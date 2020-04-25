@@ -1,0 +1,206 @@
+
+https://apexplained.wordpress.com/2013/07/14/introducing-unit-tests-in-plsql-with-utplsql/
+
+
+The most commonly used unit test framework in PL/SQL is utPLSQL, developed by Steven Feuerstein. utPLSQL is no longer under active development since 2005. The framework is nevertheless very stable and it lets you create unit tests really fast. The documentation, which can be found here, includes a little chapter on how to install the utPLSQL framework in your database instance. Once you successfully installed utPLSQL, you are all set to create your first unit test in PL/SQL.
+
+
+Let’s say I have a package bl_user_registration in which I have a function validate_password_strength. This function checks whether a password is considered strong according to the following five criteria:
+
+contains at least one digit character (0-9)
+contains at least one lowercase character (a-z)
+contains at least one uppercase character (A-Z)
+contains at least one special character (@#$%)
+length between 6 and 20 characters
+Here’s the code I wrote to validate the strength of a password:
+
+create or replace
+package body bl_user_registration as
+ 
+  function validate_password_strength(in_password in varchar2)
+  return boolean is
+  begin
+    if not regexp_like(in_password, '[[:digit:]]') then
+      return false;
+    end if;
+ 
+    if not regexp_like(in_password, '[[:lower:]]') then
+      return false;
+    end if;
+ 
+    if not regexp_like(in_password, '[[:upper:]]') then
+      return false;
+    end if;
+ 
+    if not regexp_like(in_password, '[@#$%]') then
+      return false;
+    end if;
+ 
+    if length(in_password) not between 6 and 20 then
+      return false;
+    end if;
+ 
+    return true;
+  end validate_password_strength;
+ 
+end bl_user_registration;
+
+Now, I think that the validate_password_strength function successfully identifies the difference between a strong and weak password. Let’s write a unit test to verify that our function works as expected.
+
+Step 1 – identify test cases
+This part is all about meeting expectations. You basically say: “I expect the validate_password_strength function to return TRUE if I pass ‘ABCdef123#‘ as a parameter”. The more cases you define, the higher the reliability will be of your unit test. Make sure to think through this part carefully and try to be as complete as you can when defining the set of cases you want to test. My test cases look like this:
+
+I expect the validate_password_strength function to return TRUE if I pass the following values as a parameter:
+
+‘ABCdef123#’
+‘%a1B2CD’
+‘Abcde1@’
+I expect the validate_password_strength function to return FALSE if I pass the following values as a parameter:
+
+‘Abcdef#’ – no digit character
+‘ABCD1234$’ – no lowercase character
+‘abcd1234@’ – no uppercase character
+‘ABcd1234’ – no special character
+‘Abc1%’ – less than 6 characters
+‘Abcdefghijk123456789@’ – more than 20 characters
+” – an empty string
+Step 2 – build the test package
+We always put our unit test code in a separate test package. The name of the test package equals the name of the package to be tested, prefixed with ut_. By following this naming convention, it is possible for utPLSQL to automatically recompile your package before each test.
+
+A test package must contain a ut_setup and ut_teardown procedure. These two procedures offer the possibility to respectively initialize and remove temporary database objects that are available to use in your unit test procedures. Very helpful when writing data dependent unit tests, but we won’t be needing them in this example.
+
+This is how the test package specification will look like:
+
+create or replace
+package ut_bl_user_registration as
+ 
+  procedure ut_setup;
+  procedure ut_teardown;
+ 
+  procedure ut_validate_password_strength;
+ 
+end ut_bl_user_registration;
+As you can see, unit tests in utPLSQL are procedures without arguments, dead simple. In such a unit test procedure, you typically make use of the utAssert package to evaluate the outcome of a test case. We’ll use the utAssert.eq routine to compare the result of the validate_password_strength function with whatever we expect it to return. So for each test case in step 1, we’ll have one utAssert.eq call to perform.
+
+The test package body:
+
+create or replace
+package body ut_bl_user_registration as
+ 
+  procedure ut_setup as
+  begin
+    null;
+  end ut_setup;
+ 
+  procedure ut_teardown as
+  begin
+    null;
+  end ut_teardown;
+ 
+  procedure ut_validate_password_strength as
+  begin
+    utassert.eq(
+      msg_in          => 'ABCdef123# is a strong password',
+      check_this_in   => bl_user_registration.validate_password_strength('ABCdef123#'),
+      against_this_in => true
+    );
+    utassert.eq(
+      msg_in          => '%a1B2CD is a strong password',
+      check_this_in   => bl_user_registration.validate_password_strength('%a1B2CD'),
+      against_this_in => true
+    );
+    utassert.eq(
+      msg_in          => 'Abcde1@ is a strong password',
+      check_this_in   => bl_user_registration.validate_password_strength('Abcde1@'),
+      against_this_in => true
+    );
+ 
+    utassert.eq(
+      msg_in          => 'Abcdef# misses a digit character',
+      check_this_in   => bl_user_registration.validate_password_strength('Abcdef#'),
+      against_this_in => false
+    );
+    utassert.eq(
+      msg_in          => 'ABCD1234$ misses a lowercase character',
+      check_this_in   => bl_user_registration.validate_password_strength('ABCD1234$'),
+      against_this_in => false
+    );
+    utassert.eq(
+      msg_in          => 'abcd1234@ misses an uppercase character',
+      check_this_in   => bl_user_registration.validate_password_strength('abcd1234@'),
+      against_this_in => false
+    );
+    utassert.eq(
+      msg_in          => 'ABcd1234 misses a special character',
+      check_this_in   => bl_user_registration.validate_password_strength('ABcd1234'),
+      against_this_in => false
+    );
+    utassert.eq(
+      msg_in          => 'Abc1% is too short',
+      check_this_in   => bl_user_registration.validate_password_strength('Abc1%'),
+      against_this_in => false
+    );
+    utassert.eq(
+      msg_in          => 'Abcdefghijk123456789@ is too long',
+      check_this_in   => bl_user_registration.validate_password_strength('Abcdefghijk123456789@'),
+      against_this_in => false
+    );
+    utassert.eq(
+      msg_in          => 'An empty string should return false',
+      check_this_in   => bl_user_registration.validate_password_strength(''),
+      against_this_in => false
+    );
+  end ut_validate_password_strength;
+ 
+end ut_bl_user_registration;
+Step 3 – run the unit test
+Now let’s run the unit tests for our bl_user_registration package by invoking the utplsql.test procedure:
+
+
+set serveroutput on;	
+begin
+  utplsql.test(
+    package_in   => 'bl_user_registration',
+    recompile_in => false
+  );
+end;
+
+
+set serveroutput on;	-> will display output in sqlPlus for sql developer or pl/sql developer use dbms_output.enable;
+
+begin
+  dbms_output.enable;
+  utplsql.test(
+    package_in   => 'bl_user_registration',
+    recompile_in => false
+  );
+end;
+
+
+Alright, it’s obvious that our unit test failed big time. This means that our validate_password_strength function contains a sneaky bug. You’ll notice that all of our test cases were successful, except for the last one.
+
+FAILURE – bl_user_registration.UT_VALIDATE_PASSWORD_STRENGTH: EQ “An empty string should return false” Expected “N” and got “Y”
+
+Passing an empty string to the validate_password_strength function should return FALSE (or “N” in utPLSQL terms), but we get back TRUE. What’s wrong with our code?
+
+The problem is the length function on line 23. length(”) returns NULL and results in unexpected behaviour. Let’s fix the code and re-run our test package.
+
+1
+if length(in_password) is null or length(in_password) not between 6 and 20 then
+The output:
+
+unit test success
+unit test success
+Ahh, great success as Borat would say.
+
+
+Our unit test accurately identified a bug in our code, which is a good thing, but more importantly, we now have a working unit test for our validate_password_strength function that facilitates later changes to the code. You can run your unit tests at any point in time and validate whether your code still behaves as expected. I hope you came to the conclusion that unit testing leads to an increased maintainability, changeability, and quality of your code.
+
+Happy unit testing!
+
+
+Lots of ut files in db-core. 
+
+
+
+

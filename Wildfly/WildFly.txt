@@ -1,0 +1,39 @@
+- Download a wildfly zip from - http://wildfly.org/downloads/
+- Extract the wildfly zip.
+- At \wildfly-14.0.1.Final\bin we have all wildfly executables.
+	To make this executables available from command prompt add this path in Path environment variable.
+- To start wildfly we need to run standalone.bat from bin folder or we can just type standalone in command prompt.
+- If port 8080 is occupied 
+	(usually by OracleTNSListner - To check, execute command - 
+		netstat -aon | findstr 8080 
+			-a Displays all connections and listening ports.
+			-o Displays owning process Id associated with each connection.
+			-n Displays addresses and port numbers in numerical forms)
+		Above command gives us the process id, to find process name using process id execute below command - 
+		tasklist | findstr <PID> 
+	)
+	We need to stop the process using port 8080 then start wildfly and check in browser using URL - localhost:8080
+- Now you would be able to see wildfly window but you wont be able to access administrator console from that window. To access administrator console first we need to create user.
+- To create user type add-user in cmd.
+	It will ask - 
+	What type of user do you wish to add?
+	 a) Management User (mgmt-users.properties)
+	 b) Application User (application-users.properties)
+	(a): a
+	
+	Enter username and password.
+	
+	It will ask - 
+		What groups do you want this user to belong to? (Please enter a comma separated list, or leave blank for none)[  ]:
+		About to add user 'inarajp' for realm 'ManagementRealm'
+		Is this correct yes/no? yes
+		
+		Is this new user going to be used for one AS process to connect to another AS process?
+		e.g. for a slave host controller connecting to the master or for a Remoting connection for server to server EJB calls.
+		yes/no? no
+		
+	Now admin start the wildfly and check, you should be able to access admin console.
+	
+
+		
+		

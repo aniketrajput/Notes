@@ -1,0 +1,79 @@
+
+SSL Certificate - Secure Socket Layer Certificate
+
+There are free SSL certificates and Paid one
+	Paid certificate will validate who your are and if you own the domain
+	Free one just confirms that you own the domain (Not recommended for cards and personnel info -  user is not paying on that site then free one is enough. Free one are valid for 90days after that it has to be renewed (which takes 5-10 mins ))
+	
+	Paid one - comodo or symantec
+	
+	
+TLS -Transport Layer Security
+	
+	
+	
+
+
+HTTP - Way to communicate from browser to web serser.. Thats it. 
+
+Two types of SSL - regular and extended (whole url is in box.. )
+
+Dedicated ip
+check with hosting if we can install ssl certificate
+
+
+Do we have a domain name register? Do we already have a official domain name? if not who will buy it? From which provider? 
+Do we have an hosting server? Or is it that our pc will only be the hosting server? 
+Vanderlande must be having its own domain name or sub-domain? Do we need to buy domain ?
+Do we want Paid certificate or Free one ?
+
+we will have to make the ip of the pc static and give router ip address for which we are opening the port to be accessible by the rest of the world. 
+
+Domain name and web hosting account 
+
+Domain name
+Static Ip
+Port forwarding at router
+
+
+
+
+I understood that we need to host the website from our own server. Using a domain name and HTTPS protocol
+
+Few thing I want to know - do we have a domain or sub domain name for this website? Is it mapped to Ip of our server?
+Does the server have static Ip?
+Is the port forwarding done for the server static ip?
+Who will buy ssl? 
+
+
+www won't work on sub domains. 
+
+
+Provide ip which can be made static for the server
+Provide domain or sub domain. Domain should be mapped to static ip of the server.
+Port forwarding for http and https ports on router interface
+
+
+
+-----------------------------------------------------
+
+SSL cost ?
+Windows server ? 
+
+
+
+Domain level SSL - they verify 
+Organization Validated - 
+Extended Validation - Needs few days to get. Validates lot of things - upto 10 days
+
+
+
+EV SSL Certificate is the most recommended SSL type as it displays green address bar along with the business name in URL
+To issues an EV SSL certificate, the issuer need to submit important business documents as per the certificate authority’s requirement. It takes up to 10 days to issue an EV SSL Certificate.
+
+Organization validated SSL is highly recommended to validate online business. Business name is displayed in certificate and a CA’s seal, which is considered to be a trust indicator. It takes up to 3 days to issue an OV SSL.
+
+Domain validated SSL certificate is used to validate the domain name only. If a user carries a small/medium level website, DV SSL certificate is the best option. The validation process for the domain validated (DV) certificate is pretty simple. Here, the user only needs to prove the domain ownership to the certificate authority (CA). SSL certificate authority can ask for email verification, file bases verification, or can check website’s web registrar’s information to validate the domain.
+
+
+

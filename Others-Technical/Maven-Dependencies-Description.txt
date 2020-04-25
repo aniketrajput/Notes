@@ -1,0 +1,711 @@
+1) Commons CLI
+	The Apache Commons CLI library provides an API for parsing command line options passed to programs. It's also able to print help messages detailing the options available for a command line tool.
+
+	Commons CLI supports different types of options:
+
+	POSIX like options (ie. tar -zxvf foo.tar.gz)
+	GNU like long options (ie. du --human-readable --max-depth=1)
+	Java like properties (ie. java -Djava.awt.headless=true -Djava.net.useSystemProxies=true Foo)
+	Short options with value attached (ie. gcc -O2 foo.c)
+	long options with single hyphen (ie. ant -projecthelp)
+	A typical help message displayed by Commons CLI looks like this:
+
+	usage: ls
+	 -A,--almost-all          do not list implied . and ..
+	 -a,--all                 do not hide entries starting with .
+	 -B,--ignore-backups      do not list implied entried ending with ~
+	 -b,--escape              print octal escapes for nongraphic characters
+		--block-size <SIZE>   use SIZE-byte blocks
+	 -c                       with -lt: sort by, and show, ctime (time of last
+							  modification of file status information) with
+							  -l:show ctime and sort by name otherwise: sort
+							  by ctime
+	 -C                       list entries by columns
+ 
+ 
+2) net.lingala.zip4j -
+	Zip4j - A Java library for zip files and streams
+	Features:
+	Create, Add, Extract, Update, Remove files from a Zip file
+	Read/Write password protected Zip files
+	AES 128/256 Encryption/Decryption
+	Standard Zip Encryption/Decryption
+	Zip64 format
+	Store (No Compression) and Deflate compression method
+	Create or extract files from Split Zip files (Ex: z01, z02,...zip)
+	Unicode file names
+	Progress Monitor
+
+
+3) Commons IO
+	Commons IO is a library of utilities to assist with developing IO functionality.
+	Simply put, utility classes provide sets of static methods that can be used to perform common tasks on files.
+
+	There are six main areas included:
+
+	Utility classes - with static methods to perform common tasks
+	Input - useful Input Stream and Reader implementations
+	Output - useful Output Stream and Writer implementations
+	Filters - various implementations of file filters
+	Comparators - various implementations of java.util.Comparator for files
+	File Monitor - a component for monitoring file system events
+
+	3.1. FileUtils
+	This class provides different operations on files, such as opening, reading, copying, and moving.
+
+	Let's look at how to read or copy files using FileUtils:
+
+	File file = FileUtils.getFile(getClass().getClassLoader()
+	  .getResource("fileTest.txt")
+	  .getPath());
+	File tempDir = FileUtils.getTempDirectory();
+	FileUtils.copyFileToDirectory(file, tempDir);
+	File newTempFile = FileUtils.getFile(tempDir, file.getName());
+	String data = FileUtils.readFileToString(newTempFile,
+	  Charset.defaultCharset());
+	3.2. FilenameUtils
+	This utility provides an operating-system-agnostic way of executing common functions on file names. Let's see some of the different methods we can utilize:
+
+	String fullPath = FilenameUtils.getFullPath(path);
+	String extension = FilenameUtils.getExtension(path);
+	String baseName = FilenameUtils.getBaseName(path);
+	3.3. FileSystemUtils
+	We can use FileSystemUtils to check the free space on a given volume or drive:
+		long freeSpace = FileSystemUtils.freeSpaceKb("/");
+		
+	4. Input and Output
+	This package provides several implementations for working with input and output streams.
+
+	We'll focus on TeeInputStream and TeeOutputSteam. The word “Tee” (derived from letter “T“) is normally used to describe that a single input is to be split into two different outputs.
+
+	Let's look at an example that demonstrates how we can write a single input stream to two different output streams:
+
+	String str = "Hello World.";
+	ByteArrayInputStream inputStream = new ByteArrayInputStream(str.getBytes());
+	ByteArrayOutputStream outputStream1 = new ByteArrayOutputStream();
+	ByteArrayOutputStream outputStream2 = new ByteArrayOutputStream();
+	 
+	FilterOutputStream teeOutputStream
+	  = new TeeOutputStream(outputStream1, outputStream2);
+	new TeeInputStream(inputStream, teeOutputStream, true)
+	  .read(new byte[str.length()]);
+	 
+	assertEquals(str, String.valueOf(outputStream1));
+	assertEquals(str, String.valueOf(outputStream2));
+
+	5. Filters
+	Commons IO includes a list of useful file filters. These can come in handy when a developer wants to narrow down to a specific desired list of files from a heterogeneous list of files.
+
+	The library also supports AND and OR logic operations on a given file list. Therefore, we can mix and match these filters to get the desired outcome.
+
+	Let's see an example that makes use of WildcardFileFilter and SuffixFileFilter to retrieve files which have “ple” in their names with a “txt” suffix. Note that we wrap above filters using ANDFileFilter:
+
+	@Test
+	public void whenGetFilewith_ANDFileFilter_thenFind_sample_txt()
+	  throws IOException {
+	 
+		String path = getClass().getClassLoader()
+		  .getResource("fileTest.txt")
+		  .getPath();
+		File dir = FileUtils.getFile(FilenameUtils.getFullPath(path));
+	 
+		assertEquals("sample.txt",
+		  dir.list(new AndFileFilter(
+			new WildcardFileFilter("*ple*", IOCase.INSENSITIVE),
+			new SuffixFileFilter("txt")))[0]);
+	}
+
+	6. Comparators
+	The Comparator package provides different types of comparisons on files. We'll explore two different comparators here.
+
+	6.1. PathFileComparator
+	The PathFileComparator class can be used to sort lists or arrays of files by their path either in a case-sensitive, case-insensitive, or system-dependent case-sensitive way. Let's see how to sort file paths in the resources directory using this utility:
+
+	@Test
+	public void whenSortDirWithPathFileComparator_thenFirstFile_aaatxt() 
+	  throws IOException {
+		 
+		PathFileComparator pathFileComparator = new PathFileComparator(
+		  IOCase.INSENSITIVE);
+		String path = FilenameUtils.getFullPath(getClass()
+		  .getClassLoader()
+		  .getResource("fileTest.txt")
+		  .getPath());
+		File dir = new File(path);
+		File[] files = dir.listFiles();
+	 
+		pathFileComparator.sort(files);
+	 
+		assertEquals("aaa.txt", files[0].getName());
+	}
+
+	Note that we have used the IOCase.INSENSITIVE configuration. PathFileComparator also provides a number of singleton instances that have different case-sensitivity and reverse-sorting options.
+
+	These static fields include PATH_COMPARATOR, PATH_INSENSITIVE_COMPARATOR, PATH_INSENSITIVE_REVERSE, PATH_SYSTEM_COMPARATOR, to name few.
+
+	6.2. SizeFileComparator
+	SizeFileComparator is, as its name suggests, used to compare the sizes (lengths) of two files. It returns a negative integer value if the first file's size is less than that of the second file. It returns zero if the file sizes are equal and a positive value if the first file's size is greater than the second file's size.
+
+	Let's write a unit test demonstrating a comparison of file sizes:
+
+	@Test
+	public void whenSizeFileComparator_thenLargerFile_large()
+	  throws IOException {
+	 
+		SizeFileComparator sizeFileComparator = new SizeFileComparator();
+		File largerFile = FileUtils.getFile(getClass().getClassLoader()
+		  .getResource("fileTest.txt")
+		  .getPath());
+		File smallerFile = FileUtils.getFile(getClass().getClassLoader()
+		  .getResource("sample.txt")
+		  .getPath());
+	 
+		int i = sizeFileComparator.compare(largerFile, smallerFile);
+	 
+		Assert.assertTrue(i > 0);
+	}
+
+	7. File Monitor
+	The Commons IO monitor package provides the capability to track changes to a file or directory. Let's see a quick example of how FileAlterationMonitor can be used together with FileAlterationObserver and FileAlterationListener to monitor a file or folder.
+
+	When FileAlterationMonitor starts, we'll start receiving notifications for file changes on the directory that is being monitored:
+
+	FileAlterationObserver observer = new FileAlterationObserver(folder);
+	FileAlterationMonitor monitor = new FileAlterationMonitor(5000);
+	 
+	FileAlterationListener fal = new FileAlterationListenerAdaptor() {
+	 
+		@Override
+		public void onFileCreate(File file) {
+			// on create action
+		}
+	 
+		@Override
+		public void onFileDelete(File file) {
+			// on delete action
+		}
+	};
+	 
+	observer.addListener(fal);
+	monitor.addObserver(observer);
+	monitor.start();
+
+
+4) maven-resources-plugin 
+	collects the resources (XSDs/WSDLs) from the input.
+	
+	The resources plugin copies files from input resource directories to an output directory. This plugin has three goals, which are different only in how the resources and output directories are specified.
+
+	The three goals of this plugin are:
+
+	resources – copy resources that are part of the main source code to the main output directory
+	testResources – copy resources that are part of the test source code to the test output directory
+	copy-resources – copy arbitrary resource files to an output directory, requiring us to specify the input files and the output directory
+	Let's take a look at the resources plugin in the pom.xml:
+
+	<plugin>
+		<artifactId>maven-resources-plugin</artifactId>
+		<version>3.0.2</version>
+		<configuration>
+			...
+		</configuration>
+	</plugin>
+	
+	We can find the latest version of this plugin here.
+
+	3. Example
+	Assume we want to copy resource files from the directory input-resources to the directory output-resources and we want to exclude all files ending with the extension .png.
+
+	These requirements are satisfied with this configuration:
+
+	<configuration>
+		<outputDirectory>output-resources</outputDirectory>
+		<resources>
+			<resource>
+				<directory>input-resources</directory>
+				<excludes>
+					<exclude>*.png</exclude>
+				</excludes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</configuration>
+
+	The configuration applies to all executions of the resources plugin.
+
+	For example, when the resources goal of this plugin is executed with the command mvn resources:resources, all resources from the input-resources directory, except for PNG files, will be copied to output-resources.
+
+	Since, by default, the resources goal is bound to the process-resources phase in the Maven default lifecycle, we can execute this goal and all the preceding phases by running the command mvn process-resources.
+
+	In the given configuration, there's a parameter named filtering with the value of true. The filtering parameter is used to replace placeholder variables in the resource files.
+
+	For instance, if we have a property in the POM:
+
+	<properties>
+		<resources.name>Baeldung</resources.name>
+	</properties>
+
+	and one of the resource files contains:
+
+	Welcome to ${resources.name}!
+	then the variable will be evaluated in the output resource, and the resulting file will contain:
+
+	Welcome to Baeldung!
+
+
+5) hyperjaxb3-maven-plugin 
+	is used to convert the XSDs to .java files which can be found in target\generated-sources\ folder.
+	
+	Generate JPA Java classes from XSD schema file using Maven
+
+	The standard JDK command xjc will handily generate Java classes from a given xsd file:
+		"%java_home%\bin\xjc" -p [your package namespace] [xsd_file].xsd
+	
+	…but if you want to specify information such as a super-class or Java perisitence for the generated classes, the following info should help.
+
+	The following example uses the Hyperjaxb3 plugin. Hyperjaxb3 is an open source project which provides relational persistence for JAXB objects.
+
+	To begin, in a maven Jar type project, place your .xsd file under src/main/resources e.g. take a simple xsd like the Shipment Odrer XSD (shiporder.xsd) from: http://www.w3schools.com/schema/schema_example.asp
+
+	In the same folder src/main/resources, create a binding file called e.g. binding.xjb:
+
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<jxb:bindings version="1.0"
+				  xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+				  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+				  xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc">
+	   
+		<jxb:bindings schemaLocation="shiporder.xsd" node="/xs:schema">  
+	 
+			<jxb:globalBindings localScoping="toplevel">
+				<xjc:superClass name="com.pat.demos.xjc.MyAbstractBaseType"/>         
+				<jxb:serializable/>
+			</jxb:globalBindings>
+							   
+			<jxb:schemaBindings>
+				<jxb:package name="com.pat.demo.shiporder.domain"></jxb:package>  
+			</jxb:schemaBindings>           
+			  
+		</jxb:bindings>
+	  
+	</jxb:bindings>
+
+	Here I’ve specified a super class called com.pat.demos.xjc.MyAbstractBaseType. I’ve also marked the classes to be generated as serializable and belonging to the package com.pat.demo.shiporder.domain.
+
+	Next, specify the hyperjaxb3 plugin in the pom. I’ve specified that old output should be removed and that the generated classes will extend from a super-class.
+
+	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		<modelVersion>4.0.0</modelVersion>
+		<groupId>jaxb-from-pom_demo</groupId>
+		<artifactId>jaxb-from-pom_demo</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	 
+		<properties>
+			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		</properties>
+	 
+		<build>
+			<plugins>
+	 
+				<!-- Generates classes from .xsd file and annotates them as persistent 
+					entities: -->
+				<plugin>
+					<groupId>org.jvnet.hyperjaxb3</groupId>
+					<artifactId>maven-hyperjaxb3-plugin</artifactId>
+					<version>0.5.6</version>
+					<executions>
+						<execution>                                       
+							<!-- for the generate goal of hyperjaxb3, use the following config: -->
+							<goals>
+								<goal>generate</goal>
+							</goals>
+							<configuration>
+								<variant>jpa2</variant>
+								<!-- allows superclass to be defined for the classes generated from 
+									xsd: -->
+								<extension>true</extension>
+								<removeOldOutput>true</removeOldOutput>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+	 
+			</plugins>
+		</build>
+	 
+		<!-- these dependencies are needed to compile the generated classes: -->
+		<dependencies>
+	 
+			<dependency>
+				<groupId>javax.persistence</groupId>
+				<artifactId>persistence-api</artifactId>
+				<version>1.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jvnet.jaxb2_commons</groupId>
+				<artifactId>jaxb2-basics-runtime</artifactId>
+				<version>0.6.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jvnet.hyperjaxb3</groupId>
+				<artifactId>maven-hyperjaxb3-plugin</artifactId>
+				<version>0.5.6</version>
+			</dependency>
+	 
+		</dependencies>
+	</project>
+
+	Note: A great way to see the details for the plugin is to use the maven help command:
+
+	mvn help:describe -Dplugin=org.jvnet.hyperjaxb3:maven-hyperjaxb3-plugin -Ddetail
+	Running maven install now will generate the Java classes, extending the super-class, JPA annotations and all! Take a look inside the jaxb-from-pom_demo-0.0.1-SNAPSHOT.jar file.
+
+
+6) maven-compiler-plugin 
+	then compiles the .java files to classes in target/classes folder.
+
+7) maven-jar-plugin 
+
+	This plugin provides the capability to build jars. If you like to sign jars please use the Maven Jarsigner Plugin.
+	
+	We also use the maven-jar-plugin to add the Main-Class and Class-Path entries to the manifest
+
+	Goals Overview
+	jar:jar create a jar file for your project classes inclusive resources.
+	jar:test-jar create a jar file for your project test classes .
+	Major Version Upgrade to version 3.0.0
+	Please note that the following parameter has been completely removed from the plugin configuration:
+
+	useDefaultManifestFile
+	If you need to define your own MANIFEST.MF file you can simply achieve that via Maven Archiver configuration like in the following example:
+
+	<project>
+	  ...
+	  <build>
+		<plugins>
+		  <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jar-plugin</artifactId>
+			<version>3.2.0</version>
+			<configuration>
+			  <archive>
+				<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+			  </archive>
+			</configuration>
+			...
+		  </plugin>
+		</plugins>
+	  </build>
+	  ...
+	</project>
+	
+	We can also specify the entry point function class in manifest
+	
+	<archive>
+		<manifest>
+			<mainClass>com.vanderlande.ProducerApp</mainClass>
+		</manifest>
+	</archive>	
+					
+					
+8) maven-source-plugin 
+
+	The Source Plugin creates a jar archive of the source files of the current project. The jar file is, by default, created in the project's target directory.
+
+	Important Hint
+	Starting with version 3.0.0 of the plugin all properties which could be used via command line have been named based on the following schema maven.source.*. Further details can be found in the goal documentations.
+
+	Goals Overview
+	The Source Plugin has five goals:
+
+	source:aggregate aggregrates sources for all modules in an aggregator project.
+	source:jar is used to bundle the main sources of the project into a jar archive.
+	source:test-jar on the other hand, is used to bundle the test sources of the project into a jar archive.
+	source:jar-no-fork is similar to jar but does not fork the build lifecycle.
+	source:test-jar-no-fork is similar to test-jar but does not fork the build lifecycle.
+	
+9) build-helper-maven-plugin 
+
+	https://www.mojohaus.org/build-helper-maven-plugin/usage.html	
+
+	Add more source directories to your project
+		Use this example to add more source directories to your project, since pom.xml only allows one source directory.
+
+		<project>
+		  ...
+		  <build>
+			<plugins>
+			  <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+				  <execution>
+					<id>add-source</id>
+					<phase>generate-sources</phase>
+					<goals>
+					  <goal>add-source</goal>
+					</goals>
+					<configuration>
+					  <sources>
+						<source>some directory</source>
+						...
+					  </sources>
+					</configuration>
+				  </execution>
+				</executions>
+			  </plugin>
+			</plugins>
+		  </build>
+		</project>
+			
+			
+	Add more test source directories to your project
+		The same as the previous example, but this time we add more test source directories to your project.
+		
+	Add more resource directories to your project
+		This example shows how to add additional resource directories to your project. Another goal called add-test-resource can be used in a similar way to add test resources to the project.
+
+	Attach additional artifacts to your project
+		Typically run after antrun:run, or another plugin, that produces files that you want to attach to the project for install and deploy.
+
+	Set the current version of Maven in a property
+		This can be used to keep track of what version of Maven was used to build a particular artifact. For example, the following POM sets the property and then uses the property to save the Maven version to the project JAR's manifest.
+
+	Access the parsed components of a project version
+		The parse-version goal can be used to access the component parts of a version string. For example, the major version or the qualifier by themselves. Executing the following plugin configuration will parse the version of the current project and set several properties.
+
+	Resolve the latest released version of a project
+		The released-version goal can be used to resolve the latest released version of a project. Executing the following plugin configuration makes the latest released version of the current project available.
+
+	Remove a project's artifacts from local repository
+		Mainly used to remove previously installed large project artifacts in the local repository before the install phase starts. The example below removes all the project's artifacts including all versions from the local repository at the implicit package phase. To remove only the current version, set the <removeAll> configuration element to false.
+
+	Reserve a list of random and unused network ports
+		Use this plugin to reserve a set of available unused network ports to be placed in a given property set, so that they can be inserted into other plugin configurations.
+
+		The example below shows how one can pass in random ports to Selenium server port and Tomcat http port. Useful for running multiple tests concurrently.
+
+	Set a property by applying a regex replacement to a value
+		The regex-property goal can be used to set a property to a value after regex replacement has been applied. For example, executing the following plugin configuration to set the human.version property.
+
+	Set a property based on the current time and date
+		The timestamp-property goal can be used to set a property to a value based on the current time and date (with an optional offset applied). For example, executing the following plugin configuration to set the next.year property to next year.
+
+	Retrieve current host IP address
+		The local-ip goal can be used to load current host address
+
+	Retrieve available number of CPUs
+		The cpu-count goal can be used to load number of CPU
+
+	Set a property according to whether target files are up to date with respect to their sources
+		'Up to date' means that the target file both exists and has a 'last modification timestamp' (java.io.File.lastModified()) equal to or later than that of the corresponding source file(s).
+
+		Source files are computed relative to the fileset's required directory property. If the fileset has an outputDirectory property, target files are computed relative to that; otherwise, target files are also computed relative to directory.
+
+		The fileset element supports a mapper, whose type can be any of the built-in mappers flatten glob identity merge package unpackage. Alternatively, the classname property can specify the fully qualified name of a class that implements org.apache.maven.shared.model.fileset.mappers.FileNameMapper.
+
+		The uptodate-property goal can be used to set a property to a value if specified target files are up to date. For example, executing the following plugin configuration to set the obj.status property.
+
+10) We can run the tests of a project using the surefire plugin. By default, this plugin generates XML reports in the directory target/surefire-reports.
+
+This plugin has only one goal, test. This goal is bound to the test phase of the default build lifecycle, and the command mvn test will execute it.
+
+3. maven-surefire-plugin
+
+	Configuration
+	The surefire plugin can work with the test frameworks JUnit and TestNG. No matter which framework we use, the behavior of surefire is the same.
+
+	By default, surefire automatically includes all test classes whose name starts with Test, or ends with Test, Tests or TestCase.
+
+	We can change this configuration using the excludes and includes parameters, however:
+
+	<plugin>
+		<artifactId>maven-surefire-plugin</artifactId>
+		<version>2.21.0</version>
+		<configuration>
+			<excludes>
+				<exclude>DataTest.java</exclude>
+			</excludes>
+			<includes>
+				<include>DataCheck.java</include>
+			</includes>
+		</configuration>
+	</plugin>
+
+	With this configuration, test cases in the DataCheck class are executed while the ones in DataTest aren't.	
+	
+	
+11) com.hubspot.maven.plugins	
+	Overview
+		The slimfast-plugin can be used in place of the maven-assembly-plugin or maven-shade-plugin (which are often used to build fat jars). In addition, if you configure the maven-jar-plugin in the right way, the resulting jar (although not a fat jar) will still be runnable using plain old java -jar (ie, without needing to manually construct the classpath).
+
+		This uses a feature of the JVM which is that if you run a jar which has a Class-Path entry in its manifest, then those paths are added to the classpath of the JVM. Using this feature, we can tell the maven-jar-plugin to build the classpath for us at build time and add it as a manifest property. Then we can configure the slimfast-plugin to copy the dependency jars to the right place and the resulting jar will start up fine when run with java -jar.
+
+	Usage
+		The plugin has three goals: copy, upload, and download.
+
+	copy can be used to copy your dependencies to the target folder so they're available at runtime (example). This is similar to the copy-dependencies goal of the maven-dependency-plugin, but we were unable to get that to work with a repository layout combined with resolved snapshot versions (the useBaseVersion flag seems to get ignored when the useRepositoryLayout flag is set). Using the copy goal saves you the time of building a fat jar and eliminates the jar merging complexities, but it doesn't reduce the size of your build artifacts.
+
+	Just using the copy goal has a lot of advantages and is a big win in its own right, but there's still room for improvement. At HubSpot, for example, we tar up the build directory and upload it to S3 at the end of the build. Then we download and untar it on the application servers when someone wants to deploy. Using the copy goal doesn't reduce the size of these tarballs so we're still uploading the same amount to S3 on build and downloading the same amount on deploy. This adds time to builds and deploys, uses lots of bandwidth, and costs money for storing these large artifacts in S3.
+
+	But fear not! This is what the upload and download goals are for. The upload goal binds to the deploy phase by default and will upload all of the project's dependencies to S3 (example). It only uploads a dependency if it doesn't already exist in S3, so after the initial build this step should mostly be a no-op and go very fast. When it's done uploading the files, it will write out a JSON file (target/slimfast.json by default) containing information that can be used later to download the dependencies to the correct paths.
+
+	The most straightforward way to use this JSON file is to run the download goal on your application servers before startup. This goal doesn't require a project so it can run in standalone mode without a pom.xml. A minimal invocation would look like this. It will download all of the project dependencies (determined by reading target/slimfast.json) to the correct paths so that the application will start up with java -jar.
+
+	Another option is to integrate this into your deployment phase, which is what we've done at HubSpot. Before using SlimFast, at build time we would generate a single S3 artifact and store its information in the database so that we can fetch it at deploy time. Now, we just store an array of S3 artifacts produced by the build (the main artifact, combined with the SlimFast artifacts read from target/slimfast.json). At deploy time, Singularity downloads all these S3 artifacts for us so everything just works.
+
+	Examples
+	Copy Goal
+	  <build>
+		<plugins>
+		  <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jar-plugin</artifactId>
+			<configuration>
+			  <archive>
+				<manifest>
+				  <addClasspath>true</addClasspath>
+				  <mainClass>${your-main-class-property}</mainClass>
+				  <classpathPrefix>lib/</classpathPrefix>
+				  <classpathLayoutType>repository</classpathLayoutType>
+				</manifest>
+			  </archive>
+			</configuration>
+		  </plugin>
+		  <plugin>
+			<groupId>com.hubspot.maven.plugins</groupId>
+			<artifactId>slimfast-plugin</artifactId>
+			<version>0.18</version>
+			<executions>
+			  <execution>
+				<goals>
+				  <goal>copy</goal>
+				</goals>
+				<phase>package</phase>
+			  </execution>
+			</executions>
+		  </plugin>
+		</plugins>
+	  </build>
+	Upload Goal
+	  <build>
+		<plugins>
+		  <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jar-plugin</artifactId>
+			<configuration>
+			  <archive>
+				<manifest>
+				  <addClasspath>true</addClasspath>
+				  <mainClass>${your-main-class-property}</mainClass>
+				  <classpathPrefix>lib/</classpathPrefix>
+				  <classpathLayoutType>repository</classpathLayoutType>
+				</manifest>
+			  </archive>
+			</configuration>
+		  </plugin>
+		  <plugin>
+			<groupId>com.hubspot.maven.plugins</groupId>
+			<artifactId>slimfast-plugin</artifactId>
+			<version>0.18</version>
+			<executions>
+			  <execution>
+				<goals>
+				  <goal>upload</goal>
+				</goals>
+				<phase>deploy</phase>
+				<configuration>
+				  <s3Bucket>my-bucket</s3Bucket>
+				  <s3ArtifactRoot>jars</s3ArtifactRoot>
+				  <s3AccessKey>abc</s3AccessKey>
+				  <s3SecretKey>123</s3SecretKey>
+				</configuration>
+			  </execution>
+			</executions>
+		  </plugin>
+		</plugins>
+	  </build>
+	You probably don't want to hard-code these S3 credentials in your pom though, instead you can use the properties-maven-plugin to read them from a file that is managed by puppet or your configuration management tool of choice. If you have a file located at /etc/slimfast.properties with contents like:
+
+	s3.bucket=my-bucket
+	s3.artifact.root=jars
+	s3.access.key=abc
+	s3.secret.key=123
+	Then you could invoke SlimFast like this:
+
+	  <build>
+		<plugins>
+		  <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jar-plugin</artifactId>
+			<configuration>
+			  <archive>
+				<manifest>
+				  <addClasspath>true</addClasspath>
+				  <mainClass>${your-main-class-property}</mainClass>
+				  <classpathPrefix>lib/</classpathPrefix>
+				  <classpathLayoutType>repository</classpathLayoutType>
+				</manifest>
+			  </archive>
+			</configuration>
+		  </plugin>
+		  <plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>properties-maven-plugin</artifactId>
+			<version>1.0.0</version>
+			<executions>
+			  <execution>
+				<goals>
+				  <goal>read-project-properties</goal>
+				</goals>
+				<phase>initialize</phase>
+				<configuration>
+				  <files>
+					<file>/etc/slimfast.properties</file>
+				  </files>
+				</configuration>
+			  </execution>
+			</executions>
+		  </plugin>      
+		  <plugin>
+			<groupId>com.hubspot.maven.plugins</groupId>
+			<artifactId>slimfast-plugin</artifactId>
+			<version>0.18</version>
+			<executions>
+			  <execution>
+				<goals>
+				  <goal>upload</goal>
+				</goals>
+				<phase>deploy</phase>
+			  </execution>
+			</executions>
+		  </plugin>
+		</plugins>
+	  </build>
+	Download Goal
+	mvn com.hubspot.maven.plugins:slimfast-plugin:0.12:download -Dslimfast.s3.accessKey=abc -Dslimfast.s3.secretKey=123
+		
+	
+12) spring-boot-starter – 
+	this lets spring boot autoconfigure your application
+
+13) spring-boot-starter-web – 
+	this dependency tells spring boot that your application is a web application. This add the functionality of @Controller, @RequestMapping, etc.
+
+14) spring-boot-starter-thymeleaf – 
+	web app needs some views like jsp or html. Thymeleaf is a server side template engine where your htmls can be viewed in any browser. Simply to say, instead of traditional jsp with jstl or format tags, we will use thymeleaf.
+
+15) spring-boot-devtools – 
+	this is an optional dependency but this makes your development faster. This dependency automatically restart or hotswap your changes to the running tomcat server, thus removing the need to restart the application whenever there are changes in codes.	
+	
+	
+	
+	
+	
+
+
+
+
+ 

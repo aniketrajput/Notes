@@ -1,0 +1,108 @@
+Two files tnsnames.ora and listerner.ora
+
+Listerner.ora exists only on server. It configures listerner, tells listerner how to configure request. Requests coming in from client. client could be running any thing a browser,
+application, etc. Anything that needs to communicate with oracle db needs to go through this listerner.
+tnsnames.ora is going to exist on both client machine and server.
+
+OracleHome/Network/ADMIN/listerner.ora
+OracleHome/Network/ADMIN/tnsnames.ora
+
+tnsnames.ora => it encapsulates all the different ways that we are going to talk to db. 
+
+
+Transparent Network Substrate (TNS) - 
+TNS supports homogenous peer-to-peer connectivity on top of other networking technologies such as TCP/IP.
+TNS operates mainly for connection to Oracle databases.
+TNSNAMES.ORA is a SQL*Net configuration file that defines databases addresses for establishing connections to them. 
+This file normally resides in the ORACLE HOME\NETWORK\ADMIN directory, but location can be defined by the TNS_ADMIN environment variable. 
+Add the following entry in your TNSNAMES.ORA file and change the values shown in brackets to suit your environment: 
+<addressname> =
+ (DESCRIPTION =
+   (ADDRESS_LIST =
+     (ADDRESS = (PROTOCOL = TCP)(Host = <hostname>)(Port = <port>))
+   )
+ (CONNECT_DATA =
+   (SERVICE_NAME = <service_name>)
+ )
+)
+Here is a completed example: 
+ORA11 =
+ (DESCRIPTION = 
+   (ADDRESS_LIST =
+     (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.1.0)(PORT = 1521))
+   )
+ (CONNECT_DATA =
+   (SERVICE_NAME = ORA12)
+ )
+)
+TNSNAMES.ORA files are located on both client and server systems.
+
+
+
+
+
+
+utl_file predefined package. 
+Introduced in 7.3 onwards.
+Used to load and read data from os files.
+Alias director. plsql doesn't directly interact with 
+
+create any directory perssion needed....admin can give
+grant create any directory to username;
+grant read, write on directory directoryname(xyz) to username;
+ 
+create or replace directory xyz as 'c:\';
+
+writing data into an os file - putf(), put_line()
+
+step 1- declare a varaible (file pointer varaible using 'file_type')
+		varname utf_file.file_type;
+
+step 2- open a file ('fopen()')
+		file_pointer_var := utl_file.fopen(alias_directory, filename, mode);	(mode - w, r, a(append))
+
+step 3- writing data into file 
+		utf_file.putf(file_pointer_var, 'content');
+
+step 4- closing a file (fclose());
+		utl_file.fclose(file_pointer_var);
+		
+
+declare
+	fp utl_file.file_type;
+begin
+	fp:= utl_file.fopen('xyz', 'file1.txt', 'w');
+  utl_file.putf(fp,'abc0');
+  utl_file.fclose(fp);
+end;
+    
+  
+  
+	
+	
+select value
+from v$parameter
+where name = 'utl_file_dir';
+
+
+We can also execute a java file through dbms_job
+how to monitor jobs - Below are tables through which we can monitor running jobs - 
+select * from all_scheduler_running_jobs where job_name='first_job';
+select log_id, to_char(log_date, 'dd/mm'yyyy') log_date
+		,substr(job_name,1, 20) job_name
+		,substr(status,1,10) status
+		,additional_info operation
+		from dba_scheduler_job_log where job_name like '%FIRST%';
+		
+select * from dba_scheduler_jobs where job_name='FIRST_JOB';
+		
+
+How debug plsql blocks in plsql developer - 
+You need to have below privileges - 
+grant 
+
+		
+
+		
+		
+		

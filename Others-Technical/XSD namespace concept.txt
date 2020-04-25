@@ -1,0 +1,85 @@
+XSD namespace concept - 
+
+In java package concept is used to group all the classes as single unit.
+Whenever a class is present in a package at the time of using of that class we will use fully qualified names. 
+Fully wualified name means className along with it's package name. 
+If we are using fully qualified names it is possible to avaoid some kind of ambiguity problem.
+
+In XSD namespace concept is similar to java package. In XSD namespace are used to group all the elements as a single unit.
+At the time of using the element we will use fully qualified name. 
+Here fully qualified name means -> Namespace + ElementName
+
+In XSD to create a namespace(package) we will work with targetNamespace attribute.
+
+For one java file we have one package declaration statement, similar for one document we will have one targetNamespace. 
+
+targetNamespace attribute we are writting along with <schema> element. <schema> acts as a root document in XSDs.
+
+targetNamespace can start with any protocol. http is not mandatory. 
+
+Example - 
+	package com.empinfo
+	<schema targetNamespace="http://empinfo.com"
+
+Now in XML we can use fully qualified name of targetNamespace like - 
+	<http://empinfo.com:employee>
+		...
+	</employee>
+
+using fully qualified name increases burder so we can use something like import in java - 
+	<employee xmlns="http://empinfo.com:">
+		...
+	</employee>
+
+We can also create prefix - 
+	<e:employee xmlns:e="http://empinfo.com:">
+		...
+	</e:employee>
+
+Now to use all elements like schema, complexType, element, sequence, etc., these are provided by W3C in there namespace. So we need to import there namespace - 
+	<schema xmlns:xs="http://www.w3.org/2001/XMLSchema"		--we can prefix this and use it for elements.
+		targetNamespace="http://empinfo.com"> 
+		
+		<xs:element ... >
+	If we don't use this then we need to use fully qualified names of namespaces.	
+	
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Mapping the XML documents with XSD - 
+
+<element name="employees">						//now we want to use employee in employees 0 to n number of times
+	<complexType>
+		<element name="employee">
+			.......
+		</element>
+</element>
+
+Now we want to use employee in employees 0 to n number of times, we can work with coordinality constaint - minOuccurs and maxOccurs
+
+minOuccurs = 0, maxOccurs = 10 
+
+minOuccurs = 0, maxOccurs = 10 // 0 to n number of times.
+
+To give intimation to parser to validate all the elements as per the namespace we use elementFormDefault ="qualified"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,160 @@
+Unlock the power of marquee tool - Hotkey M. 
+
+Marquee tool creates selections. 
+
+If we select some thing using marquee tool and use brush then only that area will suffer the edit. 
+
+Ctrl + D = deselects
+
+If we created a selection and we want to expand it then press shift. And if we press alt we will remove parts from it. 
+Selection done -> shift = expand the slection, alt = remove part of selection
+
+If we want to remove something(sun), do selection besides it and press ctrl + t and drag (This will happen only for raster layers.)
+
+We can copy a part of image and paste it in some another project. Select then go to move tool and drag selected area. After paste it will still be there in its intial place.
+
+We can duplicate the selected area by Ctrl + J
+
+Shift + F5 = Fill colour dialog.	(We can cut part of image in preciously straight line and then fill that area with some colour).
+
+It is also very useful in case of alignment. Do the selection around the element we want to align go to move and use alignment tools. 
+
+Suppose we want to select a sun. We will use ellipse marquee. But we might not know from where to drag to make perfect sun selection. We might be selecting some other bits too. To do this approximate the center of sun and drag from there holding shift + alt. This will make the intial point or center of sun as center of selection. Now if we didn't get the center right we might not get the perfect selection. To get it right add space while hold shift + alt (shift + alt + space) and then adjust the selection.
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Crop and eye dropper explained - 
+
+Crop tool hotkey = C. Removes the unwanted parts of the image.
+
+If the Delete Cropped Pixels checkbox is checked then after crop if we expand the canvas we will not get the preciously cropped or removed pixels.
+If this check box is unchecked we will get those pixels. 
+
+Ctrl + alt + c = to resize the canvas 
+
+We can use crop tool to increase the canvas size. To be precise use Ctrl + alt + c.
+
+Content Aware checkbox will expand the pixels in extended area.
+
+Using eye drop we can also get colours from other application. Open photoshop and browser side by side. Get eyedropper on browser it will pick colours from there as well. 
+
+In eye drop to revert to default black n white colour press D.
+
+We can swap between colours by pressing X.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Eraser(E), gradient, paint bucket with a big twist - 
+
+
+Eraser(E), works only on raster layers.
+To earse in straight line take the rectangular marquee tool and do selection and erase. We can also directly press delete after selection.
+
+Gradient overlay button below layers panel (its non-destructive way like adjustments.)
+Color overlay, similar to above.
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+The brush tool and layer masks - 
+
+Brush tool (B), works only on raster layers. Square brackets keys to enlarge and reduce the size of brush.
+
+If we want to use color that are already in our composition we need to use the eye dropper tool. Just hold the alt key we will get toggled to eye dropper from brush tool. 
+
+Brush presets. 
+
+Layer mask is different from clipping mask (Ctrl + alt + G, contraints a layer inside another layer.)
+
+Layer mask is used to hide a part of layer non-destructively. Layer mask can be added from bottom of layers panel. Check the example. (check the black and white colors. Black hide, white reveals.) Apply layer mask on the top one and not the bottom one. We can even disable the layer mask.
+
+Layer mask can be even used on the adjustment layer. 
+
+Ctrl + I = inverse command, it flips the mask. 
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+The powerful Direct selection tool (A)- 
+
+Example if I want just corener of rectangle to be updated then using just selection we cannot get desired precision. 
+We can use direct tool for this. 
+
+Ctrl + H to get selections.
+
+using shift we can select multiple points. 
+
+Using this tool we can adjust only shapes. No raster or any other layer. 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Fantastic selection with magic wand and the quick selection tool (W)-
+
+magic wand - Photoshop looks for all the pixels that look similar. Using shift we can expand the region. Alt removes. 
+The selection for similar color depends on Tolerance value in upper bar, the lower the value the more precious it will be. 
+
+Contigious check box.
+
+Size, keep low. 
+
+Use alt keep to remove. 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Pen tool (P)- For making shapes. 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lasso tool
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Section 4 : 
+
+We won't code our PSD projects into working websites in this course. 
+
+The power of a well written brief. 
+Brief = document that lists the specifications of the project.
+Don't reply on your memory.
+Take notes and have them confirmed on email.
+
+What brief should contain - 
+	- a couple of lines about the company and its value 2-3 paragraphs at most
+	- Existing website, if any
+	- Competitor websites, if any
+	- A few positive and negative points about the competitions websites
+	- Any supporting materials? Logos in vector format, images that may be used in the design process, a style guide, etc.
+	- What's the structure of the new site? List the navigation and subpages
+	- A couple of lines about how they want their new website to look like. No more than 3 paragraphs
+	- Budget, when should the project start and end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

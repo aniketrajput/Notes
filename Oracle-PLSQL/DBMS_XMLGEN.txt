@@ -1,0 +1,431 @@
+DBMS_XMLGEN
+
+1. DBMS_XMLGEN.NEWCONTEXT - This function generates and returns a new context handle. This context handle is used in GETXML function and other function to get XML 
+	back from the result.
+	1. DBMS_XMLGEN.NEWCONTEXT(SQLQUERY);
+	2. DBMS_XMLGEN.NEWCONTEXT(QUERYSTRING IN SYSREFCURSOR)
+	
+2. DBMS_XMLGEN.GETXML  - Gets the XML document and returns it as CLOB.
+		i. DBMS_XMLGEN.GETXML(qryctx)
+				qryctx - The context handle obtained from the newContext call.
+		
+		ii. DBMS_XMLGEN.GETXML(sqlQuery)
+
+		
+Example 1:
+
+	SELECT DBMS_XMLGEN.getXML(
+		'select * from ODD_TAB'
+	) from dual;
+
+Example 2: 
+
+DECLARE
+ result CLOB;
+BEGIN
+  result:= DBMS_XMLGEN.getXML(
+               'select * from ODD_TAB'
+           );
+  DBMS_OUTPUT.put_line(result);
+  
+END;         
+
+
+Example 3:
+
+DECLARE
+  qryctx DBMS_XMLGEN.ctxHandle; --decalre a query handle before using it.
+ result CLOB;
+BEGIN
+  qryctx := dbms_xmlgen.newContext('select * from ODD_TAB');
+  result:= DBMS_XMLGEN.getXML(qryctx);
+  dbms_xmlgen.closeContext(qryctx);
+  DBMS_OUTPUT.put_line(result);  
+END;   
+
+
+Output: 
+	CLOB<?xml version="1.0"?>
+	<ROWSET>
+		 <ROW>
+			<NO1>7870.95083611443404931428389110785038601</NO1>
+		 </ROW>
+		 <ROW>
+			<NO1>871.647006049793131095449764505869056319</NO1>
+		 </ROW>
+		 <ROW>
+			<NO1>623.039930774438112095873548684955608999</NO1>
+		 </ROW>
+		 <ROW>
+			<NO1>4636.75547155131133647731352289999905325</NO1>
+		 </ROW>
+	</ROWSET>
+	
+3. DBMS_XMLGEN.GETXMLTYPE - Gets XML document and returns it as XMLType. (Earlier function was returning CLOB. This is the only difference.)
+
+	i. DBMS_XMLGEN.GETXMLTYPE(qryctx)
+				qryctx - The context handle obtained from the newContext call.
+		
+	ii. DBMS_XMLGEN.GETXMLTYPE(sqlQuery)
+	
+
+Example 1:
+
+
+SELECT DBMS_XMLGEN.getXMLType(
+ 'select * from ODD_TAB'
+) from dual;
+
+------------------------------------------------------------------------------------
+Example 2: 
+
+DECLARE
+ result XMLTYPE;
+BEGIN
+  result:= DBMS_XMLGEN.getXMLType(
+               'select * from ODD_TAB'
+           );
+  -- DBMS_OUTPUT.put_line(result);  We cannot print XmlType data type using dbms_output. For this we need to convert it into varchar or clob.
+  DBMS_OUTPUT.put_line(result.getclobval);  
+  
+END;         
+
+
+----------------------------------------------------------------------------------
+Example 3:
+
+DECLARE
+  qryctx DBMS_XMLGEN.ctxHandle; --decalre a query handle before using it.
+  result XMLTYPE;
+BEGIN
+  qryctx := dbms_xmlgen.newContext('select * from ODD_TAB');
+  result:= DBMS_XMLGEN.getXMLType(qryctx);
+  dbms_xmlgen.closeContext(qryctx);
+  DBMS_OUTPUT.put_line(result.getclobval);  
+END;         
+
+
+Output:
+
+<ROWSET>
+ <ROW>
+  <NO1>7870.95083611443404931428389110785038601</NO1>
+ </ROW>
+ <ROW>
+  <NO1>871.647006049793131095449764505869056319</NO1>
+ </ROW>
+ <ROW>
+  <NO1>623.039930774438112095873548684955608999</NO1>
+ </ROW>
+ <ROW>
+  <NO1>4636.75547155131133647731352289999905325</NO1>
+ </ROW>
+</ROWSET>
+
+
+4. CURSOR(SELECT STATEMENT) - Cursor(select query) inside the dbms_xmlgen.getXML
+Example - 
+	select dbms_xmlgen.getXML(
+		'select department_id, department_name, 
+		CURSOR(select first_name, last_name from employees e where e.department_id = d.department_id) emp_row
+		from department d where department_id=10'
+	) from dual;
+
+	select dbms_xmlgen.getXMLaType(
+		'select department_id, department_name, 
+		CURSOR(select first_name, last_name from employees e where e.department_id = d.department_id) emp_row
+		from department d where department_id=10'
+	) from dual;
+
+
+Inserting xml type into a table - 
+create table t_xml(n Xmltype);
+
+DECLARE
+  qryctx DBMS_XMLGEN.ctxHandle; --decalre a query handle before using it.
+  result XMLTYPE;
+BEGIN
+  qryctx := dbms_xmlgen.newContext('select * from ODD_TAB');
+  result:= DBMS_XMLGEN.getXMLType(qryctx);
+  dbms_xmlgen.closeContext(qryctx);
+  insert into t_xml values(result);
+  DBMS_OUTPUT.put_line(result.getclobval);  
+END;         
+
+select * from t_xml;
+
+--------------------------------------------------------------------------------
+Example of sys_refcursor in dbms_xmlgen.newContext function.
+
+declare
+       l_refcursor sys_refcursor;
+       qryctx dbms_xmlgen.ctxHandle;
+       result xmltype;
+begin
+       open l_refcursor for select department_id, department_name 
+       from departments where department_id in (10);
+       
+       qryctx := dbms_xmlgen.newContext(l_refcursor);    --We can also pass sys_refcursor instead of a query
+       result := dbms_xmlgen.getXMLType(qryctx);
+       dbms_output.put_line(result.getclobval);
+end;   
+
+5. DBMS_XMLGEN.SETMAXROWS - This procedure sets the maximum number of rows to fetch from the SQL query result for every invocation of the GETXML function call. 
+	It is used when generating paginated results.
+	DBMS_XMLGEN.SETMAXROWS(QRYCTX, MAXROWS)
+	QRYCTX - The context handle corresponding to the query executed. 
+	maxRows - The maximum number of rows to get for each call to GETXML function 
+	(Not GETXMLTYPE. Because it returns CLOB and CLOB can handle only 37000 number of bytes. GETXMLTYPE return XmlType and it can handle nearly 4gb of data bytes. 
+	So if we want to generate xml data for 1000 records, we cannot do it at a time using GETXML coz of CLOB type. Thus we need SETMAXROWS).
+
+	Example:
+	
+	declare
+		qryctx dbms_xmlgen.ctxHandle;
+		result CLOB;
+	begin
+		qryctx := dbms_xmlgen.newContext('select * from employees');
+		dbms_xmlgen.SETMAXROWS(qryctx, 5);		--It will generate xml after every 5 records. In next iteration it will generate another 5 records xml. Thus we need loop.
+		LOOP
+			--SAVE THE XML INTO THE CLOB FIELD
+			result := dbms_xmlgen.getXML(qryctx);
+			EXIT WHEN dbms_xmlgen.GETNUMROWSPROCESSED(qryctx) = 0;
+			
+			--Else store the xml to a tempory table
+			insert into t values(result);		--In this t table each row will contain xml data of 5 employees. There for if we have 110 employees, rows in this table will be 22. If we change SETMAXROWS to 1 then number of records will be 110.
+			dbms_output.put_line(result);
+		
+		END LOOP;	
+	END;		
+	
+6. DBMS_XMLGEN.GETNUMROWSPROCESSED - This function retrieves the number of SQL rows processed when generatin the XML using the GETXML function call. This count does not include
+	the number of rows skipped before generating the XML.
+	DBMS_XMLGEN.GETNUMROWSPROCESSED(Qryctx)
+	RETURN NUMBER;
+	
+7. DBMS_XMLGEN.SETROWSETTAG - This procedure sets the name of the root element of the document. The default name is ROWSET.
+	DBMS_XMLGEN.SETROWSETTAG(qryctx, rowSetTagName IN VARCHAR2);
+	
+8. DBMS_XMLGEN.SETROWTAG - This procedure sets the name of the element separating all the rows. The default is ROW.
+	DBMS_XMLGEN.SETROWTAG(qryctx, rowTagName IN VARCHAR2);
+
+Example:
+
+declare
+	qryctx DBMS_XMLGEN.ctxHandle;
+	result XMLTYPE;
+begin
+	qryctx := dbms_xmlgen.newContext('select * from employees where department_id=30');
+	dbms_xmlgen.SETROWSETTAG(qryctx, 'DEPARTMENTS');
+	dbms_xmlgen.SETROWTAG(qryctx, 'DEPARTMENT_DETAILS');
+	result := DBMS_XMLGEN.GETXMLTYPE(qryctx);
+	dbms_xmlgen.closeContext(qryctx);
+	insert into t_xal values(result);
+	dbms_output.put_line(result.getclobval);
+end;
+	
+
+9. DBMS_XMLGEN.CONVERT - This function converts the XML data into escaped or unescapes XML equivalent, and returns XML CLOB data in encoded or decoded format.
+
+	1. DBMS_XMLGEN.CONVERT(xmlData IN VARCHAR2, flag IN NUMBER := ENTITY_ENCODE)
+		RETURN VARCHAR2;
+	
+	2. DBMS_XMLGEN.CONVERT(xmlData IN CLOB, flag IN NUMBER := ENTITY_ENCODE)
+		RETURN VARCHAR2;
+	
+	
+10. DBMS_XMLGEN.SETNULLHANDLING - DBMS_XMLGEN.SETNULLHANDLING(ctx IN xtx, flag IN NUMBER);		--suppose employee name is empty, then whether to display employee_name tag or to display but with nill value or to display but as a closed tag.
+	1. DROP_NULLS CONSTANT NUMBER := 0; (Default) Leaves out the tag for NULL elements.
+	2. NULL_ATTR CONSTANT NUMBER := 1; Sets xsi:nil="true".
+	3. EMPTY_TAG CONSTANT NUMBER := 2; Sets, for example, <foo/>
+	
+Example: 
+
+declare
+	qryctx DBMS_XMLGEN.ctxHandle;
+	result CLOB;
+begin
+	qryctx := dbms_xmlgen.newContext('select * from employees where employee_id = 199');
+	dbms_xmlgen.SETNULLHANDLING(qryctx, 0);		--It wont display NULL XML element.
+	--dbms_xmlgen.SETNULLHANDLING(qryctx, 1);	--NULL XML element will be embedded with XSI:NIL="TRUE"
+	--dbms_xmlgen.SETNULLHANDLING(qryctx, 2);	--NULL XML tag will be closed like />
+	result := DBMS_XMLGEN.GETXML(qryctx);
+	dbms_xmlgen.closeContext(qryctx);
+	dbms_output.put_line(result);
+end;
+
+
+11. DBMS_XMLGEN.SETSKIPROWS - This procedure skips a given number of rows before generating the XML output for every call to the GETXML function.
+	
+	DBMS_XMLGEN.SETSKIPROWS(ctx IN ctxHandle, skipRows IN NUMBER);
+	skipRows - The number of rows to skip for each call to getXML.
+	
+Example: 
+
+declare
+	qryctx DBMS_XMLGEN.ctxHandle;
+	result CLOB;
+begin
+	qryctx := dbms_xmlgen.newContext('select * from employees');
+	dbms_xmlgen.SETSKIPROWS(qryctx, 105);	--first it will skip the next 105 rows after then it will read/process the remaining rows using GETXML(qryctx) statement.		
+	result := DBMS_XMLGEN.GETXML(qryctx);
+	dbms_xmlgen.closeContext(qryctx);
+	dbms_output.put_line(result);
+end;
+	
+--------------------------------------------------------------------------------------------------
+
+Oracle xml sequence retrieve data from xml document - 
+
+We have a xml document. (Copy paste xml from the above table where we stored xml generated from procedure)
+
+Syntax - 
+XMLSEQUENCE([XMLTyoe instance | SYS_REFCURSOR instance])
+
+extract(XMLType_instance IN XMLType(say column name), XPath_string IN VARCHAR2) return xmltype 
+
+SQL function extractValue lets you extract the desired value more easily than extract;
+
+Syntax - 
+extractvalue(value(XMLSequence instance), 'XPath_String')
+
+Example - 
+	1. 
+		select 
+			extractvalue(value(f1), 'ROW/EMPLOYEE_ID'),
+			extractvalue(value(f1), 'ROW/FIRST_NAME'),
+			extractvalue(value(f1), 'ROW/LAST_NAME')
+		from t_xml
+		table(xmlsequence(extract(xml_col, '/ROWSET/ROW'))) f1;			--all the xml data will be extracted and will generate this xmlsequence and a virtual table will be created hold these xmlsequence
+	
+	2. 
+		select 
+			extractvalue(value(f1), 'ROW/EMPLOYEE_ID'),
+			extractvalue(value(f1), 'ROW/FIRST_NAME'),
+			extractvalue(value(f1), 'ROW/LAST_NAME')
+		from t_xml
+		table(xmlsequence(extract(xml_col, '/ROWSET/*'))) f1;			--same as above just we have add * coz if we have changed ROW name and we don't know the name then we can use *, which will select all ROW
+		
+	3. 
+		select 
+			extractvalue(value(f1), 'ROW/EMPLOYEE_ID'),
+			extractvalue(value(f1), 'ROW/FIRST_NAME'),
+			extractvalue(value(f1), 'ROW/LAST_NAME'),
+			extractvalue(value(f1), 'ROW/SALARY')			
+		from t_xml
+		table(xmlsequence(extract(xml_col, '/ROWSET/ROW'))) f1
+		where extractValue(value(f1), '/ROW/SALARY') > 10000;	--added condition
+		
+------------------------------------------------------------------------------------------------------------------------
+
+Oracle retrieve data from XML document using XMLQuery - 
+
+XPath
+
+XPath uses path expression to select nodes or list of node from a xml document.
+Eg. /ROWSET/ROW will select all the xml element under /ROWSET/ROW.
+(Can also rewritten as "/ROWSET/*")
+
+XPath can also be an expression.
+Below list of expression are called Predicates.
+The Predicates are defined in square brackets [...]. They are either used to find a specific node or a node that contains a specific value.
+
+/employees/employee[1]				Selects the first employee element that is the child of the employees element.
+/employees/employee[last()]			Selects the last employee element that is the child of the employees element.
+/employees/employee[last() - 1]		Selects the last but one employee element(second last) that is the child of the employees element.
+
+Eg. 
+If you want to retrieve employee record whose employee_no=200 from the xmltype document.
+/Employees/Employee[Employee_no=200]		
+/Rowset/Row[EMPLOYEE_ID=117]
+
+If you want to retrieve employee record whose salary>=2000 from the xmltype document.
+/Employees/Employee[salary>=2000]
+/Rowset/Row[salary>10000]
+	
+
+--RETRIEVE SINGLE RECORD USING XMLQUERY
+
+XMLQUERY lets you query XML data in SQL statements.
+It takes an XQuery expression as a string literal and returns the result of evaluating the XQuery expression.
+XMLQuery as an alternative to extract. Using XMLQuery is generally recommended, because it is a standard function not Oracle-specific
+RETURNING CONTENT indicates that the result from the XQuery evaluation
+
+XMLQuery returns query result as XML. XMLTable returns result as relation data.
+Below sql is an example for this.
+
+Syntax:
+
+XMLQUERY( 'XPath'
+			PASSING COLUMN_NAME				--which column we are passing to XPath expression
+			RETURNING CONTENT
+		)
+
+Example 1:
+SELECT 
+		XMLQUERY('/ROWSET/ROW[FIRST_NAME="Shelly"]/JOB_ID'
+		PASSING XML_COL				--XML_COL is column in T_XML table.
+		RETURNING CONTENT
+		)JOB_ID						--Alias
+FROM T_XML;
+
+OUTPUT:
+<JOB_ID>AC_MGR</JOB_ID>
+		
+Example2:		
+SELECT 
+		XMLQUERY('/ROWSET/ROW[SALARY > 10000]/LAST_NAME'
+		PASSING XML_COL				--XML_COL is column in T_XML table.
+		RETURNING CONTENT
+		)LAST_NAME						--Alias
+FROM T_XML;
+
+------------------------------------------------------------------------------------------
+
+XMLTable.
+
+Syntax of XMLTable function:
+
+XMLTable('XQuery'
+		  PASSING <xml column>
+		  COLUMN <new column name> <column type> PATH <XQuery path>
+		)
+
+The XMLTABLE operator allows us to split a XML document in single row into multiple rows in the final result set.
+THe table column is identified as the source of the data using the PASSING clause. The rows are identified using a XQuery expression
+The COLUMN clause is used to transform XML data into relational data. Each of the entries in this clause defines a column with column name and a SQL data type. 
+In the below query we defined three column Employee_id, first_name and job_id that points to path employee_id, first_name and job_id or selected XML node.
+
+Example 1:
+
+SELECT XT.*
+FROM T_XML X,
+	XMLTABLE('ROWSET/ROW'
+		PASSING X.XML_COL
+		COLUMNS
+		"EMPLOYEE_ID" VARCHAR2(4) PATH 'Employee_id',		--here 'Employee_id' should be same as it is in xml node else we will get null as data. Here it will create path as - 'ROWSET/ROW/Employee_id'
+		"FIRST_NAME" VARCHAR2(10) PATH 'FIRST_NAME',
+		"JOB_ID" VARCHAR2(9) PATH 'JOB_ID'
+	)	XT;
+
+
+Example 2:
+
+SELECT XT.*
+FROM T_XML X,
+	XMLTABLE('ROWSET/ROW[JOB_ID="IT_PROG"]'
+		PASSING X.XML_COL
+		COLUMNS		
+		"FIRST_NAME" VARCHAR2(30) PATH 'FIRST_NAME',
+		"JOB_ID" VARCHAR2(9) PATH 'JOB_ID'
+	)	XT;
+
+
+
+
+
+
+
+
+
+	

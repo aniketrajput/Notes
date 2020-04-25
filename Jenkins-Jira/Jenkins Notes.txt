@@ -1,0 +1,62 @@
+JIRA is a tool used for bug tracking, issue tracking and project management. 
+The basic use of this tool is to track issue and bugs related to your software application.
+The JIRA dashboard consists of many useful functions and features which make handling of issues easy.
+
+
+
+Bitbucket is a web based hosting service used for source code and development projects that use revision control systems.
+Mostly used for code review.
+It uses Git.
+
+
+
+Bamboo is a Continuous Integration (CI)and deployement server that can be used to automate the release management for a software application, creating a continuous 
+delivery pipeline.
+Bamboo assists software development teams by providing: 
+	- automated building and testing of software source-code status.
+	- updates on successful and failed builds
+	- reporting tools for statistical analysis
+
+IBM Rational DOORS NG – for Requirements gathering and management
+IBM Rational Team Concert – for Project Planning, SCM and Build management
+	
+
+
+Jenkins Tutorial - 
+Edureka - Jenkins Tutorial For Beginners - 1 | Continuous Integration with Jenkins | DevOps Tools | Edureka
+
+What is Continuous Integration (CI)?
+Continuous Integration is a development practice that requires developers to integrate code into a shared repository at regular intervals. 
+This concept was meant to remove the problem of finding later occurrence of issues in the build lifecycle. 
+Continuous integration requires the developers to have frequent builds. The common practice is that whenever a code commit occurs, a build should be triggered.
+Each check-in is then verified by an automated build, allowing teams to detect problems early and deliver the software early.
+
+Old days of software developement (In waterfall model):
+Code changes made by individual team members are merged together into working software. which was known as Integration phase.
+Integration phase was a hard work which often results in code conflicts, hard to find bugs and even harder to fix them which lead to significant delivery delays.
+
+Now people have adopted to agile methodology and work is being done faster. Now they don't built the complete software they do it in bits and pieces and work parallelly.
+Means developer will complete its task, that task will automatically get integrated and built and then tester can test it immediately.
+
+What will happen is developer will develop a code, do functional testing or unit testing, then commit the code to git repository, after commit continuous integration will take place 
+automatically. 
+(Developemt (commit) -> Source control (initiate CI process)-> Build (test) -> Testing (report)-> Developemt)
+
+Continuous Integration brings following to software developement - 
+	- Catch issues fast and nip them in the bud.
+	- Everyone can see what's happening.
+	- Automate the build.
+	- Keep the build fast.
+	- Stop waiting to find out if your code's going to work.
+	- Continuous Integration leads to Continuous Deployment allowing you to deliver software more rapidly.
+	
+Continuous Integration doesn't remove the bug, but it does make them dramatically easier to find and remove.
+
+Jenkins is a cross platform 
+
+
+
+
+
+
+

@@ -1,0 +1,680 @@
+NEW TUTORIAL SERIES 
+Oracle tutorial By Basha – DurgaSoft (2016)
+
+
+Session 1 – Introduction
+
+Oracle 
+SQL (Basics)
+PL/SQL (Basic)
+SQL (Advanced)
+PL/SQL (Advanced)
+Performance Tuning (Basic)
+Performance Tuning(Advanced)
+
+JVM is inbuild in Oracle database.
+
+- From Oracle 8i (internet) we can build internet based applications. We can interact with internet from i versions directly without using the browser.
+- Examples like sending an email, receiving and email, uploading/downloading of attachments, etc. this kind of things can be performed from oracle application or oracle db directly
+	without using browser.
+- 10g (grid computing) multiple db servers can be connected together. At higher level we can see a single db but there are multiple disks invovked in it. 
+- 12c (c stands for cloud) So wahtever db we have it can be uploaded to the cloud and we can access the db directly from the cloud.
+
+DBMS
+- Data = The fact
+- Colelction of meaningful Data is Information
+- Database - Collection of inter-related Data. Physical Storage.
+- Database Management - Communication To and From the Database. 
+	-Storing, Retrieving, Deleting, Sorting data
+
+SQL (S.Q.L. or Sequel)
+- SQL is a language. Database knows only SQL, it doesn't understand anything apart from SQL.
+	The language which is used to communicate with the Database server.
+- SQL uses Statements to communicate with database server.
+- SQL requires an enviornment (SQL *Plus/ iSQL *Plus / SQL Developer / PL/SQL Developer) to implement its features in the form of Statements.
+- Structured Query Language
+- SQL is a non-procedural language (no programming logic, hence we have pl/sql)
+- SQL is a volatile language (non historic)
+- SQL is a case sensitive language
+- SQL commands cannot be abbreviated 
+- SQL Statements can spread onto multiple Lines
+- SQL is ANSI (American National Standards Institute) standard
+
+
+Session 2 - 
+
+SQL Commands - 
+DDL - Data Defination Language
+DML - Data Manipulation Language
+TCL - Transactional Control Language (Commit, Rollback, Savepoint, Set Transaction)
+DCL - Data Control Language (Grant, Revoke, Set Role)
+
+DDL (Data Defination Language)- 
+1. DDL Commands deal with the structure of objects (defination of the objects)
+2. DDL Commands interact with the database directly (No third party involved in between DDL command and database)
+3. DDL Commands enforce an implicit commit before and after the statement (i.e. every DDL Commands is a three steps process)
+	-> commit
+	-> DDL Commands
+	-> commit
+	
+	Irrespective of success/failture of DDL command first commit will be placed. When DDL Commands is successful then second commit will be placed. 
+4. Cannot undo (rollback) the changes.
+5. DDL commands are faster (performance).
+6. Some of DDL Commands - Create, Alter, Truncate, Rename, Drop, FlashBack, Purge, Comment, etc. (Observe delete is not a DDL Commands, its DML Commands)
+
+
+DML - Data Manipulation Language
+1. DML Commands deal with the data only.
+2. DML Commands interact with the buffer first (dbBuffer) and then database on commit.
+	(Whatever work we do using DML will be initially stored in buffer. And when we do commit then buffer data is moved to database(data files))	(DML -> Buffer -> Database)
+3. We can undo(rollback) the changes. (Buffer content are erased)
+4. DML Commands are slower (performance) (Because of buffer).
+5. Row-Level locks occur implicitly on the modified rows.
+
+DML Commands 
+	---Read Operation (Select)(This is also called as DRL - Data Retrieval Language Command.)
+	---Write Operation (Insert, Update, Delete, Merge) With all this write operation commands there will be a implicit row level locks automatically place on the row we are modifying.
+			Means row level locks are placed automatically on rows that are affected because of our DML write operations. 
+			If we are inserting one row that row will be locked for that particular user.  
+			Same way if 100 rows are modified(deleted/inserted/updated) the all 100 rows will be locked for that particular user who is performing the operation.
+			So once row is locked other user cannot modify that particular row until the lock is released by the owner of the operation. But they can read data even if it is locked.
+	
+	
+TCL - Transactional Control Language (Commit, Rollback, Savepoint, Set Transaction)
+1. Transaction - Starting from DML statement to Commit/Rollback (Implicit/Explicit). A set of DML operations with Commit/Rollback is transaction. 
+2. Commit - To make the changes permanent
+3. Rollback - To undo the previous work done by DML statement.
+4. Savepoint - A temporary saving point within the transaction. 
+				Savepoint store within the buffer only (not DB).
+				No limit for the number of savepoints within the transaction.
+				Use unique names for the savepoints within the transaction.
+				We need to remember the names of the savepoints
+5. All TCL commands are valid within the transaction only.
+(We use Set Transaction to change mode of an transaction)
+
+DCL - Data Control Language (Grant, Revoke, Set Role)
+1. DCL Commands deal with privileges only. 
+2. DCL Commands enforces an implicit commit before and afer the statement.
+3. Cannot undo(rollback) the changes.
+4. Privileges - 
+	- Right to execute a particular type of SQL statement
+	- Right to connect to the database
+	- Right to create a table in your schema 
+	- Right to select the rows from someone else's tables or from some other schema or execute stored procedures
+5. Like DDL they also interact with database directly. So faster. Because no buffer.
+
+
+Session 3 - DDL Commands Part 1.
+
+1. Create - to create new object in db.
+	
+	Make a copy of existing table (With DATA) -
+		---Create table EMP_COPY as select * from EMP; (EMP_COPY will be create with exactly same structure, columns as of EMP and with DATA).
+		
+		---Create table EMP_COPY as select eno, ename, sal from EMP; (Creating a copy of table with selected columns).
+		
+	Make a copy of existing table (Without DATA. Only Structure) -
+		To copy only structure we specify a WHERE condition with some false condition. If we specify a true condition then data will be copied.
+		--- Create table EMP_COPY as select * from EMP where 1=2;
+		
+2. Alter - Modify the structure of object
+		- Adding/ Dropping a column    --With/Without constraints
+		- Hiding the columns
+		- Renaming the columns
+		- Renaming the constraints
+		- Modifying the data types
+		- Modifying size of columns
+			-Increasing/Decreasing 
+			-Without Data
+			-With Data
+		-Adding/Dropping constraints    --With/Without constraint Names	
+		-Enabling/Disabling constraints
+
+		Syntax:
+							   ADD									//for adding a constraint or for adding a new column(single or multiple)
+							   MODIFY								//changing the data type, size
+							   DROP 								//dropping a constraint, dropping a column
+		ALTER TABLE <Tab_Name> RENAME ..........;					//changing the name of constraint, changing the name of the column
+							   SET UNUSED							//hiding a column
+							   ENABLE								//for enabling a constraint
+							   DISABLE								//for disabling a constraint
+								
+		ADD
+		---ALTER TABLE <Tab_Name> ADD Col_Name DataType(size); 	---SIngle Column
+		---ALTER TABLE <Tab_Name> ADD(Col_Name DataType(size)); 	---SIngle Column		
+		---ALTER TABLE <Tab_Name> ADD(Col1 DataType(size), Col2 DataType(size)); 	---Multiple Column
+		
+		MODIFY
+		---ALTER TABLE <Tab_Name> MODIFY <Col_Name DataType(size)>; 	---SIngle Column
+		---ALTER TABLE <Tab_Name> MODIFY(Col_Name DataType(size)); 	---SIngle Column		
+		---ALTER TABLE <Tab_Name> MODIFY(Col1 DataType(size), Col2 DataType(size)); 	---Multiple Column
+		
+		DROP
+		---ALTER TABLE <Tab_Name> DROP COLUMN (Col_Name); 	---SIngle Column
+		---ALTER TABLE <Tab_Name> DROP(Col_Name); 	---SIngle Column
+		---ALTER TABLE <Tab_Name> DROP(Col1, Col2, Col3); 	---Multiple Column
+		
+		SET UNUSED (For hiding the column. When we hide the column that particular column will not be displayed in the select. Hiding will not remove the column from table physically.
+		It will be physically present in table or database. Just logically the column is hiddent. Once the column is hidden we cannot unhide the column. We have only one option to
+		drop hidden column later. Why don't be then drop the column directly? Why hide? Because suppose there are 1 billon rows and then deleting a column with 1 billon records 
+		might take lot of time. So we can hide it first and the later drop when we can give time. This way our business hours are not affected and we can work productively.
+		If a column is hidden, we can add a new column with same name.)
+		
+		---ALTER TABLE <Tab_Name> SET UNUSED(Col_Name); 	---SIngle Column
+		---ALTER TABLE <Tab_Name> SET UNUSED(Col_Name); 	---SIngle Column
+		
+		
+	
+3. Truncate - To remove complete data from the table. Only structure will remain. Cannot perform rollback.	
+
+4. Rename - To change the name of the object. (Table name, columns name)
+				---RENAME Emp TO Employee;
+			
+			Renaming column and constraint is added in 9i Release 2 version onwards - 
+				--- ALTER TABLE Emp RENAME EmpNo TO Eno;
+
+				--- ALTER TABLE Emp RENAME CONSTRAINT pk_emp TO P_EMP;
+								
+6. Drop - To remove object permanently from the db. Data + Structure will be removed. Till oracle 9i if we drop object we cannot restore it. In 10g they introced a concept of 
+			recycle bin so we can restore.
+			
+			---DROP TABLE Emp;
+			
+			Droping column - 
+				--- ALTER TABLE EMP DROP COLUMN ename;
+					OR
+					ALTER TABLE EMP DROP (ename);
+					
+				Multiple columns -
+					---ALTER TABLE EMP DROP (sal, ename);
+			
+			We can also drop constraints.
+						
+7. FlashBack - Added 10g. Till 9i oracle could remove object permanently. But in 10g they have a concept of recycle bin. Same concept of windows recycle bin. As long as the 
+				object is available in recycle bin we can restore the object.
+
+				---DROP TABLE emp;
+					Table emp now available in recycle bin.
+					We can query the recycle bin as - 
+						---SELECT * FROM RECYCLEBIN;	
+								we get objects in recycle bin which are dropped.  
+								we can also use SQL *PLUS command - SHOW RECYCLEBIN;
+				
+					If object is present then we can flashback- 
+					--- FLASHBACK TABLE emp TO BEFORE DROP;
+							emp is now restored in db.
+					
+					--- FLASHBACK TABLE emp TO BEFORE DROP RENAME emp1;
+														
+8. Purge - 	Added 10g. Its like emptying the recycle bin. (i.e. when we drop object will be moved into recycle bin (from here we can restore using FlashBack). 
+			And when we purge, object will be removed permanently from recycle bin).
+
+			---PURGE TABLE emp;
+			
+			After purge if do flashback the we will get error.
+			
+			Like in windows we have shift + delete to permanently delete a file without putting it in recycle bin, similar functionality is there in oracle. 
+			We can permanently delete a object without putting it into recycle bin using another purge syntax - 
+				--- DROP TABLE emp PURGE;
+			
+9. Comment - We can add meaningful comments to tables and the columns of the table. We can have comments till 4000 characters.
+		Syntax - COMMENT ON TABLE <TABLE_NAME> is '<Text>';
+		---COMMENT ON TABLE emp IS 'Employee details';
+			
+		Syntax - COMMENT ON COLUMN <TABLE_NAME.COL_NAME> is '<Text>';
+		---COMMENT ON COLUMN emp.ename IS 'Employee name';
+		---COMMENT ON COLUMN emp.ename IS 'Employee name details';		//This will overrride the previous old comment
+				
+	The table comments or column comment will not be stored as part of table. It will be stored in data dictionary. To see these comments we need query data dictionary views.
+	
+	Viewing comments from data dictionary - 
+		USER_TAB_COMMENTS in this view all the table comments will be stored. 
+		USER_COL_COMMENTS in this view all the column comments will be stored.
+
+	
+Session 4 - DDL Commands Part 1.
+	
+		It was all about ALTER.
+		
+		
+Session 5 -  SQL Commands DML Commands Part - 1.
+
+DML command first interact with buffer then after commit it will be entered into database and becomes permanent. 
+If we do rollback data will be removed from buffer.
+Due to buffer its slower.
+
+Inserting using substitution varaibles - 
+---INSERT INTO emp VALUES(&Eno, '&Ename', '&DOB', &Sal); 	//Now after entering slash(/) it will prompt us to enter values for the substitution varaibles. 
+															//If we againg enter slash then it will again prompt us to enter next record.
+															
+(Slash is a execution symbol for oracle and pl/sql) 
+
+
+Inserting records using records of another table - 
+---INSERT INTO emp1 SELECT * FROM emp;			//entire output of emp will be inserted into emp1. Multiple records can be inserted in one shot.
+
+---INSERT INTO emp1(Eno, Ename, Sal) SELECT (Enum, Enm, Esal) FROM emp;
+
+DELETE VS TRUNCATE =>
+1. DELETE is DML command, whereas TRUNCATE is DDL command.
+2. Rollback is possible in case of DELETE as it is a DML command. Rollback is not possible in case of TRUNCATE as it is DDL command.
+3. Implit commit is not there in DELETE, TRUNCATE has implicit commit. 
+4. Single row of table can be deleted but single row cannot be truncated.
+5. Multiple rows can be deleted. But multiple rows cannot be truncated.
+6. WHERE clause can be used in DELETE. WHERE clause cannot be used in TRUNCATE.
+7. Trigger can be created fired in case of DELETE. Trigger cannot be created on TRUNCATE upto 8i.
+8. TRIGGER from oracle 9i can be created on both DELETE AND TRUNCATE.
+9. Space removal/release of data will not be there incase of DELETE(Space will not be released in case of DELETE). Space will be released in case of TRUNCATE.
+10. Performance of DELETE is slow (due to buffer). TRUNCATE performance is faster.
+
+
+Session 6 -  SQL Commands DML Commands Part - 2.
+
+MERGE - 
+Introduced in 9i. In 9i it was introduced to support insert and update together in single statement. Normally we need to execute insert and update separately and we have to do this
+using pl/sql block.
+In 10g they have extended to delete operation as well.
+
+9i - INSERT + UPDATE //valid
+	 INSERT //invalid
+	 DELETE //invalid
+		(Individual INSERT and UPDATE is not possible)
+
+10g - INSERT + UPDATE + DELETE //valid
+	  INSERT + UPDATE	//valid
+	  UPDATE + DELETE 	//valid
+	  INSERT + DELETE   //invalid
+	  INSERT   //valid
+	  UPDATE   //valid
+	  DELETE   //invalid	
+
+Even in 12c same thing will happen as 10g.
+
+--- MERGE INTO emp1 a 
+	USING emp2 b
+	ON (a.eno = b.eno)				//columns present in condition here cannot be updated in update statement
+	WHEN MATCHED THEN
+		UPDATE SET ename = b.ename, sal = b.sal, dob = b.dob;
+	WHEN NOT MATCHED THEN
+		INSERT [(eno, ename, dob, sal)] VALUES(b.eno, b.ename, b.dob, b.sal);
+		
+		
+--- MERGE INTO emp1 a 
+	USING (SELECT * FROM emp2) b 	---inline view. We can bring data from any where, using join also. 
+	ON (a.eno = b.eno)				//columns present in condition here cannot be updated in update statement
+	WHEN MATCHED THEN
+		UPDATE SET a.ename = b.ename, a.sal = b.sal, a.dob = b.dob;
+	WHEN NOT MATCHED THEN
+		INSERT [(eno, ename, dob, sal)] VALUES(b.eno, b.ename, b.dob, b.sal);
+
+The target table is always one. 		
+
+
+Session 6 -  SQL Commands. DCL Commands Part - 1.
+
+Data Control Language Commands - 
+
+DCL - Data Control Language (Grant, Revoke, Set Role)
+1. DCL Commands deal with privileges only. 
+2. DCL Commands enforces an implicit commit before and afer the statement.
+3. Cannot undo(rollback) the changes.
+4. Privileges - 
+	- Right to execute a particular type of SQL statement
+	- Right to connect to the database
+	- Right to create a table in your schema 
+	- Right to select the rows from someone else's tables or from some other schema or execute stored procedures
+5. Like DDL they also interact with database directly. So faster. Because no buffer.
+
+Two types of privileges - 
+	1. System Privileges
+		- Available only to administrators and application developers.
+	
+	2. Object privileges 
+		- Allows users to perform a particular action on a specific object.
+			Object privileges are granted to end-users so that they can use a database application to accomplish specific tasks.			
+			Owner of a object can give privileges to other users for those objects.
+
+GRANT - for giving privileges to other users on our own object.
+	
+	--- GRANT Connect, Resource to USER identified by PAssWORD    --Granting 
+	
+	---SHOW USER	
+		o/p > USER is "U1"				// It displays the current user to which we have connected. SHOW is a SQL *PLUS command.
+	
+	U1>---GRANT SELECT on EMP to U2;		-- U2 can SELECT data from U1.EMP	.. U2 will have to specify the owner/schema name as 'U1.EMP' while selecting.
+	
+	U1>---GRANT ALL on EMP to U2;		-- Granting ALL privileges to U2 on U1.EMP.  ALL means whatever privileges U1 has on EMP only those will be granted to U1 (not all privileges of Oracle).
+	
+	U1>---GRANT SELECT, INSERT on EMP to U2, U3; 	--U2, U3 can select/insert data
+	
+	
+	U1>---GRANT SELECT on EMP, DEPT to U2; 	//This is invalid and will throw an error. We cannot GRANT privileges for multiple objects in single statement. 
+											//We need to GRANT privileges on them individually in separate statements.
+
+	U1>---GRANT SELECT on EMP to U2 with GRANT option; 		--In simple statement like 'GRANT SELECT on EMP to U2' U1 is granting privileges to U2, but if U2 wants to GRANT same 
+																privileges he got to another user then directly he cannot. 'with GRANT option' make this possible for U2 to GRANT
+																privileges to some another user.
+	
+	U2>---Select * from U1.EMP;
+	U2>---GRANT SELECT on U1.EMP to U3;		//U2 can GRANT only SELECT not other privileges which he also doesn't have.
+	U3>---Select * from U1.EMP;				// observe U1.EMP
+	
+	In above senario U1 cannot revoke privileges from U3.
+	U1>---REVOKE SELECT on emp from U3;		// not possible. Because U1 is not person who directly granted access to U3. U2 can only REVOKE it.
+	OR U1 CAN REVOKE Privileges from U2 and automatically U3's privileges will also be removed.
+	U1>---REVOKE SELECT on EMP from U2;		// U2, U3 can't SELECT data from U1.EMP
+
+REVOKE - take back the privileges
+		
+		---REVOKE Connect, Resource from USER;			//Revoking ROLES
+		
+		---SHOW USER
+			o/p => USER is "U1"
+			
+		---REVOKE SELECT on EMP from U2;		--U2 cann't select data from U1.EMP
+
+		---REVOKE ALL on EMP from U2;			--Revoking all privileges from U2 on U1.EMP
+		
+		---REVOKE SELECT, INSERT on EMP from U2, U3;
+	
+	
+SET ROLE - Assigning a role to user. Role is collection of privileges.
+			
+	- First we need to create a role. 
+	- Then assign all privileges to that role.
+	- Assign role to user.
+	
+	Creating a role (3 ways)- 
+		--- Create ROLE R1;
+		--- Create ROLE R1 identified by PASSWORD; 	--Creating Role with Password
+		--- Create ROLE R1 not identified; 			--Creating Role without Password
+
+	Assigning privileges to a role - 
+		---Grant P1[, P2, ..., Pn] to R1;
+		
+	Assigning role to a user - 
+		GRANT R1 to U1[, U2, ...., Un];
+		
+	---Alter Role R1 identified by PASSWORD; 	--Adding password	
+
+	---Alter Role R1 Not identified;			--Removing Password
+	
+	---Alter USER U1 DEFAULT ROLE R1;			--Setting DEFAULT ROLE is U1
+
+	In future if we want to add some new privileges to Role R1 then we can do it - 
+	---GRANT SELECT on xyz to R1;
+	All the users who have R1 as role will now also have this new privilege granted to him automatically.
+	
+	Set Role (For Current User)- 
+	---Set Role R1; 	//Setting R1 to the current user
+	---Set Role ALL;
+	---Set Role ALL Except R1;
+	---Set Role None;
+	---Set Role R1 identified by PASSWORD;  //Setting Role with Password
+	
+
+Session 7 -  SQL Commands. TCL Commands Part - 1.	
+	
+TCL - Transactional Control Language (Commit, Rollback, Savepoint, Set Transaction)
+1. Transaction - Starting from DML statement to Commit/Rollback (Implicit/Explicit). A set of DML operations with Commit/Rollback is transaction. 
+2. Commit - To make the changes permanent. 
+3. Rollback - To undo the previous work done by DML statement.
+4. Savepoint - A temporary saving point within the transaction. 
+				Savepoint store within the buffer only (not DB).
+				No limit for the number of savepoints within the transaction.
+				Use unique names for the savepoints within the transaction.
+				We need to remember the names of the savepoints
+5. All TCL commands are valid within the transaction only.
+(We use Set Transaction to change mode of an transaction)
+	
+If we do some DML write operation (insert, update, delete, merge) then changes will go in buffer. This changes will not be relected to other users unless we commit. After commit
+changes will become permanent and go into database. 	
+	
+TCL - Commit.
+		1. Create 	--Implicit
+		
+		2. Insert 
+		   Update
+		   Commit;	--Explicit
+		   
+		3. Insert
+		   Alter 	--Implicit
+		   
+		4. Insert
+		   Commit;	--Explicit
+		   
+		5. Insert
+		   Delete
+		   Drop		--Implicit
+			
+		6. Insert
+		   Delete
+		   Select
+		   Commit;	--Explicit
+	
+		7. Select		//Except this select every thing is part of a transaction.
+		   Insert
+		   Select
+		   Delete
+		   Select
+		   Commit;	--Explicit
+		   
+	
+	TCL - RollBack - Roll[Back]; | Rollback | Roll
+	Rollback is only command where we acn use its short-form as 'roll'. Don't use semicolon.
+	
+	1.  Insert
+		Insert
+		Rollback;		--Explicit
+		
+	2. Insert
+	   Update 		
+	   Roll				-- Explicit. Don't use semicolon when using 'roll' short form else it wont work.
+	   
+	3. Insert
+	   Delete
+	   Alt + F4			--Implicit
+		
+	TCL Savepoint - 
+		A temporary saving point within the transaction. 
+		Savepoint store within the buffer only (not DB).
+		No limit for the number of savepoints within the transaction.
+		Use unique names for the savepoints within the transaction.
+		We need to remember the names of the savepoints
+		
+	Example - 
+	
+	SQL> Insert  
+	SQL> Insert  
+	SQL> Savepoint S1;	
+	SQL> Delete  
+	SQL> Savepoint S2;	
+	SQL> Select	 
+	SQL> Savepoint S3;
+	SQL> Insert  
+	SQL> RollBack to S3;
+	SQL> RollBack to S2;
+	SQL> RollBack; 
+	SQL> Insert
+	
+	
+	TCL - SET TRANSACTION - 
+	This command is used to change the isolation level of the transaction or to restrict the user to perform write operation within the session or within that transaction.
+	This command must be executed at the beginning of the transaction as the first statement of the transaction.
+	
+	SQL> SET TRANSACTION READ WRITE; 	--DEFAULT. That means within a transaction we can perform both read and write operation. (We can perform read - select, write - insert, update
+											delete and merge)
+	SQL> SET TRANSACTION READ ONLY;		-- Only read - select. If try to perform write operation it will throw and error. Once the transaction is completed by commit or rollback 
+											then again the default read-write mode will be set.
+	
+	SQL> SET TRANSACTION ISOLATION LEVEL READ COMMITTED;  --DEFAULT. 
+
+	SQL> SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+	
+	There are two values for isolation level - 
+		READ COMMITTED		--default
+		SERIALIZABLE
+	When we change the isolation level it decides what type of data should be available for us. 
+	Whether we want to see the modified data or we want to see the data which was there before starting the transaction. That decides the isolation level.
+	By default its READ COMMITTED means if we commit in between the pl/sql block those committed changes will be visible to other user or for the same session. 
+	If we don't want to show modified or committed data as part of this pl/sql block then we can change the isolation level of the transaction. 
+	If we change it to SERIALIZABLE then whatever data was present before starting the transaction only that data will be visible even if we make any changes and commit the data.
+	Basic thing is - whether we want to see the modified data after commit, or we want to see data as it was before starting the transaction even after commit.
+	
+	
+Session 7 - Oracle data types - Part - 1.
+
+Till Oracle 8i - 
+1.  CHHAR[(S)]
+2.  VARCHAR(S) | VARCHAR2(S)
+3.  NCHAR(S)
+4.  NVARCHAR2(S)
+5.  NUMBER
+6.  DATE
+7.  RAW(S)
+8.  LONG
+9.  LONG RAW
+10. ROWID
+11. UROWID
+12. BLOB
+13. CLOB
+14. NCLOB
+15. BFILE 
+	
+In 9i - 
+1. Timestamp[(P)]
+2. Timestamp[(P)] with Time Zone
+3. Timestamp[(P)] with Local Time Zone
+4. Interval Year [(P)] to Month
+5. Interval Day [(P)] to Second[P]
+
+1.  CHHAR[(S)]
+	- Fixed length character datatype.		(Means size will not increase automatically once its full)
+	- Maximum size is 2000 byte/ 2000 characters.
+	- Size is optional.
+	- Default size id 1 byte.
+	- Size can be specified in byte/character.
+	- Characters allowed: a-z, A-Z, 0-9, all special characters.
+	- There is a blank padding on right hand side of data(if size is more than entered characters)
+	
+	CHAR
+	CHAR(1) - One byte character
+	CHAR(1 BYTE) - One byte character
+	CHAR(1 CHAR) - One single byte character/2 byte char/ 3 byte char / 4 byte char. Max of size 4byte char but number of char is only one. 
+	CHAR(5) - Number of chars 5. 5 single byte char. Size of each char is one byte.
+	CHAR(5 BYTE) - Number of chars 5. 5 single byte char. Size of each char is one byte.
+	CHAR(5 CHAR) - Totally 5 char. Storage size can be upto max of 4 bytes. Means we can enter multi byte char. 
+	
+2.  VARCHAR(S) | VARCHAR2(S)  (both same. Original was varchar2, later they modified to varchar)
+	- Variable length character datatype.	(Means size will increase automatically once its full)	
+	- Maximum size is 4000 byte/4000 character.
+	- Size is mandatory.
+	- Size can be specified in byte/character.
+	- Characters allowed: a-z, A-Z, 0-9, all special characters.
+	- There is no blank padding.
+	
+	Example for CHAR and VARCHAR - 
+	
+	SQL> CREATE TABLE t_xx (c1 number, c2 char(10), c3 varchar(10));
+	
+	SQL> Insert into t_xx values(1, 'A', 'A');
+	SQL> Insert into t_xx values(2, 'AB', 'AB');
+	SQL> Insert into t_xx values(3, 'ABC', 'ABC');
+	SQL> commit;
+	
+	SQL> SELECT LENGTH(C2), LENGTH(C3) from t_xx;
+	Output => 
+			LENGTH(C2)  LENGTH(C3)
+					10			1
+					10			2
+					10			3
+		
+	This is the different. VARCHAR is variable data type. In CHAR rest of spaces are filled with spaces.
+	
+	SQL> SELECT LENGTH(RTRIM(C2)), LENGTH(RTRIM(C3)) from t_xx;
+	Output => 
+			LENGTH(C2)  LENGTH(C3)
+					1			1
+					2			2
+					3			3
+	
+	Spaces are on right not on left side
+	
+	SQL> SELECT TRANSLATE(C2, ' ', '*'), TRANSLATE(C3, ' ', '*') from t_xx;
+	Output => 
+			TRANSLATE(C2)  TRANSLATE(C3)
+			A*********			A
+			AB********			AB
+			ABC*******			ABC
+	
+3.  NCHAR(S)
+		- Fixed length multi byte character data type
+		- Max size 1000
+		
+4.  NVARCHAR2(S)
+		- Variable length multi byte character data type
+		- Max size 2000
+		
+5.  NUMBER
+		- Allows numeric data
+		- Precision is the total number of digits in the Number(Integer Part + Decimal Part)
+		- Scale is the total no of digits in the decimal part. (Scale range is -84 to +126)
+		- Data is right aligned, default NUMWIDTH in SQL* PLUS is 10
+		- Size is optional, Default precision is 38
+		- Size can be specified in byte/char
+		- Character allowed: 0-9, ., +, -
+
+6.  DATE
+		Stores date and time values
+		
+7.  RAW(S)
+		Used to support binary data and hexa-decimal data. 
+		Size is mandatory. Max size is 2000.
+		
+8.  LONG
+		Deprecated. After introducing LOB. Extension to varchar2. To support more size. Max size 2GB.
+		LONG is still supported in latest version to support Backward Compatibility
+		Only one long column is allowed per table.
+		Long columns are not allowed in WHERE clause.
+		Except NOT NULL, no other Constraint can be defined on LONG Columns.
+		
+9.  LONG RAW
+		Deprecated. Extension to RAW. To support more size. Max size 2GB. Supports Binary and hexa-decimal.
+		
+		
+10. ROWID
+		18 bit/char. 
+
+11. UROWID
+		Universal row id.
+		
+12. BLOB
+		Extention to RAW. Max size is 4GB. In a table either LONG RAW or LONG is allowed. Only one. Coz of this restriction they have BLOB. 
+		Max size 4Gb.
+		Binary and hexa-decimal.
+		Binary Large Object.
+		
+13. CLOB
+		Extention to varchar2. Max size 4Gb.
+		Character Large Object.
+		
+14. NCLOB
+		Multi-byte Character Large Object. N stands for multi byte.
+		
+15. BFILE 
+		Here we don't have any max size limit. Because data will not be stored in db, it will be store in OS. We need a oracle directory to path of OS. It can support images, vedio, 
+		audio, exe, any type of file.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+

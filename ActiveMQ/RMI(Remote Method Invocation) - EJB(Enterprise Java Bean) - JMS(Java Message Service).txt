@@ -1,0 +1,174 @@
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+https://www.tomitribe.com/blog/5-minutes-or-less-activemq-with-jms-queues-and-topics/
+
+
+Very nice tutorial - Tutorial copied on desktop as well
+
+
+Example code in download section.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+The RMI (Remote Method Invocation) is an API that provides a mechanism to create distributed application in java. 
+The RMI allows an object to invoke methods on an object running in another JVM.
+The RMI provides remote communication between the applications using two objects stub and skeleton. 
+
+RMI(Remote Method Invocation)
+
+1. Create the remote interface
+2. Implementation of Remote Interface
+3. Compile, stud and skeleton(rmic - rmi compiler)
+4. Start the registry (We require a registry or a global name because we wont be focusing on object using its address but by using registry name. rmiregistry(tool))
+5. Create and start server
+6. Create and start client
+
+
+EJB (Enterprise Java Bean)- 
+EJB applications is deployed on the server, so it is called server side component also.
+TO run EJB application, you need an application server (EJB container) such as JBOSS(wildfly), Glassfish, Weblogic, Websphere, etc. 
+
+When to use EJB?
+Application needs Remote Access. In other words, it is distributed.
+Application needs to be scalable. EJB application supports load balancing, clustering and fail-over.
+Application needs encapsulated business logic. EJB application is separated from presentation and persistent layer.
+
+Types of EJBs - 
+There are 3 types of enterprise bean in java.
+- Session Bean
+	Session bean contains business logic that can be invoked by local, remote or webservice client.
+
+- Message Driven Bean
+	Like Session Bean, it contains the business logic but it is invoked by passing message.
+
+- Entity Bean
+	It encapsulates the state that can be persisted in database. It is deprecated. Now, it is replaced with JPA(Java Persistent API).
+	
+Difference between RMI and EJB -
+	Both RMI and EJB provides services to access an object running in another JVM(known as remote object) from another JVM. 
+
+	In RMI, middle-ware services such as security, transaction management, object pooling etc. need to be done by the java programmer.
+	In EJB, middle-ware services are provided by EJB Container automatically.
+
+	RMI is not a server-side component. It is not required to be deployed on the server.
+	EJB is a server-side component, it is required to be deployed on the server.
+
+	RMI is build on the top of socket programming.
+	EJB technology is built on the top of RMI.
+	
+EJB and Webservice - 
+	In EJB, bean component and bean client both must be written in java language. 
+	If bean client need to be written in other language such as .net, php etc, we need to go with webservices(SOAP or REST). So EJB with web service will be better option.
+	
+Disadvantage of EJB - 
+	Requires application server
+	Requires only java client. For other language client, you need to go for webservice.
+	Complex to understand and develop ejb applications.
+	
+Session Bean - 
+	Session bean encapsulates business logic, it can be invoked by local, remote and webservice client.
+	It can be used for calculations, database access etc.
+	The life cycle of session bean is maintained by the application server (EJB Container).
+	
+Types of Session Bean - 
+	There are three types of session beans -
+	- Stateless Session Bean: It doesn't maintain state of a client between multiple method calls.
+	- Stateful Session Bean: It maintains state of a client across multiple requests.
+	- Singleton Session Bean: One instance per application, it is shared between clients and supports concurrent access. 
+	
+Stateless Session Bean - 
+	Stateless Session Bean is a business object that represents business logic only. It doesn't have state(data).
+	In other words, conversational state between multiple method call is not maintained by the container in case of stateless session bean.
+	The stateless bean objects are pooled by the EJB container to service the request on demand.
+	It can be accessed by one client at a time. In case of concurrent access, EJB container routes each request to different instance.
+	
+Annotations used in Stateless Session Bean:
+Three important annotations used in stateless session bean:
+	- @Stateless
+	- @PostConstruct
+	- @PreDestroy
+	
+Life cycle of Stateless Session Bean-
+	There is only two states of stateless session bean: does not exist and ready.
+	
+	Does Not Exits
+	Dependency Injection, if any
+	@PostConstruct callback, if any
+	Method call invoked by client
+	@PreDestroy callback, if any
+	
+Stateful Session Bean-
+	Stateful Session bean is a business object that represents business logic like stateless session bean. But, it maintains state(data).
+	In other words, conversational state between multiple method calls is maintained by the container in stateful session bean.
+	
+Annotations used in Stateful Session Bean -
+	There are five important annotations used in stateful session bean:
+	- @Stateful
+	- @PostConstruct
+	- @PreDestroy
+	- @PrePassivate
+	- @PostActivate
+	
+(When we are developing and EJB application we will develop three projects - 1. EJB project which will contain all the business logic(which client will invoke) 
+	2. Web Application(Client) 3.Java Enterprise Application (In this ear we will add jar of EJB application and war of web application))
+
+Check the Example at  - https://www.javatpoint.com/stateful-session-bean
+
+JMS(Java Message Service) - 
+	JMS is an API that provides the facility to create, send and read messages. It is provides loosely coupled, reliable and asynchronous communication(automatically messages can be detected).
+	JMS is also know as a messaging service.
+	
+Understanding Messaging -
+	Messaging is a technique to communicate application or software components.
+	JMS is mainly used to send and receive message from one application to another.
+	
+Requirement of JMS -
+	Generally, user sends message to application. But, if we want to send message from one application to another, we need to use JMS API.
+	Consider a scenario, one application A is runing in INDIA and another application B is running in USA. To send message from A application to B, we need to use JMS.
+	
+Advantages of JMS - 
+	Asynchronous: To receive the message, client is not required to send request. Message will arrive automatically to client.
+	Reliable: It provides assurance that messsage is delivered.
+	
+Messaging Domains - 
+	There are two types of messaging domains in JMS - 
+	- Point-to-Point(PTP) Messaging Domain.
+	- Publisher/Subscriber Messaging Domain.
+
+Point-to-Point(PTP) Messaging Domain - 
+	In PTP model, one message is delivered to one receiver only. Here, Queue is used as a message oriented middleware(MOM).
+	The Queue is responsible to hold the message until receiver is ready.
+	In PTP model, there is no timing dependency between sender and receiver.
+
+Publisher/Subscriber Messaging Domain - 
+	In Pub/Sub model, one message is delivered to all the subscribers. It is like broadcasting. Here, Topic is used as a message oriented middleware that is responsible to hold 
+	and deliver messages.
+	In this model there is timing dependency between publisher and subscriber.
+	
+Check example implemented in eclipse for JMS.
+
+Message Driven Bean - 
+	A message driven bean (MDB) is a bean that contains business logic. But, it is invoked by passing the message. So, it is like JMS Receiver. (When message arrives execute the business logic.)
+	MDB asynchronously receives the message and processes it. 
+	A message driven bean receives message from queue or topic, so you must have the knowledge of JMS API.
+	A message driven bean is like stateless session bean that encapsulates the business logic and doesn't maintain state.
+	
+Message Driven Bean Example - 
+	To create the message driven bean, you need to declare @MessageDriven annotation and implement MessageListener interface. 
+	
+	package com.javatpoint;  
+	import javax.ejb.MessageDriven;  
+	import javax.jms.*;  
+	  
+	@MessageDriven(mappedName="myTopic")  
+	public class MyListener implements MessageListener{  
+		@Override  
+		public void onMessage(Message msg) {  
+			TextMessage m=(TextMessage)msg;  
+			try{  
+			System.out.println("message received: "+m.getText());  
+			}catch(Exception e){System.out.println(e);}  
+		}  
+	}  
+	

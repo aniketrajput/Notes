@@ -1,0 +1,135 @@
+
+Basic concepts -
+- Five sources of income
+- Deductions Under 80C, 80CCD etc
+- Taxable income
+- Income tax slab (tax rates)
+- Income Tax Rebates (U/s 87A)
+
+- Five sources of income
+	1. Income from salaries
+	2. Income from house property (rent of house)
+	3. Income from business/profession
+	4. Income from Capital gain(you had purchased some property few years back and now you are selling it, MF, share)
+	5. Income from any other sources (FD, Saving, lottery, etc.)
+
+	Total of all the above income is called Gross total income.
+	
+	Government offers some deduction on our income. It is a bunch of deductions called - Deductions U/s 80 C (Limit Rs. 1,50,000)
+	
+	- Deductions U/s 80 C - PF, PPF, LIC, Housing loan principal, Fixed deposit, NSC(National Saving Scheme), ELSS, Tution Fees of children
+	- NPS Deductions U/s 80 CCD (Limit Rs. 50,000)
+	- Deduction U/s 80 D (Mediclaim)
+	- Deduction U/s 80G (NGOs. Only few ones. May be not complete 100%.)
+	- Deduction U/s 80 TTA (Limit Rs. 10,000) Saving bank interest
+	
+	Whatever amount is remaining after all these deductions it will be a taxable income. 
+	
+- Income tax slab (tax rates)
+	(From 1st April 2019 to 31st March 2020)
+	
+	Taxable Income 				Tax Rate
+	Up to Rs 2.50L 					NIL
+	Rs. 2.50L - Rs. 5.00L			5%
+	Rs. 5.00L - Rs. 10.00L			20%
+	Rs. 10.00L and above 			30%
+
+Whatever tax liability will come you need to add 4% to it for Health & Education Cess (Health and Education Cess @ 4% is applicable on the Income tax)
+
+Rebate of Rs. 12,500 U/s 87A is available if Taxable income is up to Rs. 5.00L (that means we can subtract rebate from tax liability)
+
+- House Rent Allowance
+	Condition 1 : HRA should be actually received from the employer
+	Condition 2 : Employee should be living in a rented house
+	
+	Amount of Exemption
+		Least of the following three will be the amount of exemption (means which ever is less will be considered):
+			- Actual HRA received 
+			- Actual Rent Paid - 10% of [Basic + DA]
+			- 50% of [basic salary + DA] for those living in metro cities 
+				(40% for non-metros)
+	
+	Note: If you are not getting HRA but if you are paying rent than you can get deductions U/s 80GG which is upto Rs. 60,000 (Rs. 5000 per month)
+
+Standard Deduction - 
+	- Flat deduction of Rs. 50,000 is available from FY 2019-20
+	- Available to every employee without any condition
+	- Limit is increased from Rs. 40,000 to Rs. 50,000 in the recent Budget
+	
+Housing Loan -
+	EMI (Equitable Monthly Income) is divided into two components - 
+		Interest Component 					+ 				Principal Component
+		Deduction upto Rs. 2L U/s 24(b)						Deduction U/s 80C is available
+		(Under income from House Property Head)				(Subject to combined Limit of Rs. 1.50L)
+
+	Note: Apart from interest and principal you can also claim Stamp duty and Registration Charges U/s 80C
+	
+
+Mediclaim Deduction (U/s 80D) - 
+	
+	Scenario 							Premium Paid											Deduction U/s 80D			
+										Self, spouse, Children 		Parent	
+1.	Individual and parents below
+	60 years							25,000						25,000						50,000
+
+2.	Individual below 60 and parents 
+	above 60 years						25,000						50,000						75,000
+
+3.	Both above 60 years 				50,000						50,000						1,00,000
+
+Note: Deduction of preventive health check ups can be claimed to the extent of Rs. 5000
+
+
+Rebate u/s 87A is increased from Rs. 2500 to Rs. 12,500 if taxable income is up to Rs. 5.00L (Means if taxable income is upto 5.00L we can make use of rebate. For above 5.00L we can't use it)
+	
+Formula to calculate tax - 5% of (Taxable income - 2.5L (Because its tax free))
+
+Understand the slab - 
+	Example -  
+				Gross Salary   -   6,50,000
+				Deduction 80C  -   1,00,000
+				Taxable Income -   5,50,000		- he is not eligible for tax rebate now, above 5.00L
+				
+	Now his will be calculated as - 
+																														
+	Taxable Income 				Tax Rate
+	Up to Rs 2.50L 					NIL																											0	
+	Rs. 2.50L - Rs. 5.00L			5%			(5,00,000 - 2,50,000) * 5/100  i.e. 5% on 2.5L (because first 2.5L no tax and till 5.00L 5%) = 12,500
+	Rs. 5.00L - Rs. 10.00L			20%			(5,50,000 - 5,00,000) * 20/100 i.e remaining 50,000 will be consider in 3rd slab			 = 10,000
+	Rs. 10.00L and above 			30%																											0
+																																	Total	   22,500 Tax
+																																	
+																																	
+																																	
+																																	
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+What is ITR - 
+
+7 ITR forms - ITR1, ITR2, ITR3, ITR4, ITR5, ITR6, ITR7
+
+We need to fill ITR 1.
+
+Documents - Form 16, Bank Statement (1st April 18 - 31st March 19)
+
+View form 26AS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

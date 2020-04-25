@@ -1,0 +1,2634 @@
+
+Step 01 - Installing Docker - Docker
+
+	
+Quick Tip for Windows 10 : Use 192.168.99.100 in URL instead of localhost
+
+	Quick Tip for Windows 10 : Use 192.168.99.100 in URL instead of localhost
+	If you are using Window 10 and are using docker toolbox
+
+	=> Use 192.168.99.100 instead of localhost.
+
+	Note: If 192.168.99.100 does not work, you can find the IP by using the command docker-machine ip
+
+	Reason
+
+	In Window 10 when using docker toolbox , docker is configured to use the default machine with IP 192.168.99.100
+
+
+Step 02 - Your First Docker Usecase - Deploy a Spring Boot Application
+
+	docker --version		=> Docker is installed
+
+	Deploy an application => docker run in28min/todo-rest-api-h2:1.0.0.RELEASE
+	
+		After this command we can see logs like - 
+			
+			Unable to find image 'in28min/todo-rest-api-h2:1.0.0.RELEASE' locally
+			1.0.0.RELEASE: Pulling from in28min/todo-rest-api-h2					//downloads the application
+			....
+			And then Spring boot application launches up.		//But we don't have java installed on machine then how its running?
+			
+		Check C:\Users\inarajp\Desktop\Notes\MasterDockerWithJavaAndSpringUdemy\TraditionalDeployment.JPG
+		
+		
+	Magic of Docker - Makes delpoying applications a Cake Walk.
+
+	
+Step 03 - Docker Concepts - Registry, Repository, Tag, Image & Containers	
+	
+	In previous vedio we say that the application gof downloaded and it was launched up. 
+	So from where did the application got downloaded?
+	
+	When we execute command => docker run in28min/todo-rest-api-h2:1.0.0.RELEASE, an image is downloaded from Docker Registry - https://hub.docker.com
+	A Registry contains a lot of repositories, alot of different versions of different applications. 
+	This is a public registry so anybody can access this. Typically when we are working in an enterprise we will be working on private repositories so that our images can be accessed only by somebody with right credentials. 
+	
+	To locate our application we can type https://hub.docker.com/r/in28min/todo-rest-api-h2
+	
+	So https://hub.docker.com is a registry which can contain mutiple repositories
+	And inside that in28min/todo-rest-api-h2 is a repository storing all the versions of a specific application. So this is something that hosts a number of tags. And we specified 1.0.0.RELEASE as the version we want to use.
+		
+		Default Registry(hub.docker.com) > Repository (in28min/todo-rest-api-h2)	> Tag(1.0.0.RELEASE)
+		
+	Now if we see the image size is 102.77 MB, so what does it contains? It contains all the things that our application needs to run. It contains the right software, like specific version of java. It contains all the library your API needs. And it contains any other dependency that our application might need to be able to run.
+	
+	So when we executed this command - docker run in28min/todo-rest-api-h2:1.0.0.RELEASE, a image was download to our machine, so a local image was created, and it is runned as an application in our machine. And this is what is called a container. 
+	
+	Image - A Static Template - A set of bytes. 
+		On the repository image is set of bytes. 
+		When its downloaded, even then image is just a set of bytes. 
+		And when its running its called a Container.
+		
+	Container - Running/dynamic version of your image. 
+	
+	So Image is the static version and container is the running version. 
+	
+	For the same image we can have multiple container running. 
+	
+	Image is like a Class. Container is like an object!
+	
+	
+	Now we know that the application has launched up and is running, but how do we access it? In logs we can see -
+		Tomcat started on port(s): 5000 (http) with context path ''
+	Its running on port 5000.
+		
+	http://localhost:5000/hello-world - Got error 
+	
+	Press Ctrl + C to stop the container.
+	
+	This time we will run the command with an option => docker run -p 5000:5000 in28min/todo-rest-api-h2:1.0.0.RELEASE
+	
+		-p 5000:5000 => -p {HostPort}:{ContainerPort}					//Publish container port to host port to be able to access the application
+	
+	By default any container that we run is part of something called bridge network in docker. We can kind of think of it as a internal docker network. Nobody will be able to access it, unless we specifically expose it on the host on to the system where you container is running.
+	So by suing above command we are saying that I would want to take the internal port i.e. 5000 and map it to a host port. So now we will be able to access the application on port 5000 - http://localhost:5000/hello-world. 
+	
+	In command => docker run -p 5000:5000 in28min/todo-rest-api-h2:1.0.0.RELEASE
+		in28min/todo-rest-api-h2 => is name of repository 
+		1.0.0.RELEASE => is which tag to get
+
+
+Step 04 - Playing with Docker Images and Containers
+
+	We want our application to be always running. We don't want it to get killed whenever we do Ctrl + C. 
+	We can add a option -d, which stands for detached mode. So we want to run the container in the background. We don't want to tie up the terminal to the lifecycle of the container.
+	
+		docker run -p 5000:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE
+
+	In the logs we will just get container id. 
+	
+	To check logs - docker logs {id of the container}
+		- docker logs 80ddb9bf7866a305f1d0292551ecca9ee005e044663d8176f5fd48963b45551e
+		
+	We cna also type subset of id 
+		- docker logs 80dd
+	
+	If we want to keep following the logs, add option -f =>
+		
+		- docker logs -f 80dd		//it will start following the logs of the application, if any new logs comes in we would be able to see it.
+		
+	
+	http://localhost:5000/jpa/users/in28minutes/todos		=> we can see logs being followed, query is displayed.
+	
+	Again to unfollow press- Ctrl + c
+	
+	
+	Now we would want to see what containers are running => docker container ls
+	
+	Now we want to launch up another container from same image. So we can run another verison/instance of same application on port 5001.
+		docker run -p 5001:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE
+		
+	So now we have two instances of application running. 
+	
+	docker container ls => can see that two containers are ruuning, from same image. This command shows running containers.  
+
+
+	docker images => will show all the images that are present in our machine. It will show images which are local to use, the images that are pulled. 
+
+	docker container ls -a => show all the containers irrespective of there status, Running and Stopped.
+	
+	docker container stop {id of container}	=> to stop the running container
+	
+	
+Step 05 - Understanding Docker Architecture - Docker Client, Docker Engine
+	
+	Check diagram - C:\Users\inarajp\Desktop\Notes\MasterDockerWithJavaAndSpringUdemy\Docker_Architechture
+	
+	The place where we were running the commands in, is called a Docker Client. And when we type something in Docker Client the command is send out to something called as Docker Deamon or Docker Engine for execution. 
+	So even the local installation of docker uses a client-server kind of architechture. 
+	So when we install Docker Desktop, we were installing both the Docker client and Docker deamon. 
+	Docker Deamon is responsible for managing the Containers, Local Images and it is responsible for pulling something from Image Registry or pushing a locally created image to Image Registry.
+	
+	If the image is alrady on local, Docker Deamon know about it and it won't download it again after running the command. 
+	
+	So if we exectue an command with new tag => docker run -p 5000:5000 in28min/todo-rest-api-h2:1.0.0-SNAPSHOT	, Docker Deamon would know that it is not present locally so it will download it and run it as a container.
+	
+	One of the additional capabilities that Docker Deamon has it can process instructions to create images as well. We can later push this image to the Image Registry. 
+	
+
+Step 06 - Why is Docker Popular?
+	
+	Check diagram C:\Users\inarajp\Desktop\Notes\MasterDockerWithJavaAndSpringUdemy\Deployments_Using_Docker
+	
+	Installing docker on local machine is easy. But these days most of our enviornments are deployed on cloud. We can install docker on cloud also very easily. 
+	Most of the cloud providers provides container based services. So they provide services where we just need to tell, run this container and it will automatically run on the cloud. 
+	
+	Before docker virtual machines where very popular.
+	
+	Check diagram - C:\Users\inarajp\Desktop\Notes\MasterDockerWithJavaAndSpringUdemy\Deployments_Using_Virtual_Machines
+	
+	We had Hypervisors to manage Virtual Machines. 
+	
+	Major problems with these VMs were that they were heavy weight. We had two OS - HostOS and GuestOS. This made the whole thing a little heavy.
+	
+	In Deployments_Using_Docker if we had a infrastructure and HostOS installed, we then just need to install Docker Engine for that OS and Docker will take care of managing those Containers. The docker image contains all that is needed to run a container - libaries, softwares, etc. As there is only one OS, this is light weight and very efficient.
+	
+	This is why all the cloud providers, provides a number of services around docker. 
+	
+	Today its very easily to deploy something related to docker on to any of the cloud providers.
+	
+	Azure provides a service called Azure Container Service. 
+	
+	AWS provides a service called Elastic Container Service.
+	
+	
+Step 07 - Playing with Docker Images
+
+	- docker image
+
+	We can give multiple tags to a same image. 
+	
+	- docker tag in28min/todo-rest-api-h2:1.0.0.RELEASE in28min/todo-rest-api-h2:latest 	=> same image with a new tag latest, image id for tag 1.0.0.RELEASE and latest will be same i.e. image is same but there are two tags. 
+	
+	- docker pull mysql			=> here we haven't specified any tag. So it will pull by default the tag with name 'latest'
+									latest might not be the most recent and might not even be present somethimes. 
+									Pull command will just download image from registry to local machine, it will not run the image. 
+									To run we will use docker run, docker run will check if image is present, if not then it will download it. 
+									
+	- docker search mysql		=> search any image that will contain mysql, we can see id its official image. 
+	
+	mysql is an Official image. Docker Oficial images are curated set of Docker repositories. Docker has a team which looks at these images, make sure they are meeting certain standards and they publish all the contents in the official images. 
+
+	So whenever we want to use a image like, mysql, tomcat, java, etc. make sure we are using an official image. 
+	 
+	- docker image history {image id}		//instead of image id we can also use repository:tag
+											We would see steps invovled in creating that image. 
+	
+	- docker image inspect {image id}		// we can see a lot of details. 
+	
+	
+	- docker image remove {image id} //we can remove the image from the local, not from the docker registry
+		
+	
+Step 08 - Playing with Docker Containers
+
+	Earlier we created a container using command => docker run -p 5000:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE. 
+	This command is shortcut to => docker container run -p 5000:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE	
+	Thing we need to understand is we are running a container.
+	
+	- We can pause and unpause a container => docker container pause {some unique identifier of id}	//if we access the url it won't access now. 
+	
+	- To unpause => docker container unpause {unique identifier of id}
+	
+	- docker container inspect {container id}	=> similar to docker image inspect 
+	
+	- docker container prune  		=> this will remove all the stopped container. Before this we can check using => docker container ls -a
+	
+	
+	- docker container stop {id of container}  => 
+		stop command gracefully shutdowns the container. Container is given sometime to finish its process, if we see the logs we can see that its, shutting down ExecutorService, Closing JPA EntityManagerFactory, dropping the tables, sequences, closing connection pool, etc. 
+		
+		when we do container stop the signal which is send to container is called SIGTERM, it means take time and gracefully close
+		stop => SIGTERM => graceful	shutdown
+		
+	- docker container kill {id}		
+		//container stops as it is. 
+		signal semd is SIGKILL.
+		kill => SIGKILL => immediately terminates the process.
+		
+	- docker run -p 5000:5000 -d --restart=always in28min/todo-rest-api-h2:1.0.0.RELEASE
+		Here we have added a restart policy of 'always'. Other value for restart policy is 'no'. Default is 'no'. 
+		
+		Now after executing above command container is started, now again stop it. Now what 'always' will do is, when we restart our docker desktop and check using cmd => docker container ls -a, we will find that this container is running. It was automatically started. 
+		Whenever the Docker Deamon restarts, it sees if there are any container with restart policy as always. If yes it will launch those. 
+		
+		The only way to again stop this restart is to do => 
+			docker container stop {id}
+			docker container prune 
+		Now as we have deleted that container completely there is no container with restart policy always. 
+	
+	
+Step 09 - Playing with Docker Commands - stats, system		
+		
+	- docker events		
+		we can what events are happening. Open two cmds, in one run => docker events, do something in another, we can see events in first cmd of what is happening. Like if we start a container we can see logs like - volume createm container create, network connect, volume mount, etc. 
+		It keeps running continously. We can see whats happening in background.
+		
+	- docker top
+		used to check what is the top process which is running in a specific container. We can see process that are running in that container. 
+
+	- docker stats 
+		It will show all the stats regarding the containers which are running. Like CPU used, memory, name, limit, etc. 
+	
+	Now we run another container from the same image on port 5001, and for this one we want to add a specific memory and cpu limit => docker run -p 5001:5000 -m 512m --cpu-quota 5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE,
+	-m 512m tell that this container can use only 512mb of memory. 
+	--cpu-quota 5000, typically the entire quota which is present is 100000 i.e. 100000 = 100% and 5000 = 5%
+	
+	- docker system df 
+		helps us to look up at all the different things that our docker deamon manages - images, containers, local volumes, etc. 
+	
+	
+Section 3: Import All Java Spring Boot Projects for Docker	
+	
+	Importing Docker Projects
+	
+	We will create docker images for the project from git repository and run them as part of docker containers. 
+	
+	So we imported not all projects for now, but 01 - 04 and from 05 only currency-conversion-service and currency-exchange-service. We didn't import - netflix-eureka-naming-server and netflix-zuul-api-gateway
+	
+	
+Section 4: Docker with Java Spring Boot Hello World Rest API
+	
+Step 01 - Setting up 01 Spring Boot Hello World Rest API in Local
+	
+	Up till now we were using a pre-created docker images, however when we are working for a project we would want to create a image for the project. 
+	
+	If we read readme.md file of hello-world-rest-api project we can see it exposes 3 rest apis. 
+	
+	
+Step 02 - Build Docker Image Manually for 01 Hello World Rest API
+
+	Check readme.md for all command and steps. 
+
+	We will do a manual approach to build a docker image => 
+	
+		Building a Docker Image for Hello World Rest API 
+			- Build a JAR	
+				packaging is jar		
+				To build - mvn clean package
+				Name of the jar comes from <build><finalName>hello-world-rest-api
+				\target\hello-world-rest-api.jar
+				
+			- Setup the prerequisites for running the JAR
+				- openjdk:8-jdk-alpine	
+					we need java, so we will use openjdk image. It already contains JDK installed. Alpine - A minimal Docker image based on Alphine Linux. It is a small jar and it only contains essentials to run java.
+					
+					Once jar is build, execute following command => docker run -dit openjdk:8-jdk-alpine
+					
+					Above command will download the image and we can see that a container is created and its id is shown. 
+					
+					option -dit => -d allows to run a container in detached mode i.e. container is running and we are still able to run commands in the terminal. 
+						-i = --interactive, -t = --tty. In combination, -it allows you to run commands on a running container. 
+						-it is interactive shell.
+						We can execute command against the running container, like => docker container exec infallible_wozniak ls /tmp (see whats in tmp folder, we can use name or id of container)
+				
+			- Copy the JAR	(into openjdk image)
+				
+				command to copy jar => docker container cp target\hello-world-rest-api.jar infallible_wozniak:/tmp
+				we can check if jar is in tmp => docker container exec infallible_wozniak ls /tmp
+								
+			- Run the JAR	(as part of container)
+				
+				Before running the jar we need to do following two steps - 
+					1. save the container which we have created as a image => docker container commit infallible_wozniak in28min/hello-world-rest-api:manual1	
+							in28min/hello-world-rest-api:manual1 => name which we want to give 
+							We are saying that repository name is in28min/hello-world-rest-api and tag is manual1
+						
+							if we check using => docker images, we can see that a new image has been created from that container with given name and tag
+						
+					Now lets run the image => docker run in28min/hello-world-rest-api:manual1	
+						,BUT this won't actually run the image. Check => docker container ls. We can see the image with our name is not running.
+						The reason why its not running is because we didn't attached anything to run at startup. 
+						When we run a specific image, we need to say that this the jar file that has to be lauched at startup.
+					
+					2.  We cam do this by => docker container commit --change='CMD ["java","-jar","/tmp/hello-world-rest-api.jar"]' infallible_wozniak in28min/hello-world-rest-api:manual2
+							We added a startup command by using --change option and passing it a command. 
+							This time we gave name of the image as - in28min/hello-world-rest-api:manual2
+							
+							Above command will work fine in mac and linux for windows single quotes are not allowed, so use below command- 
+								docker commit --change="CMD ["""java""", """-jar""", """/tmp/hello-world-rest-api.jar"""]" infallible_wozniak in28min/hello-world-rest-api:manual2
+							
+							We can ckeck using => docker images, a new image with tag manual2 is created. 
+					
+					Now we can run => docker run -p 8081:8081 in28min/hello-world-rest-api:manual2			
+						We are also publishing the port in this command
+				
+						If application is running on 8081 in STS, then we can either kill it in STS or we can change the host port and keep the container port same, like => 
+							docker run -p 8082:8081 in28min/hello-world-rest-api:manual2
+	
+		
+	We can just tell our friend that this the repo name and tag name use. 
+	
+	This entire process is manual. Even if we make a small change, we will have to rebuild the jar and follow all the following process. 
+	
+
+Quick Tip for Windows 10 : Use 192.168.99.100 in URL instead of localhost
+If you are using Window 10 and are using docker toolbox
+
+=> Use 192.168.99.100 instead of localhost.
+
+Note: If 192.168.99.100 does not work, you can find the IP by using the command docker-machine ip
+
+Reason
+
+In Window 10 when using docker toolbox , docker is configured to use the default machine with IP 192.168.99.100
+	
+	
+Step 03 - Use Dockerfile to Build Docker Image
+	
+	We will now automate the manual process.
+	
+	In project create file Dockerfile => name should be same and no extension. 
+	With file we can specify the instrutions we would want to use while creating the image. 
+	
+	Dockerfile contents:
+	
+		- Base image, from which image our container should be created.
+			FROM openjdk:8-jdk-alpine
+		
+		- Copy the jar
+			Add target\hello-world-rest-api.jar hello-world-rest-api.jar	
+				ADD {jar name} {copy the jar with same name(jar name)}
+				This command is just telling that when an image is created from above container, copy this jar and keep name of that jar as specified. 
+				
+		- Set the command that need to run on startup
+			ENTRYPOINT ["sh", "-c", "java -jar /hello-world-rest-api.jar"]
+				sh => in shell
+				-c => execute a command
+				which command => java -jar /hello-world-rest-api.jar
+
+	In cmd, this command will now actually create the image and it will read the Dockerfile instructions and it will create the image from openjdk container by adding jar to it and setting an entrypoint 
+		=> docker build -t in28min/hello-world-rest-api:dockerfile1 .
+			-t => tag, we need to specify tag
+			dot(.) => represents current folder - Build Context
+			We are executing this command by going into project directory, it will read Dockerfile and create a image with specified tag. We can check. 
+			
+	Now we can run that image => docker run -p 8081:8081 in28min/hello-world-rest-api:dockerfile1		
+
+
+Step 04 - Understanding Docker Image Layers, Caching and Dockerfile
+
+	Understand whats going in background of automated process. 
+
+	- docker history in28min/hello-world-rest-api:dockerfile1
+
+	Docker layers are chached. We didn't change any thing and didn't rebuild and we are executing the command again => docker build -t in28min/hello-world-rest-api:dockerfile1 .
+	We can see that its using everything from cache. Its not really creating a new image. Its using already created image from the previous command. 
+	
+	Now lets add another instruction in Dockerfile => EXPOSE 8081
+		Thing to understand is that this will not publish the port. 8080 will not be available on the host, for that we will have to use -p option. EXPOSE 8081 is just the information for the outside world. Its informing that this container will run on the internal network on port 8081.
+		It just add metadata.  
+	
+	After adding this lets run the build again => docker build -t in28min/hello-world-rest-api:dockerfile1 .
+	
+	We didn't rebuild because we had modfied Dockerfile. If we modify any other project file, we need to rebuild. 
+
+	Here we say how docker uses cache if no changes are there and how it only creates new layer for the one which is changed and takes rest from cache.
+	
+	There are many other docker instructions like - 
+		ENV - add enviornment variables
+		Maintainer - information about who created this specific image
+		
+		We can add labels on top of our image, we can add a health check, we can set working directory, and we can also run stuff when we are creating this image.
+
+
+Quick Tip for Windows 10 : Enable "Expose Demon without TLS option"
+	If you are using Windows 10 and docker version : Version 2.0.0.3 (31259) or above, you would need to Enable Expose Daemon without TLS option!
+
+	Step 1: Right click on "Docker Desktop is running icon "
+
+	Step 2: Click on Settings
+
+	Step 3: In “General Tab” you must enable checkbox “Expose Daemon on tcp://localhost:2375 without TLS”
+
+
+
+	This is the error you would see in the subsequent steps if you do not enable this - java.net.ConnectException: Connection refused: connect
+
+
+Step 05 - Using Dockerfile Spotify Plugin to Create Docker Images
+
+	We can make this more easier by using maven plugins.
+	
+	One of the popular plugin is - https://github.com/spotify/dockerfile-maven
+	This Maven plugin integrates Maven with Docker.
+	
+	This plugin doesn't do anything fancy. We already created docker file and this plugin adds some additional things on top of it. 
+	This plugin integrates with the maven build process. 
+	
+	We can configure the plugin in such a way that when we run a mvn package, the jar file will be build and also the image will also be build. 
+	
+	<plugin>
+		<groupId>com.spotify</groupId>
+		<artifactId>dockerfile-maven-plugin</artifactId>
+		<version>1.4.10</version>
+		<executions>
+			<execution>
+				<id>default</id>			//what it would do by default, is to tie up with package phase of maven build and executes the build which creates the docker image 
+				<goals>
+					<goal>build</goal>		//we are saying, tie up with maven build lifecycle and build the image
+				</goals>
+			</execution>
+		</executions>
+		<configuration>
+			<repository>in28min/${project.name}</repository>
+			<tag>${project.version}</tag>
+			<skipDockerInfo>true</skipDockerInfo>
+		</configuration>
+	</plugin>
+
+	Now after adding this plugin, when we do => mvn package(can do in STS or on cmd), we can see that image is also gets build, earlier only jar was getting build. 
+	We can see all the steps which were happening with command => docker build -t in28min/hello-world-rest-api:dockerfile1 .
+
+	So this plugin integrates docker build as part of our maven build process. 
+	
+	We can now run it => docker run -p 8081:8081 in28min/hello-world-rest-api:0.0.1-SNAPSHOT
+
+	Again if make any chages, we will do => mvn package -DskipTests
+	And then run it.
+	
+	
+Step 06 - Create a generic reusable Dockerfile
+
+	We will see how we can create a docker file, which are common accross multiple projects. 
+	
+	FROM openjdk:8-jdk-alpine
+	EXPOSE 8081
+	ADD target/*.jar app.jar
+	ENTRYPOINT ["sh", "-c", "java -jar /app.jar"]
+
+	This can be used in any project, the only thing we might need to change can be the port. 
+
+	We can now build => mvn clean package -DskipTests
+		We can see whatever jar is created is copied as app.jar
+		Name of the image we have specified in the maven plugin i.e. repository name and tag
+	
+	Run => docker run -p 8081:8081 in28min/hello-world-rest-api:0.0.1-SNAPSHOT		
+	
+
+Step 07 - Improving Caching of Docker Images by Adding Libraries in a Separate S
+
+	We will focus on other ways to create image and to create image efficiently. 
+	
+	We will focus on making the image layer even more cachable.
+	
+	What we have now => 
+	
+		--------------- 
+		  FAT JAR
+		--------------- 
+		    JDK
+		--------------- 
+
+	We have jdk and on top of it we are copying the fat jar. This fat jar is created by spring boot maven plugin. 
+	This jar contains - 
+		- maven dependencies
+		- class files and properties files
+		
+	Now maven dependencies won't change very often. So we want - 
+
+		--------------- 
+		   CLASSES   
+		---------------
+		 DEPENDENCIES 
+		---------------
+		    JDK      
+		---------------
+	
+	Classes will be what will change most of the time. So most the time DEPENDENCIES and JDK these two layers will be cached. Right now only JDK layer is being cached. 
+	
+	To do this, we will have to split the fat jar into its individual component. We can do it using maven dependency plugin using goal unpack -
+	
+		<plugin>	
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-dependency-plugin</artifactId>
+		<executions>
+			<execution>
+				<id>unpack</id>
+				<phase>package</phase>
+				<goals>
+					<goal>unpack</goal>
+				</goals>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>${project.artifactId}</artifactId>
+							<version>${project.version}</version>
+						</artifactItem>
+					</artifactItems>
+				</configuration>
+			</execution>
+		</executions>
+	</plugin>
+
+	IMPORTANT - copy maven dependency plugin above docker file plugin
+	
+	We have commented docker file plugin for now.
+	
+	After doing => mvn clean package -DskipTests, we can see -
+	
+	[INFO] --- maven-dependency-plugin:3.1.1:unpack (unpack) @ 01-hello-world-rest-api ---
+	[INFO] Configured Artifact: com.in28minutes.rest.webservices:01-hello-world-rest-api:0.0.1-SNAPSHOT:jar
+	[INFO] Unpacking C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\01-hello-world-rest-api\target\hello-world-rest-api.jar to C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\01-hello-world-rest-api\target\dependency with includes "" and excludes ""
+
+	Last log, it has unpacked jar to C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\01-hello-world-rest-api\target\dependency
+	We can see in dependency folder that classes, lib, metadata are there separately.
+	
+	Now in Dockerfile we would want to separate copying of DEPENDENCIES and CLASSES, so that DEPENDENCIES layer would be cached most of the times. 
+	
+	So we would want to copy the lib folder first into the docker image, then copy the classes folder after that we will copy META-INF files into the image. 
+	
+		FROM openjdk:8-jdk-alpine
+		ARG DEPENDENCY=target/dependency		//we are adding a argument, this is like a variable to the dependency folder. To use the value of this value syntax is - {DEPENDENCY}/...
+		COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+		COPY ${DEPENDENCY}/META-INF /app/META-INF
+		COPY ${DEPENDENCY}/BOOT-INF/classes /app
+		ENTRYPOINT ["java","-cp","app:app/lib/*","com.in28minutes.rest.webservices.restfulwebservices.RestfulWebServicesApplication"]		
+		//Here => "java" means we are trying to run a java class and with all the libraries present inside the classpath(-cp)
+		//"app:app/lib/*" => we are putting all the libraries present in app/lib into cp
+
+	As we have commented maven docker file plugin, we will built the image using => docker build -t in28min/hello-world-rest-api:dockerfile1 .
+
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\01-hello-world-rest-api>docker build -t in28min/hello-world-rest-api:dockerfile1 .
+	Sending build context to Docker daemon  33.92MB
+	Step 1/6 : FROM openjdk:8-jdk-alpine
+	 ---> a3562aa0b991
+	Step 2/6 : ARG DEPENDENCY=target/dependency
+	 ---> Running in 940bd38a5c90
+	Removing intermediate container 940bd38a5c90
+	 ---> 317a2ed9be45
+	Step 3/6 : COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+	 ---> b1eeebc811c2
+	Step 4/6 : COPY ${DEPENDENCY}/META-INF /app/META-INF
+	 ---> a62d932f409a
+	Step 5/6 : COPY ${DEPENDENCY}/BOOT-INF/classes /app
+	 ---> 92627300162d
+	Step 6/6 : ENTRYPOINT ["java","-cp","app:app/lib/*","com.in28minutes.rest.webservices.restfulwebservices.RestfulWebServicesApplication"]
+	 ---> Running in 97ebfd020661
+	Removing intermediate container 97ebfd020661
+	 ---> 2ed49b7b79cd
+	Successfully built 2ed49b7b79cd
+	Successfully tagged in28min/hello-world-rest-api:dockerfile1
+	SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have '-rwxr-xr-x' permissions. It is recommended to double check and reset permissions for sensitive files and directories.
+
+	.....
+	
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\01-hello-world-rest-api>docker images
+	REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
+	in28min/hello-world-rest-api   dockerfile1         2ed49b7b79cd        42 seconds ago      122MB
+	mysql                          latest              9b51d9275906        5 days ago          547MB
+	in28min/todo-rest-api-h2       1.0.0.RELEASE       f8049a029560        8 months ago        143MB
+	in28min/todo-rest-api-h2       latest              f8049a029560        8 months ago        143MB
+	openjdk                        8-jdk-alpine        a3562aa0b991        10 months ago       105MB
+
+	.....
+	
+	Again if build it will use dependencies from cache =>
+	
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\01-hello-world-rest-api>docker build -t in28min/hello-world-rest-api:dockerfile1 .
+	Sending build context to Docker daemon  33.92MB
+	Step 1/6 : FROM openjdk:8-jdk-alpine
+	 ---> a3562aa0b991
+	Step 2/6 : ARG DEPENDENCY=target/dependency
+	 ---> Using cache
+	 ---> 317a2ed9be45
+	Step 3/6 : COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+	 ---> Using cache
+	 ---> b1eeebc811c2
+	Step 4/6 : COPY ${DEPENDENCY}/META-INF /app/META-INF
+	 ---> Using cache
+	 ---> a62d932f409a
+	Step 5/6 : COPY ${DEPENDENCY}/BOOT-INF/classes /app
+	 ---> Using cache
+	 ---> 92627300162d
+	Step 6/6 : ENTRYPOINT ["java","-cp","app:app/lib/*","com.in28minutes.rest.webservices.restfulwebservices.RestfulWebServicesApplication"]
+	 ---> Using cache
+	 ---> 2ed49b7b79cd
+	Successfully built 2ed49b7b79cd
+	Successfully tagged in28min/hello-world-rest-api:dockerfile1
+	SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have '-rwxr-xr-x' permissions. It is recommended to double check and reset permissions for sensitive files and directories.
+
+	......
+		
+	Change something in controller class and do => mvn clean package -DskipTests and then build image again, we can see that it will take everything from cache except classes - 	
+
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\01-hello-world-rest-api>docker build -t in28min/hello-world-rest-api:dockerfile1 .
+	Sending build context to Docker daemon  33.91MB
+	Step 1/6 : FROM openjdk:8-jdk-alpine
+	 ---> a3562aa0b991
+	Step 2/6 : ARG DEPENDENCY=target/dependency
+	 ---> Using cache
+	 ---> 317a2ed9be45
+	Step 3/6 : COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+	 ---> Using cache
+	 ---> b1eeebc811c2
+	Step 4/6 : COPY ${DEPENDENCY}/META-INF /app/META-INF
+	 ---> Using cache
+	 ---> a62d932f409a
+	Step 5/6 : COPY ${DEPENDENCY}/BOOT-INF/classes /app
+	 ---> 4ba3b2ab8a70
+	Step 6/6 : ENTRYPOINT ["java","-cp","app:app/lib/*","com.in28minutes.rest.webservices.restfulwebservices.RestfulWebServicesApplication"]
+	 ---> Running in a3e7c97178b3
+	Removing intermediate container a3e7c97178b3
+	 ---> 16882a3071de
+	Successfully built 16882a3071de
+	Successfully tagged in28min/hello-world-rest-api:dockerfile1
+	SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have '-rwxr-xr-x' permissions. It is recommended to double check and reset permissions for sensitive files and directories.
+
+
+	The advantage of picking up as many things as possible from cache is the fact that, when we later push this image to a docker hub, we would typically create the image on local and then push it to some kind of registry, if we are pushing it to docker hub we will see that first time all the layers will be pushed out except for base image(openjdk, because it is already present inside docker hub), at this point if we make a code change and push the image again, we would see that first three layers will not be pushed again i.e. Step 1/6 : FROM openjdk:8-jdk-alpine, Step 2/6 : ARG DEPENDENCY=target/dependency, Step 3/6 : COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib, only the changes part will be pushed.
+
+
+Step 08 - Using JIB Plugin to Create Docker Images
+
+	Previously we used Dockerfile maven plugin to build our docker image. It is from spotify. It provides a clear separation between what the Dockerfile does and what spotify dockefile plugin does. 
+	The Dockerfile is responsible for building the image and spotify dockefile plugin is responsible for integrating the building of image with the maven build process. 
+	So all the instructions are provided in Dockerfile and spotify plugin makes sure that whenever mvn package is done image is build for us.
+	
+	The fact is Dockerfile maven plugin is not the only plugin which can be used to build image. One of the popular option is JIB. 
+	
+	### JIB
+
+	- https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin#quickstart
+
+	- https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md
+
+	Jib is a Maven plugin for building Docker and OCI images for your Java applications. 
+	OCI - Open Container Initiative - Objective of Creating Open Industry Standards around Container Formats and Runtime. OCI is like an interface and Docker image is an implementation of OCI. So OCI is a specification and any container image creator can choose to adhere to OCI standards. Docker has taken active part in creating OCI specification and also adheres to OCI specification.
+	
+	With JIB we don't need Dockerfile file at all. 
+	
+	Delete the Dockerfile and paste the plugin in. 
+	We will also comment maven dependency plugin, as we have deleted the Dockerfile so we don't need to split up the jar. 
+	
+	In plugin we had configuration - 
+		<configuration>
+			<container>
+				<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+			</container>
+		</configuration>
+	
+		Our image should be reproduciable, if we have some source code and we generated the image today, I use the same source code to generate the image one year later, I should get the same image. This is called reproducibility of images. If we had different creation timestamp on these images, the final hash on these images will be different. By default JIB puts a creation date of Unix epoch (00:00:00, January 1st, 1970 in UTC)	(epoch - start of time for computers)
+		
+	Now do => mvn clean package, we can see JIB automatically creates an image with somename like - 01-hello-world-rest-api:0.0.1-SNAPSHOT without Dockerfile
+	
+	If we do => docker history 01-hello-world-rest-api:0.0.1-SNAPSHOT, we can see multiple images.
+	
+	The base image which is used by JIB is called Distroless Java. We can change base image as well. 
+	
+	Important thing to remember is JIB builds the images up in multiple layers. 
+
+	In above step instead of copying the fat jar in, we exploded the fat jar and copied dependencies first and classes later. JIB does something very similar. We can see that in logs. 
+	
+	We can now run it. 
+
+	JIB also supports a lot of configurations - 
+	
+		<configuration>
+			<from>
+				<image>openjdk:alpine</image>			//Base image specified. 
+			</from>
+			<to>
+				<image>in28min/${project.name}</image>		//image name
+				<tags>										//tag 
+					<tag>${project.version}</tag>
+					<tag>latest</tag>
+				</tags>
+			</to>
+			<container>
+				<jvmFlags>
+					<jvmFlag>-Xms512m</jvmFlag>
+				</jvmFlags>
+				<mainClass>com.in28minutes.rest.webservices.restfulwebservices.RestfulWebServicesApplication</mainClass>
+				<ports>
+					<port>8100</port>		//container port
+				</ports>
+			</container>
+		</configuration>
+
+
+	JIB is java specific.
+	
+
+Step 09 - Using Fabric8 Docker Maven Plugin to Create Docker Images
+
+	With JIB we dont need the Dockerfile. JIB will automatically create the image based on the best practices. 
+	
+	Next plugin we will look at is - fabric8io/docker-maven-plugin
+
+	### fabric8io/docker-maven-plugin
+
+	- https://dmp.fabric8.io/
+
+	It also doesn't need Dockerfile.
+	It provides its own configuration syntax which is similar to Dockerfile
+	So just like the instruction in Dockerfile, we can specify same instructions to fabric8io docker maven plugin, or we can even provide an external Dockerfile
+	
+	If we want to use the plugin with Dockerfile we can use below configuration - 
+	
+	#### Using Dockerfile
+
+	```
+	<!-- To build the image - "mvn clean package" -->
+	<!-- Successfully tagged webservices/01-hello-world-rest-api -->
+	<!-- docker run -p 8080:8080 webservices/01-hello-world-rest-api -->
+	<plugin>
+		<groupId>io.fabric8</groupId>
+		<artifactId>docker-maven-plugin</artifactId>
+		<version>0.26.0</version>
+		<executions>
+			<execution>
+				<id>docker-build</id>
+				<phase>package</phase>
+				<goals>
+					<goal>build</goal>			
+				</goals>
+			</execution>
+		</executions>
+	</plugin>
+	
+	<properties>
+	...
+		<jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+	</properties>
+
+	If we configure it this way it will use the Dockerfile which is in the root of the project and when we execute mvn clean package, it would build the image using the Dockerfile.
+
+	Its very similar to Spotify plugin. 
+
+	Before we configure this we will have to remove Spotify and JIB plugins. We need to add this plugin along with a property - 
+		<properties>
+		...
+		 <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+		</properties>
+		
+		path of the jar file, where is jar present
+
+	Exercise: Run the project example in code-backup 03-fabric8-docker-plugin-using-dockerfile.zip
+
+	Other possibility is to specify the Dockerfile instructions directly inside your plugin configuration. 
+
+		#### Using XML Configuration
+
+		```
+		<!-- To build the image - "mvn clean package" -->
+		<!-- TAG - 01-hello-world-rest-api:latest -->
+		<!-- docker run -p 8080:8080 01-hello-world-rest-api:latest -->
+		<plugin>
+		   <groupId>io.fabric8</groupId>
+		   <artifactId>docker-maven-plugin</artifactId>
+		   <version>0.26.0</version>
+		   <extensions>true</extensions>
+		   <configuration>
+			  <verbose>true</verbose>
+			  <images>
+				 <image>
+					<name>${project.artifactId}</name>
+					<build>
+					   <from>java:8-jdk-alpine</from>
+					   <entryPoint>
+						  <exec>
+							 <args>java</args>
+							 <args>-jar</args>
+							 <args>/maven/${project.build.finalName}.jar</args>
+						  </exec>
+					   </entryPoint>
+					   <assembly>
+						  <descriptorRef>artifact</descriptorRef>
+					   </assembly>
+					</build>
+				 </image>
+			  </images>
+		   </configuration>
+		   <executions>
+			<execution>
+				<id>docker-build</id>
+				<phase>package</phase>
+				<goals>
+					<goal>build</goal>
+				</goals>
+			</execution>
+		   </executions>
+		</plugin>
+
+	Exercise: Run the project example in code-backup 04-fabric8-docker-plugin-xml-configuration.zip
+
+	
+	Spotify Dockerfile Maven Plugin => Provides clear separation. We specify all build instruction in the Dockerfile. And the plugin integrates the build of docker image into our maven lifecycle. 
+	
+	JIB => Takes the complete control. It says I don't need the docker file at all. I will create the image for you. 
+	
+	Fabric8 plugin => Provide both options. It says either you can use the Dockerfile or you can specify the XML configuration, telling what need to be done. 
+	
+	Most of the people use external Dockerfile. It gives complete control over how image is being built.
+	
+	Dockerfile is language independent, we can create similar Dockerfile for java project, for phython project, for frontend project as well. 
+
+	
+
+Section 5: Docker with Java Spring Boot Todo Web Application
+
+	Step 01 - Setting up 02 Spring Boot Todo Web Application in Local
+
+	Deploying web application, war file. 
+	
+	Packaging of the application is war. We would want to run this application in web server like tomcat. (jar runs in application server?)
+
+	one of the intresting thing with Spring boot is when we want to package something as a war, we would want to exclude tomcat from the list of dependencies. 
+	The starter spring-boot-starter-web would automatically include tomcat into out deployable unit. 
+	And when we want to run something as a war, we don't want tomcat in dependencies. 
+	That's the reason why we would make the scope of spring-boot-starter-tomcat as provided, this starter tomcat would not be included into the war file that we create -
+	
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	
+	The second change, for running this as war file is, extending application class from SpringBootServletInitializer.
+	SpringBootServletInitializer is an opinionated WebApplicationInitializer to run a SpringApplication from a traditional WAR deployment. 
+	So if we want to deploy our Spring boot application as war file, then we need to extend from SpringBootServletInitializer and we will have to override the configure() method. 
+		
+		@SpringBootApplication
+		@ComponentScan("com.in28minutes.springboot.web")
+		public class SpringBootFirstWebApplication extends SpringBootServletInitializer {
+
+			@Override
+			protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+				return application.sources(SpringBootFirstWebApplication.class);
+			}
+
+			public static void main(String[] args) {
+				SpringApplication.run(SpringBootFirstWebApplication.class, args);
+			}
+
+		}
+
+	
+	We can easily create such projects using start.spring.io, select packaging as war. The project would be configured similarly.
+	
+	Now to deploy this application we would need a deployable unit. To create deployable unit => mvn clean package. WAR file will be created in target.
+
+
+
+Step 02 - Create Docker Image for Spring Boot Todo Web Application
+ 
+	Previously we had created a WAR file. Now we will create a docker image for this specific WAR file. 
+	
+	We will first create a Dockerfile. 
+	Now we cannot just use JDK as a base image, we will have to deploy the war file into tomcat. So we would want a tomcat base image. 
+	So we need JDK and on top of it we need tomcat. (for jar JDK is enough?)
+	So we will use tomcat image. 
+		
+		FROM tomcat:8.0.51-jre8-alpine
+		
+		EXPOSE 8181
+		
+		RUN rm -rf /usr/local/tomcat/webapps/*					
+			//here we are deleting all the web applications which are present in /usr/local/tomcat/webapps/ folder. By default tomcat comes with root application, management application, etc. So we don't want those. 
+		
+		COPY target/*.war /usr/local/tomcat/webapps/ROOT.war		
+			//copying the war file into the image. All the web applications which we want to deploy needs to be in /usr/local/tomcat/webapps folder, so copying there. We will name it as ROOT.war
+		
+		CMD ["catalina.sh","run"]
+			//shell file to launch up tomcat
+			
+	
+	We have also added spotify dockerfile-maven plugin to integrate image build process with maven lifecycle. 
+	
+	After => mvn clean package, we can see war is created and image is also created. 
+ 
+	[INFO] --- maven-war-plugin:3.2.3:war (default-war) @ 02-todo-web-application-h2 ---
+	[INFO] Packaging webapp
+	[INFO] Assembling webapp [02-todo-web-application-h2] in [C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\02-todo-web-application-h2\target\todo-web-application-h2]
+	[INFO] Processing war project
+	[INFO] Copying webapp resources [C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\02-todo-web-application-h2\src\main\webapp]
+	[INFO] Webapp assembled in [1197 msecs]
+	[INFO] Building war: C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\02-todo-web-application-h2\target\todo-web-application-h2.war
+	[INFO]
+	[INFO] --- spring-boot-maven-plugin:2.1.7.RELEASE:repackage (repackage) @ 02-todo-web-application-h2 ---
+	[INFO] Replacing main artifact with repackaged archive
+	[INFO]
+	[INFO] --- dockerfile-maven-plugin:1.4.10:build (default) @ 02-todo-web-application-h2 ---
+	[INFO] dockerfile: null
+	[INFO] contextDirectory: C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\02-todo-web-application-h2
+	[INFO] Building Docker context C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\02-todo-web-application-h2
+	[INFO] Path(dockerfile): null
+	[INFO] Path(contextDirectory): C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\02-todo-web-application-h2
+	[INFO]
+	[INFO] Image will be built as in28min/todo-web-application-h2:0.0.1-SNAPSHOT
+	[INFO]
+	[INFO] Step 1/5 : FROM tomcat:8.0.51-jre8-alpine
+	[INFO]
+	[INFO] Pulling from library/tomcat
+	[INFO] Digest: sha256:8c19caad3ac527eb88a8d75448d40216819da15ebf433fbc97b0d8513a9a0767
+	[INFO] Status: Image is up to date for tomcat:8.0.51-jre8-alpine
+	[INFO]  ---> fcc5ace83900
+	[INFO] Step 2/5 : EXPOSE 8080
+	[INFO]
+	[INFO]  ---> Running in 0ecd2cac84e4
+	[INFO] Removing intermediate container 0ecd2cac84e4
+	[INFO]  ---> c39b5bcfb6cd
+	[INFO] Step 3/5 : RUN rm -rf /usr/local/tomcat/webapps/*
+	[INFO]
+	[INFO]  ---> Running in 235741bc42ab
+	[INFO] Removing intermediate container 235741bc42ab
+	[INFO]  ---> e96006747eef
+	[INFO] Step 4/5 : COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
+	[INFO]
+	[INFO]  ---> cef8675059a9
+	[INFO] Step 5/5 : CMD ["catalina.sh","run"]
+	[INFO]
+	[INFO]  ---> Running in 3da4d9a80bd8
+	[INFO] Removing intermediate container 3da4d9a80bd8
+	[INFO]  ---> 7ea4c7f096ec
+	[INFO] Successfully built 7ea4c7f096ec
+	[INFO] Successfully tagged in28min/todo-web-application-h2:0.0.1-SNAPSHOT
+	
+	We had tomcat image already pulled, so here it has not downloaded it again. 
+	
+	Now run the app => docker run -p 8181:8181 in28min/todo-web-application-h2:0.0.1-SNAPSHOT
+	
+
+26. Step 03 - Understanding ENTRYPOINT, CMD, COPY and ADD instructions	
+ 
+	Earlier the content of Dockerfile for packaging JAR were - 
+	
+		FROM openjdk:8-jdk-alpine
+		EXPOSE 8080
+		ADD target/*.jar app.jar
+		ENTRYPOINT ["sh", "-c", "java -jar /app.jar"]
+ 
+	Now for packaging WAR we have - 
+ 
+		FROM tomcat:8.0.51-jre8-alpine
+		EXPOSE 8181
+		RUN rm -rf /usr/local/tomcat/webapps/*
+		COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
+		CMD ["catalina.sh","run"]
+	
+	So why we are using COPY and Not ADD and why CMD and not ENTRYPOINT, etc.
+	
+	COPY vs ADD - 
+		COPY allows us to copy files, directories into your container image. However with COPY we cannot specify a URL.
+		With ADD we can copy a local file, a local directory as well as we can specify a URL, to download something rom the URL and then copy it down to our contianer image. 	
+		With ADD if the archive is in specific format, then it can even unzip for us. 
+		So if we just want to copy a simple file or directory then the best practice is to use COPY. So when we are copying local file or directories use COPY.
+		
+	CMD vs ENTRYPOINT - 
+		To run we had used => docker run -p 8181:8181 in28min/todo-web-application-h2:0.0.1-SNAPSHOT, we will add some parameter to it - 
+			docker run -p 8181:8181 in28min/todo-web-application-h2:0.0.1-SNAPSHOT ping google.com, here you see ping to google.com
+			So whatever command we passed using CMD - CMD ["catalina.sh","run"], were replaced witht the one we passed from command line - ping google.com
+			CMD - Default parameters. When we pass parameters from command line, your default parameters are overridden.
+			So whatever we specify in command is nothing but what is passed to our container as parameter. 
+			
+			ENTRYPOINT is a way of making our container an executable. When we pass any arguments to the container, those arguments will not override the ENTRYPOINT. 
+			So docker run -p 8181:8181 in28min/todo-web-application-h2:0.0.1-SNAPSHOT ping google.com, will not make the difference. 
+			
+			So if we are passing any arguments while running the contianer then it would replace CMD, however with ENTRYPOINT it won't be replaced.
+			If we use argument as --entrypoint then we can overrride ENTRYPOINT also. 
+			
+			When you are creating an application image, you would want your application to always run. Use ENTRYPOINT. 
+			
+			Best practice is to use ENTRYPOINT wherever we can. 
+ 
+ 
+Step 04 - Pushing 02 Spring Boot Todo Web Application to Docker Hub 
+ 
+	In previous section we ran our Todo web application as a container in our local machine. Here we will learn how to push this in docker hub.
+ 
+	Do sign up with docker hub. 
+	
+	Docker ID - aniketrajput90
+	Password - DockerForAniket90
+ 
+	To login => docker login
+		Enter username and password.
+		
+	IMPORTANT: Change the repository docker id to yours in dockerfile-maven-plugin
+		
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.10</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>aniketrajput90/${project.name}</repository>
+					<tag>${project.version}</tag>
+					<skipDockerInfo>true</skipDockerInfo>
+				</configuration>
+			</plugin>
+ 
+	Do mvn clean package and then push.
+	
+	docker push aniketrajput90/todo-web-application-h2:0.0.1-SNAPSHOT
+ 
+	There are multiple ways to push the docker image. 
+	Another is to add goal of push to our dockefile-maven-plugin - 
+ 
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.10</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<goal>build</goal>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>aniketrajput90/${project.name}</repository>
+					<tag>${project.version}</tag>
+					<skipDockerInfo>true</skipDockerInfo>
+				</configuration>
+			</plugin>
+ 
+	After adding this goal of push, we will have to configure our maven's settings.xml and add below server configuration, with server as docker.io and our user credentials there - 
+	
+		<servers>
+			<server>
+				<id>docker-repo.example.com:8080</id>
+				<username>me</username>
+				<password>mypassword</password>
+			</server>
+		</servers>
+		
+	If we do this, whenever we build the image the image will also be pushed to docker hub.
+ 
+	If we want to see how others can see this, click on Public view button and get url - https://hub.docker.com/r/aniketrajput90/todo-web-application-h2
+ 
+ 
+Section 6: Docker with Java Spring Boot Todo Web Application using MySQL 
+ 
+	Step 01 - Code Review of 03 Todo Web Application MySQL
+ 
+	In previous example we connected to h2 db, now we will connect to mysql. 
+	
+	Spring Boot makes it very easy to connect to mysql. 
+ 
+	Changes from ToDo Application - 
+	
+	1. To connect to mysql we need connector - 
+		
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+ 
+	2. We will use h2 database to run our test, so qw changed the scope to test - 
+	
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+ 
+	3. Change in src/main/resources/application.properties
+
+		#spring.h2.console.enabled=true
+		#spring.h2.console.settings.web-allow-others=true
+
+		spring.jpa.hibernate.ddl-auto=update
+		spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+		spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL55Dialect
+		spring.datasource.url=jdbc:mysql://localhost:3306/todos
+		spring.datasource.username=todos-user
+		spring.datasource.password=dummytodos
+
+		
+		The property spring.jpa.hibernate.ddl-auto=update => When we were using h2 db, whenever the application started, the db was created and when the application was stoped the db was killed. So none of the data which we created in the application was retained. So each restart creates the database and we loose it at the end when we stop the application. 
+		However with mysql we don't want to loose the updates that we made. Hence we are loosing ddl-auto mode of update.
+		What this will do is at application start up it will compare the tables which are defined in the db vs the entities that are defined in our application. If they are matching then it won't do anything. If there is a mismatch, if the table is missing, it will create that table. So if we have any data in any table in db, it would be retain.
+
+		create: (default for h2) creates the schema, destroying previous data.
+		
+		update: update the schema.		
+
+	4.	Change in src/test/resources/application.properties for our unit tests
+
+		spring.jpa.hibernate.ddl-auto=create-drop
+		spring.datasource.driver-class-name=org.h2.Driver
+		spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+		spring.datasource.username=sa
+		spring.datasource.password=sa
+		
+		When we have only h2 dependency in classpath, then above configurations is directly provided by default. But now we have h2 as well as mysql in classpath. We have defined both these dependencies in pom.xml
+		That's why we need to tell which one to use while running our unit test. 
+		When running unit tests, we will have h2 and mysql connector in classpath.
+
+	5. Change in Todo entity - 
+
+		public class Todo
+
+ 		```
+		@Size(min=10, message="Enter at least 10 Characters...")
+		@Column(name="description")
+		private String desc;
+ 
+		Previously filed name was desc, so error was there as desc is keyword in mysql. 
+ 
+ 
+Step 02 - Running MySQL as Docker Container on Local 
+ 
+	Now we want to run mysql db on our local machine. 
+	
+	How do we install mysql on our machine? We can take traditional approach and download mysql and install it. 
+	But why don't we use docker to run mysql in our local. To be able to do that we can find mysql image on docker hub. 
+	You can check - https://hub.docker.com/_/mysql, where mysql image is there and can also get information about how to run mysql and othe things. There are different versions present, the one we will use is 5.7
+	
+	So to run mysql image => docker run mysql:5.7	
+	
+	If we don't already have image it will download, if we already have it then, it will error - You need to specify one of MYSQL_ROOT_PASSWORD, MYSQL_ALLOW_EMPTY_PASSWORD and MYSQL_RANDOM_ROOT_PASSWORD. We can resolve this error by passing an enviornment variable. 
+	
+	docker run -e MySQL_ROOT_PASSWORD=dummypassword mysql:5.7 => this will lauch up the mysql but inside mysql server we would want to create a db. We would want to configure a userid, password.  
+ 
+	docker run -d -e MySQL_ROOT_PASSWORD=dummypassword -e MYSQL_USER=todos-user -e MYSQL_PASSWORD=dummytodos -e MYSQL_DATABASE=todos  mysql:5.7 => So we are creating a mysql server using docker, with these enviornment variables configured. We add -d so that we can run it in detached mode. 
+	
+	USE THIS ONLY - Command from readme file => docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql --publish 3306:3306 mysql:5.7
+	
+	Check by => docker container list
+	
+	If you don't see any container running, then there might be prot issue, port 3306 might be occupied, we can change host port to 3300 and check => 
+		docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql --publish 3300:3306 mysql:5.7
+		
+		In above command they have given the expanded form of all the options. 
+		
+	Now we will want to connect to this mysqls server. 
+	We will use mysql shell, we can install it on our machine. We can you any client which will allow us to connect to mysql server. 
+	We can open mysql shell. 
+		
+		 MySQL  JS > \connect todos-user@localhost:3300
+						Creating a session to 'todos-user@localhost:3300'
+						
+						Please provide the password for 'todos-user@localhost:3300': **********
+						
+						Save password for 'todos-user@localhost:3300'? [Y]es/[N]o/Ne[v]er (default No): n
+						
+						Fetching schema names for autocompletion... Press ^C to stop.
+						Your MySQL connection id is 3
+						Server version: 5.7.29 MySQL Community Server (GPL)
+						No default schema selected; type \use <schema> to set one.
+
+		 MySQL  localhost:3300 ssl  JS >
+
+	So now we are able to launch mysql as a container and we are also able to connect it using mysql shell. 
+
+
+Step 03 - Connect Spring Boot Todo Web App to MySQL on Local
+
+	We will focus on connecting our application with mysql which is running as part of our container. 
+	
+	docker rm {container id} => will remove the container out
+	 
+	MySQL  localhost:3300 ssl  JS > \sql
+	Switching to SQL mode... Commands end with ;
+
+	MySQL  localhost:3300 ssl  SQL > use todos;
+	Default schema set to `todos`.
+	Fetching table and column names from `todos` for auto-completion... Press ^C to stop.
+
+	Then we will run the application. Check the ports. When the application starts up we can see that some tables are created. 
+	
+	MySQL  localhost:3300 ssl  todos  SQL > select * from todo;
+	Empty set (0.0022 sec)
+	
+	No data in table, we can go ahead and access the application add the todos. 
+	
+	MySQL  localhost:3300 ssl  todos  SQL > select * from todo;
+	+----+--------------+---------+----------------------------+-------------+
+	| id | description  | is_done | target_date                | user        |
+	+----+--------------+---------+----------------------------+-------------+
+	|  1 | Docker udemy | 0       | 2020-03-24 18:30:00.000000 | in28minutes |
+	+----+--------------+---------+----------------------------+-------------+
+	1 row in set (0.0062 sec)
+
+	
+	Relaunching the application will not create the tables again and we can see that data also retains. 
+
+
+Step 04 - Create Docker Image for 03 Todo Web Application and Use Link to connect
+	
+	In previous step we were able to run application directly from IDE. 
+	
+	In this step we will create a image for this application, create a container from that image and try to connect to mysql from the container. 
+	
+	So we would have to deploy both the todo application in the container and mysql in the container and get them to connect to each other. 
+	
+	In pom we have dockefile-maven-plugin and Dockerfile with content same as previous 02 todo project =>
+	
+		From tomcat:8.0.51-jre8-alpine
+		RUN rm -rf /usr/local/tomcat/webapps/*
+		COPY ./target/*.war /usr/local/tomcat/webapps/ROOT.war
+		CMD ["catalina.sh","run"]	
+	
+	We need to do is => mvn clean package -DskipTests	(check if you are in working directory)
+
+	Now lets run the image => docker run -p 8181:8181 in28min/todo-web-application-mysql:0.0.1-SNAPSHOT		
+	
+	But we will get errors. What is happening is, we have launched up mysql container and we have launched up web application container. 
+	The thing is, by default these containers are launched in something called as bridge network. 
+	So the default networking mode in docker is called bridge. 
+	And when we are using bridge networking mode, the contianers that are launched with the default settings cannot really talk to each other. (localhost won't work, if you want to talk with that container then give name of that container.)
+	We can see that the exception is - Communications link failure... Failed to obtain JDBC Connection;
+	
+	To fix this, one of the easiest option is called link. This is not a recommended option. Lets say we want link to mysql - 
+		docker run -p 8181:8181 --link=mysql in28min/todo-web-application-mysql:0.0.1-SNAPSHOT		
+
+		--link=mysql, here mysql is the name which we gave to mysql container while running it. 
+		
+		But if we lauch using this command then it would again fail. 
+		
+		By default the application will try to connect to localhost. If we want to connect to mysql the host name(in spring.datasource.url) should also be same as the container name. 
+		
+		If we check in application.properties, typically we would configure mysql as below =>
+		
+			spring.datasource.url=jdbc:mysql://localhost:3306/todos
+			spring.datasource.username=todos-user
+			spring.datasource.password=dummytodos
+		
+		But we will have to configure it as below, using something called enviornment variable notation =>
+		
+			spring.datasource.url=jdbc:mysql://${RDS_HOSTNAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:todos}			//IMP: here we should give container port(3306) and not host port(3300). 
+			spring.datasource.username=${RDS_USERNAME:todos-user}
+			spring.datasource.password=${RDS_PASSWORD:dummytodos}		
+					
+			What we are trying to say is, if there a enviornment variable with name RDS_PASSWORD then use its value, if its not present the use default value as 'dummytodos' as value.
+			What this will allow us to do, this will work in local, where there are no enviornment variables. And if we deploy it on an enviornment, what we can do is, set the enviornment variables with these names. 
+			We can use anything as an enviornment variable name. 
+			
+		So what we need to change now is, change the value of ${RDS_HOSTNAME:mysql}, rest of the things will remain same, but this is not the way, we will create the enviornment variable =>
+			
+			docker container run -p 8080:8080 --link=mysql -e RDS_HOSTNAME=mysql in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+
+	In this step we created an image for our application which talks with the mysql db, we ran it as a container and we were able to get it connected to mysql container. 	
+
+	However we used 'link' and link is deprecated in docker. 
+
+
+Step 05 - Exploring Docker Networking - HOST, BRIDGE and NONE
+
+	We will see other options now.
+	
+	docker network ls => we can see that there are three kinds of networks 
+	
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\03-todo-web-application-mysql>docker network ls
+	NETWORK ID          NAME                DRIVER              SCOPE
+	841dc71d8cd6        bridge              bridge              local
+	375323af62b9        host                host                local
+	ec429288bd58        none                null                local
+
+	By default the containers are launched into bridge network. 	
+	
+	docker inspect bridge => {or network id}
+	
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\03-todo-web-application-mysql>docker inspect bridge
+		[
+			{
+				
+				......
+				
+				"Containers": {
+					"616abfb3cc0c3b9cf9051f03f9edec7a4c1c58ab490d3665d10480edda8ca943": {
+						"Name": "mysql",
+						"EndpointID": "6b3c1e24f45bfc604a4b23182b04597ab6ae670ef07c07ad81076169a612762d",
+						"MacAddress": "02:42:ac:11:00:02",
+						"IPv4Address": "172.17.0.2/16",
+						"IPv6Address": ""
+					},
+					"66a6076fe0ae86927aa50951b298bd1337bccf45bcf70927125bae000faf9d77": {
+						"Name": "focused_proskuriakova",
+						"EndpointID": "5072e58111864ec531f56a3580cac1ef0f8bce52728eb3aadef37d4a1afefbb5",
+						"MacAddress": "02:42:ac:11:00:03",
+						"IPv4Address": "172.17.0.3/16",
+						"IPv6Address": ""
+					}
+				},
+				
+				......
+			}
+		]
+
+	We can see that currently one container is running inside the bridge network - mysql. If we launch up our application container, then we can see two container which are running. 
+	
+	Earlier for everything we had to publish the port, like -p 8080:8080, so we were taking the container port from the internal docker network and mapping it to host port. 
+	So what happens is, when we are using a bridge network, there is a internal docker network where all the container would be running inside. 
+	And when we are using default bridge network these applications cannot talk to each other at all. This is where we had used link to make them talk to each other. 	
+	
+	The other mode which is available in docker is something called as host network. 
+	The other option is to launch our application into host network. We are telling that we don't want use intermediate docker network, we directly want to expose everything on the host. 
+	So if we are using the host network, what happens is whatever ports we expose from our docker containers, would directly be available on our host. So we don't need to do -p 8080, we need to specify --network=host.
+		
+		docker container run --network=host in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+		
+	So now the container will be running as part of our host network, the port would be automatically exposed and all the magic would happen.
+
+	In Linux this would work, but in Mac and Windows if we are using Docker Desktop, then we would see that the application launches up fine, it would connect to mysql but when we are trying to launch up the application in browser, it won't work. The reason is, with Docker Desktop the host is not our laptop, the host is not our computer where we are running the application right now, the host is actually the virtual machine inside which we are launching up these containers. 
+	If we are deploying something to cloud, we can use host networking and then both the mysql container and our web application container would be able to talk to each other, because they are both on the host network. 
+	
+	The third option is when network is none. When network is none, then this container will not have any network. This not a option at all.
+		docker container run --network=none in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+	
+	Last option is to use custom network. We can create our own network, make our containers part of it and get them talking to each other. 
+	
+	
+Step 06 - Creating a Custom Network and Connect MySQL and WebApplication
+
+	docker network create web-application-mysql-network		=> will crea a docker network with given name
+	
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\03-todo-web-application-mysql>docker network create web-application-mysql-network
+	0a07efad0882316fa83a61449471c5cdf8ea4022f1e5eeafd752fa105c7a0a39
+
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\03-todo-web-application-mysql>docker network ls
+	NETWORK ID          NAME                            DRIVER              SCOPE
+	841dc71d8cd6        bridge                          bridge              local
+	375323af62b9        host                            host                local
+	ec429288bd58        none                            null                local
+	0a07efad0882        web-application-mysql-network   bridge              local
+	
+	We can see our custom network has been created, it is a custom bridge network. And once we put our containers into custom bridge network we would see that it could talk to each other.
+	
+	Now we will launch up the mysql container as part of our custom network => 
+
+		docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql --publish 3306:3306 --network=web-application-mysql-network mysql:5.7
+
+	Now we will also launch the web application in our custom network =>
+		
+		docker container run -p 8080:8080 --network=web-application-mysql-network -e RDS_HOSTNAME=mysql in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+		
+		We cna run this using detach mode by adding -d. 
+		We don't need link when we are using custom network. 
+		When we run this, application launches up properly, it would be able to connect to mysql database.
+		
+		However whatever data we had earlier is being lost. How do we retain it? We would see somthing called volumes later, it will help us retain the data in mysql container. 
+
+	
+	C:\Users\inarajp>docker inspect web-application-mysql-network
+	[
+		{
+			
+			.......
+			
+			"Containers": {
+				"0890e98c1ad0a4ce17750469ffc016cb3d0bab0190c420ef683d8aae5364a61f": {
+					"Name": "mysql",
+					"EndpointID": "52a3a994d5d6aa429e79ef55d6e85c6952fa6e8b9c1754a0c0578f33e58fe680",
+					"MacAddress": "02:42:ac:12:00:02",
+					"IPv4Address": "172.18.0.2/16",
+					"IPv6Address": ""
+				},
+				"e71781b24e41727ce2acd5a6986e945c0815ca4c210d17dd0225d6d69158bea4": {
+					"Name": "adoring_morse",																//name of web application container given by docker.
+					"EndpointID": "53e9cce38b8eedab30fd69a31db582e5eb0055b6d5e198483cddfe4f8f5b51e5",
+					"MacAddress": "02:42:ac:12:00:03",
+					"IPv4Address": "172.18.0.3/16",
+					"IPv6Address": ""
+				}
+			}
+			
+			.....
+		}
+	]
+
+	Any thing in custom bridge network can talk with each other easily.
+	
+	
+Step 07 - Using Docker Volumes to Persist Data
+
+	We would talk about Volumes.
+	
+	Both mysql and web application containers are up and running.	
+	
+	=> docker container restart mysql => will restart the container.
+	
+		Even if we restart the mysql container, whatever data was there before restart will STILL be there. 
+	
+	=> docker container stop mysql
+		
+		This will stop the container. 
+		
+	Now lets relaunch it using above command of docker run. 
+	
+	=> docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql --publish 3306:3306 --network=web-application-mysql-network mysql:5.7
+	
+	After this we will can see that data is being lost. 
+	
+	Now to retain data, when we create a mysql database, we need to attach it with a volume. 
+	
+	Stop all containers. Prune. 
+	
+	Start up mysql using above command but in addition attach volume => 
+		
+		docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql --publish 3306:3306 --network=web-application-mysql-network --volume mysql-database-volume:/var/lib/mysql mysql:5.7
+	
+			
+			Volume should contain the data which is present inside mysql database, so this volume should map with the folder inside mysql contianer which contains the data. And the folder inside mysql image which would contain the data is /var/bil/mysql. So we pass this in => --volume mysql-database-volume:/var/lib/mysql
+			What we are doing is, we are creating a volume on host machine which maps to the /var/lib/mysql directory inside the container, so what ever changes we make in that continer directory will also be persisted on the local disk of the host. 
+	
+	Start up the application => 
+	
+		docker container run -p 8080:8080 --network=web-application-mysql-network -e RDS_HOSTNAME=mysql -d in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+	
+	Now we can see that the data has been persisted.
+	
+	So volumes helps us in persisting data to the host. 
+	
+	Docker data volume helps us to share data between the host file system and the docker container. 
+	So we are creating something on the host file system and mapping it to the container. 
+
+	Great thing is this will also allow us to share data between multiple containers. If I am creating 3-4 container with this volume, what they can do is they can talk to that volume and they can share that volume.
+	
+	Last use case is when we want to persist data after the docker container is removed. You want to persist some data from a specific folder of a container even when that container is removed, we can use volume. 
+	
+	More to see about volume...
+	
+	
+Section 7: Docker with Java Spring Boot React Full Stack Application	
+	
+Step 01 - Exploring 04 Java Full Stack Spring Boot React App
+
+	Check diagram - Spring-Boot-React-App.JPG	-> is present the project.
+	
+	If we start the application by running the class RestfulWebServicesApplication.java and then accessing the url - http://localhost:8080/jpa/users/in28minutes/todos then we will get error saying - You would need to provide the Jwt Token to Access This resource
+	
+	This is because all the APIs are secured. So we need to provide JWT token to be able to access the resource. 
+	We need to send a POST request with url - http://localhost:8080/authenticate
+	He used Restlet API Client, its a chrome plugin (We can even use postman). Say use without a account. Add below in the body - 
+		
+		{
+		  "username":"in28minutes",
+		  "password":"dummy"
+		}
+	
+	Response comes as success. And response contains a token. 
+	
+	Now we would send a GET request to - http://localhost:8080/jpa/users/in28minutes/todos and we would add the Authorization Header with Value as 'Bearer TOKEN(the actual copied token from response)' 
+	
+	We can see that response is coming as success and all the data as well. 
+	
+	
+Step 02 - Running React Frontend in Local
+
+	To run frontend install Visual studio code. File -> Open -> Folder where we have code
+	
+	package.json has all dependencies defined in it. 
+	
+	Check if npm is installed => npm --version
+	
+	cd to the code folder. 
+	
+	To install/download dependencies => npm install
+	
+	npm is very similar to maven, it is to manage our dependencies. npm will download all dependencies defined in package.json
+	
+	After that to start app do => npm start
+	
+	Check => localhost:4200
+	
+	First the login was giving error, because it was not getting the token, because it was trying to get token from cloud, so we need to update to local url. Go to Constants.js and change it.
+	
+	
+Step 03 - Containerizing Java REST API Backend
+
+	Right now we are launching our Rest API application from IDE as java application. Frontend is also directly launched as a node application. 
+	
+	Now we want to run both the frontend and backend as containers. 
+	
+	For REST API application we have a Dockerfile - 
+		
+		FROM openjdk:8-jdk-alpine
+		VOLUME /tmp
+		ARG DEPENDENCY=target/dependency
+		COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+		COPY ${DEPENDENCY}/META-INF /app/META-INF
+		COPY ${DEPENDENCY}/BOOT-INF/classes /app
+		ENTRYPOINT ["java","-cp","app:app/lib/*","com.in28minutes.rest.webservices.restfulwebservices.RestfulWebServicesApplication"]
+	
+		Here we doing same thing copying dependencies first, then metadata then classes. 
+		
+	As we are exploding the jar, we have added maven-dependency-plugin for that with goal as unpack. 
+	
+	So the spring-boot-maven-plugin will create the fat jar and maven-dependency-plugin will make sure that that fat jar is exploded(unpacked) and everything is available at target/dependency folder. 
+	
+	cd to C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\04-spring-boot-react-full-stack-h2\restful-web-services and execute => mvn clean package
+	
+	An image will be created with name - in28min/rest-api-full-stack:0.0.1-SNAPSHOT
+	
+	Lets run it => docker run -p 8080:8080 in28min/rest-api-full-stack:0.0.1-SNAPSHOT
+	
+	Its starts fine, now go in frontend in browser and check everything is working. It works fine. 
+	
+	So we see that when we are running the application in local as java application and when we are running it inside a container there are no changes. Why there is no necessity for them to be running inside same network? Earler with mysql we say that they need to run in same network. How every in this case they are able to talk to each other. 
+	This is because, where is the request going out from? In this case request to rest api is going out from browser, its not going out from a container (like in case of mysql and web app) ,when we want to talk to db the request goes out from inside the container, inside the container you are trying to talk to another container and thats when we would actually want to put them inside same network. But over here we are outside the continer, from outside the container we can directly call that specific api, because that specific api has already exposed the port 8080. So the rest api has exposed on 8080 so we are able to connect from browser. 
+	
+
+Step 04 - Creating Multi Stage Docker Build for React Frontend Code
+
+	Now we will containeralize the frontend as well. 
+
+	Finally we will have a set of css, html, js files and we would want to run them on a web server. 
+	
+	The end goal is to use nginx. We want nginx to run as http server(web server) and serve a web package (to run the package).
+	
+	So how do we create the package? The commands to create a package are - 
+		
+		npm install
+		npm run build
+		
+	To run this we would need nodeJS and npm. So wantever package they create we will run it on nginx. 
+	
+	We need to have a goal to keep out docker image as small as possibile. If you check the image size now its around 1.2 GB after this it reduces to just 16MB
+	While nodeJS is needed to build the code, but nodeJS is not really needed to run the production package. It is not needed to run the package which is build to run inside a nginx contianer. 
+	So in these kind of situations we would go for a multi-stage build. 
+	
+	We would build a image which would something be related to nodeJS. And then inside that image we will copy the source files and then do npm install and npm run build. 
+	And after that we would create a image for nginx and inside that we would copy the output of earlier image. 
+	This will ensure that the final image which we would push on docker hub and which would run in our production (DEV, QA, PROD) is as minimal as possible. 
+	
+	The Dockerfile in frontend - 
+
+		## Stage 1 - Lets build the "deployable package"
+		FROM node:7.10 as frontend-build
+		WORKDIR /fullstack/frontend
+
+		# Step 1 - Download all package dependencies first.
+		# We will redownload dependencies only when packages change.
+		COPY package.json package-lock.json ./
+		RUN npm install
+
+		# Step 2 - Copy all source and run build
+		COPY . ./
+		RUN npm run build
+
+		## Stage 2 - Let's build a minimal image with the "deployable package"
+		FROM nginx:1.12-alpine
+		COPY --from=frontend-build /fullstack/frontend/build /usr/share/nginx/html
+		EXPOSE 80
+		CMD ["nginx", "-g", "daemon off;"]
+	
+	
+	The objective of Stage 1 is exactly same what we did i.e. to run npm install and after that run npm run build and to create same package. 
+	
+	Once the package is build the objective of the second Stage is to take a nginx image and copy whatever the result was of creating the package to nginx image and start out the nginx server. 
+
+	Now check the working directory C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\04-spring-boot-react-full-stack-h2\frontend\todo-app>
+	
+	So all we need to build is do => docker build .		(dot at last. dot might represent current directory)
+	
+	Explanation => 
+	
+		## Stage 1 - Lets build the "deployable package"
+		FROM node:7.10 as frontend-build								//node as base package.  we can refer this image as 'frontend-build'
+		WORKDIR /fullstack/frontend										//Inside /fullstack/frontend a build folder will be created by npm run build
+
+		# Step 1 - Download all package dependencies first.
+		# We will redownload dependencies only when packages change.
+		COPY package.json package-lock.json ./							//copy these two file, frontend dependencies are specified there. Its just like pom.xml
+		RUN npm install													//will make sure all dependencies are downloaded. 
+
+		# Step 2 - Copy all source and run build
+		COPY . ./
+		RUN npm run build
+
+		//Did you notice we are coying package.json and package-lock.json and source code separately because package.json and package-lock.json will not change often so we can keep caching it and source code may change often. We have created these two separate layer(while executing we will see them as separate layer. Each command becomes a layer.)
+		
+		//AT the end of stage 1 'build'  folder will be ready. In stage two we will copy build folder which is created in stage 1. That why we gave a Stage 1 a name 'frontend-build'. 
+
+		## Stage 2 - Let's build a minimal image with the "deployable package"
+		FROM nginx:1.12-alpine														//nginx image as base image for stage 2
+		
+		COPY --from=frontend-build /fullstack/frontend/build /usr/share/nginx/html			
+		//copy from image name 'frontend-build', from directory /fullstack/frontend/build to directory /usr/share/nginx/html inside nginx
+		
+		EXPOSE 80								//nginx is by default launched on port 80, so we are exposing port 80
+		CMD ["nginx", "-g", "daemon off;"]		//starting off the nginx server. After start up it would expose the content of /usr/share/nginx/html folder. Typically nginx will start up as a background process. In this specific container all we would be launching is nginx so we don't want to lauch it as a background process, we would want to run it as a main process, so we are saying 'daemon off'. 
+	
+	
+Step 05 - Improve Front End Docker Build - .dockerignore	
+
+	When we executed => docker build .		The entire content from folder C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\04-spring-boot-react-full-stack-h2\frontend\todo-app was send to docker deamon about 255MB as part of build context. 
+	
+	Thats the reason why its one of the best practice to create a .dockerignore file. Just like .gitignore, the .dockerignore can contain list of folders or files which we don't want to send as part of docker build context. 
+	
+	So we created a .dockerignore file and added folder name - node_modules
+	
+	Second thing which we see in log is that when npm install is executed it downloads everything into the node_modules and it takes lot of time. Its taking so much time because it is running inside the container. npm install is running inside the container, so the first time all the things needs to be downloaded. node_modules folder is created when we do npm install. It was there earlier because we had done npm install on local. 
+	
+	So next time when we do docker build . it won't take so much time.
+	
+	This time we would associate a tag to it - 
+		
+		docker build . -t in28min/todo-front-end:0.0.1-SNAPSHOT
+	
+	
+	One of the advantage of Multi Stage Docker Build stucture is that we are not dependending on anything on local system. It does not dependent on anything that is installed on local machine. We can run it anywhere where we have docker install. (We can also add a stage to download the code from git repository)
+	
+	Now in our REST API Application, the way we are building it is - we are first generating the jar, then we are exploding the jar and then docker file kicks in. So if you would want to create a image then you would also want maven installed on that specific machine. How do we fix this. In next stage we would see how we can implement mutiple stage builds even for java applications. 
+	
+	For now lets run frontend app => docker run -p 4200:80 in28min/todo-front-end:0.0.1-SNAPSHOT
+		
+	And access - http://localhost:4200/
+	
+	So now the REST API Application is running in a container, frontend is running in a container. And we can take these containers and run it anywhere. So anywhere we have docker engine running, we can go and deploy these containers and we can deploy our full stack app very easily.
+	
+
+Step 06 - Using Multi Stage Docker Build for Java REST API Backend
+
+	In previous step we executed a two stage build for the front-end project. Due to this, this build is now platform independent. We can run this build anywhere. All we need is the source code. 
+
+	The disadvantage is that two stage build is very slow first time, because it needs to download all the dependencies and from second time on it would be much faster.
+
+	We would now configure two stage build for REST API app.
+	
+	Dockerfile - 
+	
+		##### Stage 1 - Lets build the "deployable package"
+
+		FROM maven:3.6.1-jdk-8-alpine as backend-build
+		WORKDIR /fullstack/backend
+
+		### Step 1 - Copy pom.xml and download project dependencies
+
+		# Dividing copy into two steps to ensure that we download dependencies 
+		# only when pom.xml changes
+		COPY pom.xml .
+		# dependency:go-offline - Goal that resolves all project dependencies, 
+		# including plugins and reports and their dependencies. -B -> Batch mode
+		RUN mvn dependency:go-offline -B
+
+		### Step 2 - Copy source and build "deployable package"
+		COPY src src
+		RUN mvn install -DskipTests
+
+		# Unzip
+		RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+
+		##### Stage 2 - Let's build a minimal image with the "deployable package"
+		FROM openjdk:8-jdk-alpine
+		VOLUME /tmp
+		ARG DEPENDENCY=/fullstack/backend/target/dependency
+		COPY --from=backend-build ${DEPENDENCY}/BOOT-INF/lib /app/lib
+		COPY --from=backend-build ${DEPENDENCY}/META-INF /app/META-INF
+		COPY --from=backend-build ${DEPENDENCY}/BOOT-INF/classes /app
+		ENTRYPOINT ["java","-cp","app:app/lib/*","com.in28minutes.rest.webservices.restfulwebservices.RestfulWebServicesApplication"]
+	
+	We will execute the build now, stop previously running rest app. Check if directory is - C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\04-spring-boot-react-full-stack-h2\restful-web-services>
+
+	For two stage build we won't need to build jar using mvn clean package. Directly execute => docker build .		//But before executing this comment out couple of maven plugins - maven-dependency-plugin(we don't need to do unzip), spotify dockerfile-maven-plugin
+
+	Dockerfile explanation - 
+	
+		##### Stage 1 - Lets build the "deployable package"
+
+		FROM maven:3.6.1-jdk-8-alpine as backend-build			
+			//we will use jdk build with maven, so this particular build will have jdk and maven install in it. We will copy source code to it and we will execute mvn install and we will create the jar file, unzip the jar file and have the classes and dependencies in separate folder. This is the aim of the stage one. Aim of stage two is to create a minimum possible image. 
+		
+		WORKDIR /fullstack/backend
+
+		### Step 1 - Copy pom.xml and download project dependencies
+
+		# Dividing copy into two steps to ensure that we download dependencies 
+		# only when pom.xml changes. Making it efficient for caching
+		COPY pom.xml .				//copy in image
+		# dependency:go-offline - Goal that resolves all project dependencies, 
+		# including plugins and reports and their dependencies. -B -> Batch mode (it would not ask any questions)
+		RUN mvn dependency:go-offline -B
+
+		### Step 2 - Copy source and build "deployable package"
+		COPY src src
+		RUN mvn install -DskipTests
+
+		# Unzip
+		RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)	
+		//we are making a dir target/dependency and cd into it and unziping the jar into it. -xf is command for unzip. It will unzip the jar and make everything available at - /fullstack/backend/target/dependency
+
+		##### Stage 2 - Let's build a minimal image with the "deployable package"
+		FROM openjdk:8-jdk-alpine
+		VOLUME /tmp
+		ARG DEPENDENCY=/fullstack/backend/target/dependency							//directory of this has changed, in stage 1 we are using /fullstack/backend as working directory
+		COPY --from=backend-build ${DEPENDENCY}/BOOT-INF/lib /app/lib						//copying what was created in stage 1
+		COPY --from=backend-build ${DEPENDENCY}/META-INF /app/META-INF
+		COPY --from=backend-build ${DEPENDENCY}/BOOT-INF/classes /app
+		ENTRYPOINT ["java","-cp","app:app/lib/*","com.in28minutes.rest.webservices.restfulwebservices.RestfulWebServicesApplication"]
+	
+
+	Advantage of this two stage is that we can run it anywhere, we don't need anything installed expect for docker engine. Nothing is being done on local. Its not depending on some local version of your maven or on some java version on local. So if multiple developer run this image they would get the exact image. However in case of one stage, creation of jar depends on java version or maven version on the local machine so they might be different. 
+
+
+Step 07 - Running Java REST API Backend Docker Image
+
+	We don't need the target folder to be send to the docker deamon. So we will .dockerignore it. 
+
+	Command RUN mvn dependency:go-offline -B, would have taken a long time as it downloads all the dependencies inside the container.
+
+	We will add a tag to the imag we created earlier => docker tag {imageId} in28min/rest-api-full-stack:2stagebuild			or we can create the image again with tag => docker build . -t in28min/rest-api-full-stack:2stagebuild
+	
+	Now we can run it => docker run -p 8080:8080 in28min/rest-api-full-stack:2stagebuild
+
+
+Step 08 - Exploring Docker Compose
+	
+	What is problem that docker compose solves? 
+
+	In the previous examples we saw that a web application talking with mysql. We had a web application container talking to the mysql container inside a custom network. 
+	After that we had a fullstack application. We had a frontend talking to backend, separate containers. 
+	With each of these we saw that we needed to individually create a container and launch each one up. If we want to launch both front-end and backend together or web application and mysql together, we didn't really had a option for that. We had to individually manage the lifecycle of each of these containers. 
+	So how about having something on top of above these docker images to help us manage lifecycle of these containers. 
+	
+	When we have 1,2 contianers, its easy to manage them individually, but in case of microservices we might have 5-6 containers running at the same time, lauching each one of them individually would be a headache. 
+	And thats where a tool called Docker Compose is very useful. 
+	
+	Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.
+
+	The features of Compose that make it effective are:
+		- Multiple isolated environments on a single host
+		
+		- Preserve volume data when containers are created
+			When we launch up docker compose, it would see if there are any other containers of this specific image which were created earlier and if there are any volumes associated with those containers. If there are any volumes associated with the old container then it would make sure that those are also associated with the new containers.
+			This will ensure that we don't loose any data. 
+			
+		- Only recreate containers that have changed from previous launch.
+			So if we are using docker compose to lauch up five contianer and only fifth container has changed then it would only launch up fifth container again.
+			
+		- Variables and moving a composition between environments
+			It makes it easy to deploy whatever we have composed to different enviornments. 
+
+
+Docker Compose Scale Command
+
+	Docker Compose Scale Command
+	docker-compose scale is now deprecated.
+
+	Instead, you can use
+
+	docker-compose up -d --scale servicename=3
+
+
+
+	Recommended Reading:
+
+	https://docs.docker.com/compose/reference/scale/
+
+
+
+	Here is an issue highlighting the subtle difference between docker-compose scale and docker-compose up --scale
+
+	https://github.com/docker/compose/issues/5251
+
+
+Step 09 - Running Full Stack Application with Docker Compose
+
+	We will have to first install Docker Compose.
+	
+	If we are on Windows or Mac and we are using Docker Desktop or Docker Toolbox(for older systems) then we are good, Docker Compose is alrady installed.
+	
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\04-spring-boot-react-full-stack-h2\restful-web-services>docker-compose -version
+	docker-compose version 1.25.4, build 8d51620a
+	
+	docker-compose.yml for sprin-boot-react-full-stack-h2 =>
+	
+		version: '3.7'
+		# ERROR - Removed subprocess.CalledProcessError: 
+		# Command '['/usr/local/bin/docker-credential-desktop', 'get']' 
+		# returned non-zero exit status 1
+
+		# SOLUTION - Remove "credsStore":"desktop" from ~/.docker/config.json 
+		# Original Content of ~/.docker/config.json
+		# {"auths":{},"credsStore":"", "credsStore":"desktop","stackOrchestrator":"swarm"}
+		# Update it to this
+		# {"auths":{},"credsStore":"","stackOrchestrator":"swarm"}
+		# OR
+		# {"auths":{},"stackOrchestrator":"swarm"}
+		services:
+		  todo-frontend:
+			image: in28min/todo-front-end:0.0.1-SNAPSHOT				//instead of image we can also specify dockerfile like below commented. We already have a image build so we are using image field. 
+			#build:
+			  #context: frontend/todo-app
+			  #dockerfile: Dockerfile
+			ports:
+			  - "4200:80"
+			restart: always
+			depends_on: 		#Start the depends_on first
+			  - todo-api 
+			networks:
+			  - fullstack-application-network
+
+		  todo-api:
+			image: in28min/rest-api-full-stack:0.0.1-SNAPSHOT
+			ports:
+			  - "8080:8080"
+			restart: always
+			networks:
+			  - fullstack-application-network
+		  
+		# Networks to be created to facilitate communication between containers
+		networks:
+		  fullstack-application-network:
+	
+	This docker-compose contains configuration for both front-end and backend and thats why we kept it at the top of  root.
+
+	Two things that are configured at high level - services and network.
+	All the containers that we want to run as part of docker-compose file are called services.
+	And we are associating a network, we are saying a network needs to be created for us. for full-stack application we don't need a network.
+	
+	cd into the folder where docker-compose file is present. 
+	
+	Now do => docker-compose up	
+		If we get "ERROR - Removed subprocess.CalledProcessError" -> Look at the docker-compose.yml for solution. 
+	
+	After this command both the containers will be running. 
+	
+	If we do Ctrl + c it would stop both the container. 
+
+	To launch it in dettached mode => docker-compose up -d	
+	
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\04-spring-boot-react-full-stack-h2>docker network ls
+	NETWORK ID          NAME                                                               DRIVER              SCOPE
+	0b4046af9d7b        04-spring-boot-react-full-stack-h2_fullstack-application-network   bridge              local
+	841dc71d8cd6        bridge                                                             bridge              local
+	375323af62b9        host                                                               host                local
+	ec429288bd58        none                                                               null                local
+	0a07efad0882        web-application-mysql-network                                      bridge              local
+
+	If we check the network name we can see that the the name specified by us is prefixed with the folder name where the docker-compose file is present. 
+	
+	
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\04-spring-boot-react-full-stack-h2\frontend\todo-app>docker inspect 0b4046af9d7b
+	[
+		
+		.....
+		
+			"Containers": {
+				"1e00c7e0fde2b8a921a8e3bb885d4efc296062f734fef976e94a24e22d55d26e": {
+					"Name": "04-spring-boot-react-full-stack-h2_todo-frontend_1",
+					"EndpointID": "80a9e8206d6cf58af7626512e3e100e69580f8ca3148ce5cfe1989df0a222c50",
+					"MacAddress": "02:42:ac:13:00:03",
+					"IPv4Address": "172.19.0.3/16",
+					"IPv6Address": ""
+				},
+				"2e3e77504fb7244f643cc2c4854ec1e21e8c2e8a1f4e0fbd524d34baaa241fe5": {
+					"Name": "04-spring-boot-react-full-stack-h2_todo-api_1",
+					"EndpointID": "78ce7408dfe7aab97047687e29af1c645be22c58bb7c9e9d085ce3e4b64d5b2d",
+					"MacAddress": "02:42:ac:13:00:02",
+					"IPv4Address": "172.19.0.2/16",
+					"IPv6Address": ""
+				}
+			}
+			
+			.....
+		}
+	]
+
+	We can see two containers are up. 
+	
+	To bring down => docker-compose down
+
+
+Step 10 - Using Docker Compose for Java Spring Boot Todo Web Application - MySql
+
+	docker-compose file: 
+
+		version: '3.7'
+		# Removed subprocess.CalledProcessError: Command '['/usr/local/bin/docker-credential-desktop', 'get']' returned non-zero exit status 1
+		# I had this:
+		# cat ~/.docker/config.json
+		# {"auths":{},"credsStore":"", "credsStore":"desktop","stackOrchestrator":"swarm"}
+		# I updated to this:
+		# {"auths":{},"credsStore":"","stackOrchestrator":"swarm"}
+		services:
+		  todo-web-application:
+			image: in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+			#build:
+			  #context: .
+			  #dockerfile: Dockerfile
+			ports:
+			  - "8080:8080"
+			restart: always
+			depends_on: # Start the depends_on first
+			  - mysql 
+			environment:
+			  RDS_HOSTNAME: mysql							#shoud match the service name at 1
+			  RDS_PORT: 3306
+			  RDS_DB_NAME: todos
+			  RDS_USERNAME: todos-user
+			  RDS_PASSWORD: dummytodos
+			networks:
+			  - todo-web-application-network
+
+		  mysql:											#1 should match above
+			image: mysql:5.7
+			ports:
+			  - "3306:3306"
+			restart: always
+			environment:
+			  MYSQL_ROOT_PASSWORD: root
+			  MYSQL_ROOT_PASSWORD: dummypassword 
+			  MYSQL_USER: todos-user
+			  MYSQL_PASSWORD: dummytodos
+			  MYSQL_DATABASE: todos
+			volumes:
+			  - mysql-database-data-volume:/var/lib/mysql
+			networks:
+			  - todo-web-application-network  
+		  
+		# Volumes
+		volumes:
+		  mysql-database-data-volume:
+
+		networks:
+		  todo-web-application-network:
+
+	
+	cd to C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\03-todo-web-application-mysql
+
+	Do => docker-compose up
+
+
+Step 11 - Playing with Docker Compose
+
+	Docker Compose also provides a number of commands. 
+	
+	=> docker-compose up -d
+	
+	=> docker-compose events	//Similar to docker events, this will allows us to see what is happening.
+	
+	=> docker-compose config 	//gives information about configuration which is used, we can use it to validate any errors inside our configuration
+	
+	=> docker-compose images	//gives us idea about what are images that are being used, container information, tags, image id that are managed by docker compose
+
+	=> docker-compose ps 		//gives us list of containers which are running, what are the ports they are exposing, what is the command that is being used to run them, what the state of the containers. 
+	
+	=> docker-compose top		//We would see all the processes that are running in each of the containers. 
+	
+	=> docker-compose pause		//it would pause all the containers. If we do docker-compose ps, we can see the state is Paused. So they will not respond to any request. 
+	
+	=> docker-compose unpause	//will unpause the pause containers. 
+	
+	stop => SIGTERM => graceful shutdown
+	
+	kill => SIGKILL => immediately terminates the process
+		
+	=> docker-compose kill
+	
+	=> docker-compose stop
+	
+	=> docker-compose rm		//will remove all the contianers
+	
+	=> docker-compose build 	
+		
+		//if we have build defined in docker-compose -
+			build:
+			  context: .
+			  dockerfile: Dockerfile
+		
+			then for all services where build is defined docker compose would build images for those services. 
+
+
+Section 8: Docker - Run Java Spring Boot Microservices
+
+Step 01 - Introduction to Microservices
+
+
+Step 02 - Advantages of Microservices
+
+
+Step 03 - Understanding Docker and Microservices - An Amazing Combo
+
+	If we are getting error any dependecies, als try clean package instead of install.
+	
+	A lot of chanllendes are associated with microservices and docker plays a crutial role in solving a number of those challenges. 
+
+	Lets see what are some of these challenges and how docker solves those - 
+	
+	Earlier we said that instead of one monolith we would build a number of small microservices. A number of deployment increases exponentially. 
+	
+	Easier development:
+		- Adop new technology faster	
+			Zero worry about deployment procedures
+			
+			Lets say we have three microservices developed in different languages like java, C# and node 
+			So we would have different deployment procedures for jva microservice, C#, and node. This is not good.
+			With docker we don't need to worry about how we deploy, all we need to do is build a image. Once we have a image, whether it is java image or C# or node, it doesn't really matter because the way we will deploy all those images will be the same. And because of this adopting new technology becomes faster. Don't need to worry about deployment procedures. We just need to build an image according to organisation policy.
+
+		- Fewer Environment issues
+			No more - "It works in my Local"
+			
+			If we use docker in Local, Dev, Qa, Prod all our enviornment are consistent. The way we develop/deploy it in local will be the way we deploy it on production. 
+	
+	 
+	Easier Operations - Consistent Deployment Automation Across Different Environments and Different Technologies.
+		Operations team need not worry about whats inside a docker image. As long as docker image is good and it is able to run an application we can deploy it whereever we want.
+	
+	Docker provides a lot of flexibility for our microsevices architechture. Docker have played a crutial role in the evolution of the microservices architechture.		
+	
+
+Step 04 - Overview of CCS and CES Spring Boot Microservices
+
+	We know this from microservices tutorial. 
+
+
+Step 05 - Create Docker Images and Containers for Java Spring Boot Microservices
+
+	Till now we have launched up currency-conversion-service and currency-exchange-service in IDE.
+	Now we will launch them up as containers and make them talk to each other. 
+	
+	What we will do is, create the images for each of these microservices, create network, create container for each of these microservices attaching to that network and get them talkinf to each other.  
+	
+	Dockerfile for currency-exchange-service 
+			
+		FROM openjdk:8-jdk-alpine
+		VOLUME /tmp
+		EXPOSE 8000
+		ADD target/*.jar app.jar
+		ENV JAVA_OPTS=""			//if we want to specify memory or something, then we can specify JAVA_OPTS option, now its empty. We can use to pass options to java runtime.
+		ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]	
+	
+	
+		if our springboot version is older version like 1.5.* then we need to put -Djava.security.egd=file:/dev/./urandom in so that our container performs really well.
+		For any of the latest version like 2.1.* this option is not really necessary.
+	
+	Dockerfile for currency-conversion-service
+	
+		FROM openjdk:8-jdk-alpine
+		VOLUME /tmp
+		EXPOSE 8100
+		ADD target/*.jar app.jar
+		ENV JAVA_OPTS=""
+		ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
+	
+	Open two terminal and cd into repective projects.
+	
+	Do mvn clean package. It will build the jar and generate docker image. 
+	
+	Open a third terminal and cd to C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\05-microservices		---use to run, manage, etc
+	
+	=> docker network create currency-network
+	
+	=> Run currency-exchange-service => docker run -p 8000:8000 --network=currency-network --name=currency-exchange-service -d in28min/currency-exchange-service:0.0.1-SNAPSHOT
+	
+	=> Run currency-conversion-service => docker run -p 8100:8100 --network=currency-network --name=currency-conversion-service --env CURRENCY_EXCHANGE_URI=http://currency-exchange-service:8000 -d in28min/currency-conversion-service:0.0.1-SNAPSHOT
+	
+		We need to add an enviornment variable here because form inside currency-conversion-service we would call currency-exchange-service and if we don't have enviornment variable it wont be able to do that.
+
+	Now we can go in browser and check, we will find that both the container are working and can talk to each other. 
+
+	
+	For learning purpose we are running individual containers first and now we will use docker-compose. We should use docker-compose directly once we are comfortable.
+	
+	
+Step 06 - Run Java Spring Boot Microservices using Docker Compose
+
+	docker-compose file:
+	
+		version: '3.7'
+		services:
+
+		  currency-exchange-service:
+			image: in28min/currency-exchange-service:0.0.1-SNAPSHOT
+			#build:
+			  #context: currency-exchange-service
+			  #dockerfile: Dockerfile    
+			ports:
+			  - "8000:8000"
+			restart: always
+			networks:
+			  - currency-compose-network
+
+		  currency-conversion-service:
+			image: in28min/currency-conversion-service:0.0.1-SNAPSHOT
+			#build:
+			  #context: currency-conversion-service
+			  #dockerfile: Dockerfile    
+			ports:
+			  - "8100:8100"
+			restart: always
+			environment:
+			  CURRENCY_EXCHANGE_URI: http://currency-exchange-service:8000
+			depends_on:
+			  - currency-exchange-service
+			networks:
+			  - currency-compose-network
+		  
+		# Networks to be created to facilitate communication between containers
+		networks:
+		  currency-compose-network:
+
+		
+	Check the directory => C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\05-microservices>
+
+	And do docker-compose up, everything should run fine. 
+	
+
+Section 9: Using Docker to Integrate Java Microservices with Eureka Naming Server
+
+Step 01 - Understanding the need for Service Registry
+
+	Eureka Naming server is Service Registry.
+	
+	We know the this from microservice course. 
+
+
+Step 02 - Create Docker Images for Eureka Naming Server
+
+
+	application.properties for Eureka Naming Server:
+		
+		spring.application.name=netflix-eureka-naming-server
+		server.port=8761
+
+		#We are telling that you are server, so don't try and register yourself. 
+		eureka.client.register-with-eureka=false		
+		eureka.client.fetch-registry=false
+
+	Dockefile:
+	
+		FROM openjdk:8-jdk-alpine
+		VOLUME /tmp
+		EXPOSE 8761
+		ADD target/*.jar app.jar
+		ENV JAVA_OPTS=""
+		ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
+
+	fourth cmd for eureka => C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\05-microservices\netflix-eureka-naming-server
+	
+	Do => mvn clean package
+	
+	Now we want currency-conversion-service and currency-exchange-service also to be talking to naming-server, do it add dependecies in both - 
+		
+ 		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+ 
+	Second change we need to add => @EnableDiscoveryClient in application classes of all. 
+	
+	Third thing we will have to configure application.properties of both, as we want it to connect to naming server, we need to specify url =>
+		
+		# Eureka
+		#eureka.client.service-url.default-zone=http://localhost:8761/eureka		=> for local host
+		eureka.client.service-url.defaultZone=http://naming-server:8761/eureka/		
+			=> We will directly launch it up using docker, so we will use docker-compose service name. The name which will be given to eureka naming server service will be 'naming-server'	
+			
+	Last thing we nee to do is make currency-conversion-service to use Eureka Naming Server to talk to currency-exchange-service, to do that we need to update the proxy =>
+		
+		Earlier they were talking using => @FeignClient(name = "currency-exchange-service", url = "${CURRENCY_EXCHANGE_URI:http://localhost:8000}")
+		
+		Now we will change it to => @FeignClient(name = "currency-exchange-service")		
+			//Feign automatically knows that it needs to talk to Eureka Server. And to Eureka Naming Server it would say I want instances of 'currency-exchange-service'. 
+			If we check the application.properties of currency-exchange-service we will see that application-name is 'currency-exchange-service'. So this is the name used by currency-exchange-service to register with naming server. 
+			
+	We will rebuild everything again. 
+
+
+Step 03 - Configure and Run Java Spring Boot Microservices with Eureka Service
+
+	docker-compose file: 
+
+		version: '3.7'
+		services:
+
+		  naming-server:
+			image: in28min/netflix-eureka-naming-server:0.0.1-SNAPSHOT
+			#build:
+			  #context: netflix-eureka-naming-server
+			  #dockerfile: Dockerfile
+			ports:
+			  - "8761:8761"
+			restart: always
+			networks:
+			  - currency-compose-network
+
+		  currency-exchange-service:
+			image: in28min/currency-exchange-service:0.0.1-SNAPSHOT
+			#build:
+			  #context: currency-exchange-service
+			  #dockerfile: Dockerfile    
+			ports:
+			  - "8000:8000"
+			restart: always
+			depends_on:
+			  - naming-server
+			networks:
+			  - currency-compose-network
+
+		  currency-conversion-service:
+			image: in28min/currency-conversion-service:0.0.1-SNAPSHOT
+			#build:
+			  #context: currency-conversion-service
+			  #dockerfile: Dockerfile    
+			ports:
+			  - "8100:8100"
+			restart: always
+			environment:
+			  CURRENCY_EXCHANGE_URI: http://currency-exchange-service:8000
+			depends_on:
+			  - currency-exchange-service
+			  - naming-server
+			networks:
+			  - currency-compose-network
+		  
+		# Networks to be created to facilitate communication between containers
+		networks:
+		  currency-compose-network:
+
+	
+	One of the risk we are taking is we are directly running all images through docker-compose, we can also take a step by step approach by using commands => 
+	
+		docker run -p 8761:8761 --name naming-server --network currency-network in28min/netflix-eureka-naming-server:0.0.1-SNAPSHOT
+		docker run -p 8000:8000 --network currency-network --name currency-exchange-service in28min/currency-exchange-service:0.0.1-SNAPSHOT
+		docker run -p 8100:8100 --network currency-network --name currency-conversion-service in28min/currency-conversion-service:0.0.1-SNAPSHOT
+
+	
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\05-microservices>docker-compose up -d
+	Creating 05-microservices_naming-server_1 ... done
+	Creating 05-microservices_currency-exchange-service_1 ... done
+	Creating 05-microservices_currency-conversion-service_1 ... done
+
+	C:\Users\inarajp\Desktop\temp\Master Docker with Java and Spring\docker-crash-course-master\05-microservices>docker-compose logs -f
+
+
+	Everything will be running fine. 
+	
+	Now got to url => localhost:8761
+		Eureka will be up and running and we can see currency-conversion-service and currency-exchange-service up and register there. 
+		
+	If we do any change in any of the application, we will have to build that application and then do docker-compose up. 
+	
+	
+	Now lets increase the instance of currency-exchange-service => docker-compose scale currency-exchange-service=2			(2 is the number of instances)
+		This will throw an error, saying that we have launched by currency-exchange-service on port 8000 and they cannot launch two instances on same port. 
+		
+		To resolve this we will comment port from the docker-compose file =>
+		
+			#ports:
+			# - "8000:8000"
+		
+		And now it should launch up two instances. 
+		
+		In naming server we can see two instances has registered. 
+
+
+	Feign internally uses Ribbon to do client side load balancing. 
+	
+
+Section 10: Using Docker to Integrate Java Microservices with Zuul API Gateway
+
+Step 01 - Configure CES and CCS Microservices with Zuul API Gateway
+
+	For concept check microservice course notes. 
+	
+	Part of application.properties of Zuup =>
+		
+		#Feign and Ribbon Timeouts. Whenever we are calling a service we are telling to wait so few seconds. 
+		feign.client.config.default.connectTimeout=50000
+		feign.client.config.default.readTimeout=50000
+		ribbon.ConnectTimeout= 60000
+		ribbon.ReadTimeout= 60000
+
+
+	We will now update the currency-conversion-service, because now we don't want request to go directly from currency-conversion-service to currency-exchange-service, we want currency-conversion-service to talk with Zuul and then Zuul will exectue the filter and then request will go to currency-exchange-service.
+	We can do this by updating the proxy class =>
+	
+		Earlier we had => @FeignClient(name = "currency-exchange-service")		//this was talking with naming server.
+		
+		Now => @FeignClient(name="netflix-zuul-api-gateway-server")				//It will talk with Zuil first. 'netflix-zuul-api-gateway-server' will be application-name we configure in zuul project. 
+		
+	Another thing the @GetMapping will be updated => 
+		
+		Earlier => @GetMapping("/currency-exchange/from/{from}/to/{to}")
+		
+		Now =>  @GetMapping("/currency-exchange-service/currency-exchange/from/{from}/to/{to}")		//We have add the name of the service now which expose this api. 
+		
+		
+	When currency-conversion-service sends out the request, zuul will get the request, it will exectue its filter then it will come to proxy and from @GetMapping it will get the service name to which request needs to be send next, so it will go to naming server and as for the instances and location of that service, and then it would send request to that url.  	
+		
+		
+	Entire code =>
+	
+		package com.in28minutes.microservices.currencyconversionservice.resource;
+
+		import org.springframework.cloud.openfeign.FeignClient;
+		import org.springframework.web.bind.annotation.GetMapping;
+		import org.springframework.web.bind.annotation.PathVariable;
+
+		//@FeignClient(name = "currency-exchange-service", url = "${CURRENCY_EXCHANGE_URI:http://localhost:8000}")
+		//@FeignClient(name = "currency-exchange-service")
+		@FeignClient(name="netflix-zuul-api-gateway-server")
+		public interface CurrencyExchangeServiceProxy {
+
+		//	@GetMapping("/currency-exchange/from/{from}/to/{to}")
+			 @GetMapping("/currency-exchange-service/currency-exchange/from/{from}/to/{to}")
+			public CurrencyConversionBean retrieveExchangeValue(@PathVariable("from") String from,
+					@PathVariable("to") String to);
+		}
+	
+
+	After this build the changes project, update the docker-compose file =>
+	
+		version: '3.7'
+		services:
+
+		  naming-server:
+			#image: in28min/netflix-eureka-naming-server:0.0.1-SNAPSHOT
+			build:
+			  context: netflix-eureka-naming-server
+			  dockerfile: Dockerfile
+			ports:
+			  - "8761:8761"
+			restart: always
+			networks:
+			  - currency-compose-network
+
+		  zuul-api-gateway:
+			image: in28min/netflix-zuul-api-gateway-server:0.0.1-SNAPSHOT
+			#build:
+			  #context: netflix-zuul-api-gateway-server
+			  #dockerfile: Dockerfile
+			ports:
+			  - "8765:8765"
+			restart: always
+			depends_on:
+			  - naming-server
+			networks:
+			  - currency-compose-network
+
+		  currency-exchange-service:
+			image: in28min/currency-exchange-service:0.0.1-SNAPSHOT
+			#build:
+			  #context: currency-exchange-service
+			  #dockerfile: Dockerfile    
+			ports:
+			  - "8000:8000"
+			restart: always
+			depends_on:
+			  - naming-server
+			networks:
+			  - currency-compose-network
+
+		  currency-conversion-service:
+			image: in28min/currency-conversion-service:0.0.1-SNAPSHOT
+			#build:
+			  #context: currency-conversion-service
+			  #dockerfile: Dockerfile    
+			ports:
+			  - "8100:8100"
+			restart: always
+			environment:
+			  CURRENCY_EXCHANGE_URI: http://currency-exchange-service:8000
+			depends_on:
+			  - currency-exchange-service
+			  - naming-server
+			networks:
+			  - currency-compose-network
+		  
+		# Networks to be created to facilitate communication between containers
+		networks:
+		  currency-compose-network:
+
+	
+	Do => docker-compose up
+	
+	Every thing should work.
+	
+	When you send request from currency-conversion-service and if you check the logs we can see that the Zuul filter is logging a request in there. 
+
+
+	So the chain of request is going on => 
+		
+		currency-conversion-service -> zuul-api-gateway-server -> Naming Server -> currency-exchange-service
+		
+		
+	We are just exectuing one simple command to launch all this up => docker-compose up
+	
+
+Section 11: Using Docker to Integrate Java Microservices with Zipkin
+
+Step 01 - Introduction to Zipkin and Update Microservices to Connect to Zipkin
+ 
+ 
+	For concept check microservices course. 
+	
+	Zipkin - Distributed tracing.
+	
+	Zipkin should know whenever request hits any of the microservice. 
+
+	Whenever any gets a request, it would put a simple log in Rabbit MQ. And Zipkin server will be listening on it. Zipkin will make a dashboard out of it. 
+	But how will zipkin know that it as same request going to multiple microservices. We need a unique identifier for that. 
+	
+	If we check now in log we can see that some unique request id has been already there for same request going across microservice. This happened because we already have Spring Cloud Sleuth dependecy added in all our services. 
+	
+	What cloud sleuth does is whenever a new request comes and if there is no id to id, it add a id and further calls will retain that id. 
+	Therefore zipkin can look at the id in logs and make a dashboard out of it. 
+	
+	Now how do we get our microservices talking to Rabbit MQ and interacting with it => 
+		
+		Add below dependecies in currency-conversion-service, currency-exchange-service and zuul-api-gateway
+		
+			 
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-zipkin</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.amqp</groupId>
+			<artifactId>spring-rabbit</artifactId>
+		</dependency>
+
+	Second thing we need to do is, in application.properties => 
+		
+		spring.sleuth.sampler.probability=1.0		
+		
+		#We want sample all the request, typically we don't want to sample all the request in production, we would want to sample some of the requests. 
+	
+	Last thing =>
+		
+		# RabbitMQ
+		spring.rabbitmq.host=rabbitmq
+	
+	If you are wondering why we are not looking for project for zipkin(We had to download zip jar and do few things), what we will do, we will use zipkin image which is already present on docker hub. So we will not create a custom image for zipkin, we will use it from docker hub. 
+	
+	
+	Build images for them. 
+	
+
+Step 02 - Using Docker Compose to Launch Zipkin, RabbitMq and Microservices
+
+	We will create images for Rabbit MQ and Zipkin.
+	
+	We don't want to install Rabbit MQ or Zipkin to our local. 
+	
+	docker-compose.yml =>
+	
+		version: '3.7'
+		services:
+
+		  rabbitmq:
+			image: rabbitmq:3.5.3-management
+			ports:
+			  - "5672:5672"     #Port for rabbitmq, default port.
+			  - "15672:15672"   #Management console port    
+			restart: always
+			networks:
+			  - currency-compose-network
+
+		  naming-server:
+			image: in28min/netflix-eureka-naming-server:0.0.1-SNAPSHOT
+			#build:
+			  #context: netflix-eureka-naming-server
+			  #dockerfile: Dockerfile
+			ports:
+			  - "8761:8761"
+			restart: always
+			networks:
+			  - currency-compose-network
+
+		  zipkin-server:
+			image: openzipkin/zipkin        #We are not adding tag because we want it to pull latest version
+			container_name: zipkin          #We are configuring container name for this service
+			environment:
+			  STORAGE_TYPE: mem         #This environment varaible indicates that we will use in-memory database and not any other database.
+			  RABBIT_URI: amqp://guest:guest@rabbitmq:5672      #We want this service to talk to rabbitmq, so its uri. Default username/password=>guest/guest
+			ports:
+			  - "9411:9411"     #default port
+			restart: always
+			depends_on:
+			  - rabbitmq
+			networks:
+			  - currency-compose-network
+
+
+		  zuul-api-gateway:
+			image: in28min/netflix-zuul-api-gateway-server:0.0.1-SNAPSHOT
+			#build:
+			  #context: netflix-zuul-api-gateway-server
+			  #dockerfile: Dockerfile
+			environment:
+			  RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+			ports:
+			  - "8765:8765"
+			restart: always
+			depends_on:
+			  - naming-server
+			  - rabbitmq
+			  - zipkin-server
+			networks:
+			  - currency-compose-network
+
+		  currency-exchange-service:
+			image: in28min/currency-exchange-service:0.0.1-SNAPSHOT
+			#build:
+			  #context: currency-exchange-service
+			  #dockerfile: Dockerfile    
+			environment:
+			  RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+			ports:
+			  - "8000:8000"
+			restart: always
+			depends_on:
+			  - naming-server
+			  - rabbitmq
+			  - zipkin-server
+			networks:
+			  - currency-compose-network
+
+		  currency-conversion-service:
+			image: in28min/currency-conversion-service:0.0.1-SNAPSHOT
+			#build:
+			  #context: currency-conversion-service
+			  #dockerfile: Dockerfile    
+			ports:
+			  - "8100:8100"
+			restart: always
+			environment:
+			  #CURRENCY_EXCHANGE_URI: http://currency-exchange-service:8000         #We don't need this environment variable anymore. Because its going through Zuul -> Naming Server -> CES
+			  RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+			depends_on:
+			  - currency-exchange-service
+			  - naming-server
+			  - rabbitmq
+			  - zipkin-server
+			networks:
+			  - currency-compose-network
+		  
+		# Networks to be created to facilitate communication between containers
+		networks:
+		  currency-compose-network:
+
+
+
+	Now we can do => docker-compose up
+	
+	Alternately we can also execute individual commands =>
+	
+	docker network create currency-network
+	docker run -p 5672:5672 -p 15672:15672 --network currency-network --name rabbitmq rabbitmq:3.5.3-management
+	docker run -p 9411:9411 --env RABBIT_URI=amqp://guest:guest@rabbitmq:5672 --network currency-network --name zipkin openzipkin/zipkin
+	docker run -p 8761:8761 --name naming-server --network currency-network in28min/netflix-eureka-naming-server:0.0.1-SNAPSHOT
+	docker run -p 8000:8000 --network currency-network --name currency-exchange-service --env RABBIT_URI=amqp://guest:guest@rabbitmq:5672 in28min/currency-exchange-service:0.0.1-SNAPSHOT
+
+	docker run -p 8100:8100 --network currency-network --name currency-conversion-service --env RABBIT_URI=amqp://guest:guest@rabbitmq:5672 in28min/currency-conversion-service:0.0.1-SNAPSHOT
+
+	docker run -p 8765:8765 --network currency-network --name zuul-api-gateway  --env RABBIT_URI=amqp://guest:guest@rabbitmq:5672 in28min/netflix-zuul-api-gateway-server:0.0.1-SNAPSHOT
+
+
+Step 03 - Running Zipkin, RabbitMq and Microservices
+
+
+	If you want to learn something, try to find the image for it, you don't need to install it on local.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

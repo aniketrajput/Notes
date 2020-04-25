@@ -1,0 +1,269 @@
+Oracle have two memory spaces - 
+	SGA(System Global Area) memory which is shared by all sessions connected to Oracle Database. (Shared Memory)
+	PGA(Program Global Area) which is allocated for each session.
+	
+
+Pl/Sql program execution process - (check diagram - https://www.youtube.com/watch?v=As8EeNTri4U)
+PL/SQL programs are executed by PL/SQL Engine it is installed in database server or development tools also.
+- First client sends PL/SQL block to the DB server system (to PL/SQL engine). 
+- Server system(PL/SQL engine) splits the PL/SQL block in two parts - Procedural statement(loops, if, etc.) and SQL statement.
+- All the procedural statements are executed by Procedural Statement Executor and all SQL statements are executed by SQL statement executor. (Available in DB server) 
+	(Because of these two executors we will have more performance.)
+
+Steps for writing and executing a PL/SQL block -
+To write a PL/SQL block we will need a editor(notepad). So to invoke notepad in SQL we use below command. (All the below steps will take place in SQL prompt)
+- host notepad d:\welcome.sql 	--new file welcome.sql will be created in d:\
+- Now write PL/SQL application 
+- Save the file and exit from notepad
+- SQL> @welcome; /    --by default it will look in bin folder of oracle. so give path @D:\welcome; Give '/' at the end
+
+
+The program that executes when a server process starts is the Oracle kernel - ORACLE.EXE on windows, oracle or oracle.bin on UNIX and Linux platforms.
+The Oracle kernel is a single, large addition to the SQL and PL/SQL subsystems, this program includes all functionality needed to run the database instance - the
+background processes which run when the Oracle database is started are also copies of the Oracle kernel. 
+
+Latches - 
+- A latch is a simple data structure in memory whose value indicates whether or not its associated resource is currently in use.
+- Before using a shared memory resource, each Oracle process first obtains the latch for that resource, then accesses the resource.
+- A latch can be held by only one process at a time. 
+- If the latch is already taken, your Oracle process may:
+	Spin(active wait): Just keep trying, as fast as it can, until the latch is free.
+	Sleep: Wait a few fractions of a second, then try again.
+	Not wait: Abandon the operation.
+- Latches are very efficient and are typically held only briefly. However, the processing of a statement may require acquisition of many latches.
+- There are hundreds of different latches, for different shared resource in the SGA. In most cases, each latch protects a single resource. In some cases a latch may 
+	have associated child latches, protecting different parts of a data structure.
+- Oracle uses latches internally to protect hundreds of different resources. Statistics on their use is available in the dynamic performance view V$LATCH:
+	select name, gets, misses, sleeps, immediate_gets, spin_gets from v$latch order by gets/
+	
+LOCKS - 
+- A lock is a complex data structure in shared memory that allows a session or transaction to wait for a resource to become free.
+	A lock uses a complex data structure, allowing sessions to add themselves to a linked list, or queue, to wait on the lock.
+	Multiple sessions may interact with a lock, so each must first obtain the latch protecting the lock before making its change to the lock. 
+	The session frees the latch immediately after modifying the lock.
+- Another name for a lock is an enqueue.
+- When you update database rows, your session:
+	Creates a lock in shared memory for your transaction -  a Transaction(TX) lock.
+	Flags the rows as locked, placing information identifying your transaction in the block containing the rows.
+	Creates one lock in shared memory for each object referenced by the SQL statement - DML(TM) locks.
+	
+	When another transaction tries to update any of the rows you have locked it:
+	Identifies your transaction using information in the rows' block.
+	Creates its own lock structure
+	Adds its lock structure to your lock's "waiters" queue
+
+
+Cluster in Oracle - Naresh i Technologies
+
+Usually when we create a table oracle allocates a segment for the table. In segment it stores table data.
+Now suppose we are using a join operation, and two tables data are stored in different segments, then this degrades the operation performance. 
+So frequently needed table in join operation can be clustered in same segment.
+
+Cluster - A cluster is a db object that stores data related to two or more tables in a single disk space.
+- Create cluster 
+- Create index on cluster
+- Create tables
+
+SQL> create cluster c1(d number(2));
+SQL> create index ci1 on cluster c1;
+SQL> create table dept44
+	(
+		dno number(2),
+		dname varchar2(20)
+	)
+	cluster c1(dno); 	--This tells oracle don't create a separate segment for this table, put it in a cluster. Organised by dno.
+
+SQL> create table emp44
+	(
+		empno number(4),
+		ename varchar2(20),
+		dno number(2)
+	)
+	cluster c1(dno);	-- We have organized both tables by dno because we want to perform join operation by joining tables by dno. So if they are already organized
+							by dno then join operation will be faster.
+	
+	
+-----------------------------------------------------------------------------------------------------------------------------------
+
+A cursor is a private memory area, temporarily allocated in the session's User Global Area(UGA), that is used for processing SQL statements.
+The private memory stores the result set retrieved from the SQL execution and cursor attributes. Cursors can be classified as implicit and explicit cursors.
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Collections in PL/SQL - 
+- PL/SQL table or index by table
+- varray
+- nested table
+
+PL/SQL table or index by table - 
+- declare type
+- declare variable
+	TYPE name IS TABLE OF datatype
+		INDEX by datatype;
+	
+	TYPE array IS TABLE OF number(4)
+		INDEX by binary_integer;
+	x array;
+	x(1) := 10;
+	x(2) := 20;
+	x(3) := 30;
+	
+	
+	declare 
+		TYPE dname_array IS TABLE OF varchar2(20)
+			INDEX by binary_integer;
+		d dname_array;
+	begin
+		for i in 1..4
+		loop
+			select dname into d(i) from dept where deptno = i * 10;
+		end loop;
+
+		for i in 1..4
+		loop 
+			dbms_output.putline(d(i));
+		end loop;
+	end;
+	/
+	
+Using bulk collect we can fetch all the elements from the database and store into a collection - 
+
+
+	declare 
+		TYPE dname_array IS TABLE OF varchar2(20)
+			INDEX by binary_integer;
+		d dname_array;
+	begin
+		
+		select dname bulk collect into d from dept;
+
+		for i in d.first..d.last
+		loop 
+			dbms_output.putline(d(i));
+		end loop;
+	end;
+	/
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Working with LOBS (Large Objects) - 
+From oracle 8 onwards we can store large objects in database.
+
+BLOB (Binary LOB)
+BFILE (Binary File)
+CLOB (Character LOB)
+
+BFILE/BLOB - capable of storing binary data upto 4GB (audio, video, imgs, multimedia objects)
+	Difference between them is - 
+	BFILE - external LOB. LOB is stored outside the database, and database stores path or locator. To store the locator inside the database oracle has a function - 
+			bfilename(dir object, filename)
+			
+	BLOB - internal LOB. LOB is stored inside the database.
+	
+eg - 
+	D:\naresh\Tulips.jpg 
+	We want to insert this picture into db. Just the locator.
+	Directory object is object in oracle database that points to OS directory.
+	
+	SQL> create directory d11 as 'D:\naresh';
+	SQL> grant read, write on directory d11 to scott;	--grant permission to user who will use this directory
+	
+	SQL> create table cust(cid number(2), cname varchar2(20), cphoto bfile);		--we have taken bfile for cust photo, so we can store path of photo
+	SQL> insert into cust values(10, 'A', BFILENAME(d11, 'Tulips.jpg'));
+	
+-------------------------------------------------------------------------------------------------------------
+	
+Cursors - 
+
+Two types - Explicit and Implicit
+Cursors defined by user are explicit and declared by oracle then implicit.
+
+Explicit cursor - 
+
+(If we want only one record of one employee from emp table in PL/SQL program.. we can use 'rowtype'- 
+	e emp%rowtype   -- can get that single record in e.)
+ If we want multiple records then we need to use cursors. Process row by row.
+ 
+ - Declare cursor
+ - Open curso
+
+	
+-------------------------------------------------------------------------------------------------------------
+
+Materialized Views - It is a db object that stores query result or precomputed result. 
+(Views stores query.)
+
+Materialized views can be used to - 
+	- Maintain a local copy for remote database.
+	- To improve the performance of complex group by, complex aggregate operations, complex joins.
+
+	
+-------------------------------------------------------------------------------------------------------------
+
+In a simple loop we can relie on EXIT statement to terminate the loop. FOR and WHILE loops specify the termination condition differently.
+
+We can declare our won exception. Oracle provides a set of predefined exceptions, but if we need something specific to our application, then we need to define
+it ourself.
+	- 
+		l_balance_below_minimum  EXCEPTION
+			....
+		IF l_balance_remaining < 1000
+		THEN
+			RAISE l_balance_below_minimum;
+		END IF;
+		
+		...
+		EXCEPTION
+		WHEN l_balance_below_minimum
+		THEN
+			log_error(...);
+			RAISE;
+		END;
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Indexes in SQL - 
+	Index is a db object that makes data retrieval faster.
+	A db index works the same way as an index in text book. In text book using index a particular topic can be located fastly, using db index a record can be 
+	located fastly.
+	Index created on column and that column is called index key.
+	
+Types of indexes:
+	BTREE indexes
+	BITMAP indexes
+
+	-- select * from emp where salary = 3000; 
+	-- search is based on salary, so create index on salary
+	create index i1 on emp(salary);			--If we don't mention the type of index by default BTREE index will be created. Internally a tree like structure is created
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+	
+	
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+

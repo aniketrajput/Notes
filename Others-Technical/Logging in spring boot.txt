@@ -1,0 +1,254 @@
+By default spring boot comes with SLJ4 log
+
+logging.level.root=DEBUG	//error, info.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+We might want to log to understand production issues that might have gone wrong. To investigate issue.
+
+Use logging levels appropritely. Not everything should be an error.
+
+Take advantange of multiple log files/appenders. One for major issues, another to show context.
+
+Always log in catch blocks, even if you don't think you need to.
+
+Don't show detailed exceptions to users.
+
+Logging Levels - 
+	ERROR/error
+	WARN/warn
+	INFO/info
+	DEBUG/debug
+	TRACE/trace
+	
+	We can have our own log levels as well. 
+
+You get it free with spring-jcl, which is included with spring-boot-starter-web and/or spring-boot-starter-logging.
+Default: logs to console
+
+We can also log into separate log file. 
+
+
+	import org.slf4j.LoggerFactory;
+	import org.slf4j.Logger;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass());
+	Then, log.debug(), log.info(), etc. 
+
+	log.debug("Entering..")
+	log.warn("p is zero");
+	log.error("In catch block");
+	log.debug("exiting");
+	
+	This will log in console. But console by default only show info log. To show other logs we need to do some configurations. 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Logback configuration in spring boot - 
+
+Logger Vs Appender - 
+	Logger gathers logging information from code. Think of this just a holding area. 
+	Appender publishes information that has been looged. Appender takes the logging information from the holding area and publishes it out somewhere that we specify, could be a console, could be output stream, could be a file, could be rolling file, etc. 
+	Rolling file means once the log file reachs the date or time boundary or size boundry, we will roll that log file to backup and start new log file. 
+	
+	Logging is much better than System.out.println. Because sysout will just goes to the standard output but it doesn't have concept of severity level. Becasue we can use severity level to filter and place them severe logs at one place and other logs somewhere else. 
+
+Configuring logging - 
+	Can configure log levels in application.properties
+	Or.. can configure in a logging file. Make a file with one of these names, which will be found automatically:
+		- logback-spring.xml
+		- logback.xml
+		- logback-spring.groovy
+		- logback.groovy
+	Can configure console and file appenders in these files. 
+
+logback settings - 
+	property: a variable with a value.
+	appender: publishes logging information.
+		- ConsoleAppender: logs to System.out or System.err
+		- FileAppender: logs to a file.
+		- RollingFileAppender: roll over log files when conditions are met.
+
+Rolling File Patterns - 
+	%i: represents a numerical file version.
+		- use with maxFileSize property
+		- Optional
+	
+	%d: rollover occurs at a date boundary. On that date the current log file will be renamed with the date pattern, and a new logging file will be created. 
+		Mandatory
+		
+	Add .gz or .zip extensions for automatic compression. 
+	
+	We need to mention %d in filename and %i is optional to mention in filename. 
+
+	maxHistory: naximum number of historical files to keep
+
+	maxFileSize: the maxinum size of a log file. After this is reached, the %i will increment.
+	
+	minIndex: starting index for the rollover count. 
+
+	maxIndex: ending index for rollover count.
+		Behavior: with log%i.txt filename and minIndex 1, maxIndex 3, log3.txt will be deleted, log2.txt will be renamed to log3.txt, log1.txt will be renamed to log2.txt and log.txt will be renamed as log1.txt
+		
+Pattern Identifiers - 
+	How log statement will be formatted.
+	
+	%d: date of logging event.
+	%p: Logging priority (DEBUG, INFO, ERROR, etc.).
+	%C: class name that is doing the logging.
+	%t: thread that is doing the logging.
+	%m: message supplied for logging.
+	%n: operation system line break.
+	
+src/main/resources -> logback-spring.xml		(filename is important because spring will be looking for this file)
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+ 
+    <property name="LOGS" value="./logs" />		<!--Indicates that we are going to have some directory called logs, in which we will have all logs-->
+ 
+    <appender name="Console"
+        class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n				<!--%-5level will give 5 character of logging level, like info, debug, error.-->
+            </Pattern>
+        </layout>
+    </appender>
+ 
+    <appender name="RollingFile"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/spring-boot-logger.log</file>
+        <encoder
+            class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+        </encoder>
+ 
+        <rollingPolicy
+            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGS}/archived/spring-boot-logger-%d{yyyy-MM-dd}.%i.log		<!-- ${LOGS} is property declared above. %d date boundary. %i size boundary-->
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="SevereRollingFile"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/severe-logger.log</file>
+		
+		<!--Below in filter we are saying want to log only warn and error into the this severe log file. If it was info then info, warn and error if debug then debug, info, warn, error -->
+		
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">		
+            <level>WARN</level>
+        </filter>
+		
+        <encoder
+            class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+        </encoder>
+ 
+        <rollingPolicy
+            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGS}/archived/severe-logger-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- LOG everything at INFO level -->
+    <root level="trace">
+        <appender-ref ref="Console" />
+    </root>
+     
+    <!-- LOG "com.plantplaces.*" at TRACE level -->
+    <logger name="com.plantplaces" level="trace" additivity="false">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+        <appender-ref ref="SevereRollingFile" />
+    </logger>
+ 
+</configuration>
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+K K JavaTutorials - 
+
+36.Default Logging Configuration in Spring Boot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+
+
+
+
+

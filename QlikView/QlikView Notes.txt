@@ -1,0 +1,265 @@
+QlikView Tutorial For Beginners | What Is QlikView | Qlikview Tutorial | QlikView Training | Edureka
+
+- QlikView is a business intelligence tool.
+- QlikView is data dictionary tool.
+
+What is business intelligence?
+The term Business Intelligence(BI) refers to technologies, applications and practices for the collection, integration, analysis, and presentation of business information.
+The purpose of Business Intelligence is to support better business decision making. 
+ 
+ 
+ 
+Durga-soft QlikView Tutorial - 
+
+Part 1 : 
+
+Other business intelligence reporting tools - 
+- Cognos
+- OBIEE
+- SSRS
+- SAP BO
+- QlikView
+- Tableau
+- All Normal Reporting Tools
+
+Basic use is to generate reports or dashboard (collection of reports).
+Reports will contain some information using which user will analysis the business.
+
+QlikView(Data Visualization and in memory)
+
+Advantages - 
+1. We can pull the data from multiple sources at a time.
+2. Loads all data into memory.
+3. Allows 10:1 ratio compression. (10gb data can be compressed into 1gb)
+4. The report or dashboard refreshes very fast.
+5. We can pull the data from ERP sources (SAP, Sales Force)
+6. Licensing cost is cheaper
+
+QlikView history - 
+QlikTech is a company who has released QlikView product. Sweden based company. Around 1994.
+
+QlikView Components - 
+- QlikView Desktop(Windows based component). (Designer role and developer role are there)
+- QlikView server
+- QlikView Publisher (QlikView Admin) (Web based component - means server will be at remote location.)(QEMC	QlikView Management Console)
+
+(There are three certifications - for developer, for designer and for admin).
+
+Version of QlikView - 
+8.5, 9, 10, 11, 11.2, 12 Beta
+
+QlikView Personal Edition (Limitations)
+QlikView License Edition
+
+QlikView Architecture - 
+- 3 tier 
+	- Source layer
+	- Back end layer
+	- Front end layer
+
+Check diagram on 14:19 
+
+What kind of relational sources we can have - 
+- Oracle Sqlserver DB2 Teradat(ODBC OLEDB)
+- Flatfiles XML XL Text html sharepoint
+- ERP SAP
+- Salesforce (for this we need 3rd party connectors)
+
+File extensions of QlikView - 
+.qvw(QlikView application. Extension of report or dashboard)
+.qvs(Script files)
+.log
+.qvd
+.qvx
+
+
+Internally it will work on Associated Query Language(AQL).
+keep function - in table view we can see both tables.
+
+Loading data from XML file - 
+
+======================================================================================================================================================================
+
+Part 2 - 
+
+QlikView Folder structure - 
+	- Applications folder(.qvw files)
+	- Dataload folder(.qvw )
+	- Include(Hiding scripts)
+	- Documentation(Project Related)
+	- Manual Files (flat files - excel, txt, etc.)
+	- Scripts(.qvs)
+	- QVD(Qlikview Data store)
+
+
+QlikView Data Modeling - 
+	- Star Schema
+	- Snow flake Schema
+	
+
+Typical challenges - 
+
+	- Synthectic keys
+
+		5 methods to resolve
+		Join
+		Composite keys
+		Concatenation(Auto concatenation, Forced No concatenation )
+		Link table
+		Rename
+		Qulify an unqualify methods.
+
+	- Circular loops
+		2 methods to remove circular loops
+			Alias
+			Remove
+			
+	
+===========================================================================================================
+Part 1 - QlikGeek
+
+- Loading data from an excel file/flat file. 	
+	Open script page. Select an excel file using Table Files button.
+	
+- Directory Statement - 
+	Open script page. Check Relative Pth checkbox. Select an excel file using Table Files button.
+		
+- Drop Table - 
+	Write below code in script file - 
+	Drop Table SampleTable;
+	
+- Drop Field - 
+	Drop Field email;
+	
+- Rename Table - 
+	Rename Table Table1 to SampleTable;
+	
+- Rename Field
+	Rename field id to Customer_id;
+
+We can also rename using alias.
+
+(RIght click -> Properties -> Add all button -> ok ... You will get a list boxes.)
+
+TO create a chart - Right click new sheet objects -> select chart
+
+(Go to mockaroo.com to get data)
+		
+========================================================================================================
+
+Part 2 - 
+
+- What is QVD
+	Qlikview data file format. It stores simple table into QVD. Because of this it fetches data faster. Backup. For improving incremental load(means fetching only newly added data and adding it to existing side). 
+
+	STORE Table1 into MYFIRSTQVD.QVD(QVD);	--(We can also  specify path vefore QVD file name, else it will be stored in the location where qwd is present.)
+	
+	STORE Table1 into MYFIRSTQVD.csv(txt);
+	
+- QVD must scenario
+- Export data to CSV
+- QVD related function
+
+If we specify name of QVD file in Qlikview, we can fetch meta data from QVD.
+- LET vQVDTIME = QvdCreateTime('QVDFilename.QVD');	-> Reload button		(QVD creation time)
+	Right clik -> New sheet objects -> Text Objects -> In Text enter variable name =vQVDTIME -> Apply
+
+- LET vQVDNoofrec = QvdNoOfRecords('QVDFilename.QVD');
+	Right clik -> New sheet objects -> Text Objects -> In Text enter variable name =vQVDNoofrec -> Apply
+ 
+- LET vQVDNoofField = QvdNoOfRecords('QVDFilename.QVD'); 
+
+==============================================================================================================
+
+Part 3 - User Preferences.
+1. License
+2. Security
+3. Default Object Settings
+4. Editor
+5. Design
+6. Font
+7. Save
+
+Editing QVD with Q-Eye Tools
+
+Settings menu -> User Preferences. (Desktop preferences.) 
+
+Document settings and Sheet settings - applicable for particular document and sheets.
+
+Document settings  -background color, hide tabs, tab row background, font, font style, size, Presentation tab(We do alignment of fields used in document)
+
+ -----------------------------------------------------------------------------------------------------------------------------------
+ 
+Creating and Configuring sheets in QlikView - 
+
+- Add sheet, delete sheet, change properties of sheet, copy sheet(right click on sheet->copy sheet).
+- Layout menu -> add sheet OR click button in design tool bar.
+- Opening sheet properties - settings menu OR design tool bar OR right click on blank canvas -> properties OR shortcut keys
+	Sheet Properties - change title of sheet, show sheet - we specify condition based on which sheet will be shown, background, image, zoom, 
+	Sheet id(unique number. Useful in cases when we want to specify condition to show sheet.), tab color
+	Fields tab in sheet properties - It is a filter we want to add to sheet (year, month, etc) 
+	Object tab - All object can be seen which are present in sheet. We can go to particular objects property directly from here. Delete object.
+	Security tab - If we don't want end user to remove sheet, etc. 
+	Triggers tab - event which will occur when sheet is activated and when sheet is leaved - OnAvtivateSheet, OnLeaveSheet
+	
+ 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+4. Importing Data from Excel into QlikView - 
+
+File -> new (will open new document) -> (You can cancel the wizard) -> Save document(.qvw) -> go to script editor (using icon in toolbar) or ctrl + E -> To import goto data tab ->
+we can connect to a db or load data from flat files(by clicking Table Files buttons) other options are also there -> Select excel file -> Select file type -> 
+Select Tables (excel sheets names are present related to workbook) -> Header size (none - header is on first lines, for header is present on some other line in excel specify 
+that line number) -> Embedded labels -> Removing the columns press cross button -> Finish 
+
+QlikView generates the script. 
+
+Prior to LOAD keyword we can give a name to table or data we imported. 
+
+Whenever we are importing data from flat files we show check the relative path checkbox. Helpful when we need to deploy QlikView file on the server.
+
+Clik relative path -> follow same steps to load data from excel -> In the script Directory keyword is there, you can change it to any table name. 
+
+We can change column name also. eg - [Call Number] As CallNo. (If we want space the surrond them with brackets. [Call No])
+ 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+ 
+5. Creating and configuring ListBox in QlikView 
+ 
+ 
+
+ 
+ C:\Program Files\Java\jdk1.8.0_181
+ 
+ C:\Program Files\Java\jre1.8.0_181
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

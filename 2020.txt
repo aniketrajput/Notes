@@ -1,0 +1,127 @@
+1. Plan for learning	- Things or technologies you need to learn - 
+	1) Every related to Spring - Spring boot, Spring Data, Spring Security, Spring Cloud, OAuth, etc
+	2) Every thing related to Hibernate and JPA
+	3) JUnit, Mockito, Spring boot test
+	4) Microservices 	
+	5) Docker
+	6) Kubernates
+	7) Kafka
+	8) Jenkins
+	9) AWS or Azure
+	10) Thymeleaf
+	11) Kibana
+	12) Design patterns
+	13) DDD
+	14) Angular
+	15) CI/CD
+	16) Git/Github/JIRA/Bitbucket
+	17) Maven in depth
+	18) Java concurrency
+	19) Algoexpert.io
+	20) Swagger, Swagger UI, HATEOS
+	21) SNMP Protocol
+	
+	
+	After completing above cources mark them and make a list and notes.
+	
+	Add above technologies in resume. Also add Documentation creation using AcsiiDocFX, UMLet etc. 
+	
+2. Do personal project and build portfolio - put on AWS free
+
+3. OCAJP Programmer 1 - February
+
+4. Increse the SIP amount - April... wait here, open RD and save aggressively
+
+5. New RD or Gold RD - April
+
+6. Prepare for interview abroad and apply 
+
+7. Job change by the end of July 
+
+8. If job is changed, nice budget vacation alone
+
+9. Plan for Rahyl School
+
+10. Good health. Exercise. 
+
+11. Read lots of novels and books. Improve vocabulary and English
+
+12. Get involved in secondary income
+
+13. Plan for our bigger business venture
+
+14. Programming and Data Structure and Algorithm
+
+Less of - 
+1. Drinking. Only one beer once fortnight or in a month
+2. No junk food
+3. Less of eating outside
+4. No more liabilities or loans. 
+
+To implement our business we will need to take out break for mininum 6 months for IT.
+To take calculate risk and take loan after 2-3 years for our business we will need to save EMI amount + some important expense for at-least 18 months i.e. 1.5 years. 
+Save mininum 12 lakhs in cash
+We can apply for loan immediately after job change. Talk to pappa, tell him to support in this and help to morgage our home. Assure him that you will pay complete EMi from salary. Tell him if need we will take some amount out from it for neha's marrage. Ask him to handle the busineess for 1-2 months, until every thing is settled. Then we can quit. 
+Do not tell about your plan and future goal to any one, not even to any close person. 
+
+Daily Schedule - 
+
+2 hours for learning, watching courses
+1 hours novel reading
+1 hour exersize 
+
+Wake up at - 7 AM
+Get ready and reach office till 9:30 AM
+Office 9:30 - 6:30 PM
+In office take out 2 hours after work is done. Compulsary
+Come home till 7:30 PM
+Spend some time with family have light dinner
+Read novel for one hour
+
+Saturdays and Sundays - 
+Don't be lazy, invest most of the time learning
+Read
+
+
+
+
+Takeaway - 
+	DBCore
+	All MBA components
+	SVS
+	
+
+----
+
+
+Certified Kubernetes Administrator (CKA)
+Certified Kubernetes Application Developer (CKAD)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

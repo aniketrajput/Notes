@@ -1,0 +1,109 @@
+KK - Spring Boot Tutorial (version 1.5.4)
+
+Part 1 - Introduction to Spring Boot
+
+- Spring is a great framework but it has few pitfalls 
+- Spring's XML based configuration is a nightmare in the world of annotaions
+- There was no java framework to support microservices
+
+- Convention over configuration 
+	Spring boot has taken away all the XML based configurations and provided Annotations for using the Spring Framework.
+	
+- Standardization for Microservices
+	One of the main objective of Spring Boot is to provide a unified ecosystem of libraries & standards to all the developers utilizing Microservices methodologies.
+
+- Integrated Server for Development
+	Spring Boot attaches a Tomcat/Jetty server with the compiled Jar using Maven/Gradle
+	
+- Cloud Support
+	Spring Boot provides cloud support for configuration, tools and clients. It's also compatible with Cloud Native and works seamlessly with Cloud Foundry, Pivotal etc.
+	
+- Adapt & Support for 3rd Party Library
+	Spring Boot has taken a significant step and widen support for 3rd Party Open Source Library like No-SQL DB, Distributed Cache etc.
+	
+In one sentence, Spring Boot is equal to (Spring Framework - XML configuration) + Integrated Server
+
+Using Spring initializer we can create a starter spring boot project
+
+
+Part 2 - Create Spring Boot Application
+
+Spring Boot had been build for Rapid Application Development.
+
+Here are the following topics that we will cover in next few video series:
+
+Create Spring Boot Application using 
+	Eclipse maven
+	start.spring.io
+	Eclipse STS
+	
+Run Spring Boot Application using 
+	Java CLI 
+	Eclipse IDE
+	
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Spring Boot Batch Tutorials - 
+
+
+
+To read csv file - open csv dependency can be used 
+
+To read excel file - apache poi dependency and apache poi oo (for 2007 onwards)
+
+json dependency - jackson-databind
+
+commons-io dependency - to identity which type of file is it
+
+spring.servlet.multipart.file-size = 100MB
+spring.servlet.multipart.max-request-size=500MB
+
+private MultipartFile file;		
+
+	
+What is Spring Batch? 
+	- Open source framework for batch processing 
+	- Provides reusable functions for processing large volumes of records
+	- Includes logging/tracing, transaction management, job processing statistics, job restart, skip, and resource management
+	
+Spring scheduler is available. These schedulers will trigger the spring batch process. 
+
+Scheduler -> Job Launcher -> Job repository -> db
+
+Job Launcher -> Job -> Step -> ItemReader
+							   ItemProcessor
+							   ItemWriter			
+							   
+					-> Step (there can be multiple Steps in a particular Job)
+
+					...
+					
+All the processing of Step happens in StepExecution and Job Execution happens in Job Execution
+							   
+Check diagram of architecture on desktop.
+
+Dependencies added - Batch, Web, H2, DevTools, JPA
+H2 is in memory db  and DevTools dependency can be used to query h2 db. All batch info like which batch has run, what time it was run, etc. will be stored into the h2 db. 
+ItemWriter will use JPA dependency.
+
+In application properties we can disable the automatic job launcher which spring framework invokes - spring.batch.job.enabled = false
+
+Git link - https://github.com/TechPrimers/spring-batch-example-1
+	
+Nice example. Shown how to use in memory h2 db and how to access it when application is running. 
+
+Spring batch has its own database using which it know job execution details.. tables can be seen in h2 console	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

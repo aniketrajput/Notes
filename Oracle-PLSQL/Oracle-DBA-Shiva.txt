@@ -1,0 +1,474 @@
+Oracle DBA(Oracle Database Administration) – DurgaSoft – Shiva. Session 1.
+Pre-requisites – 
+Basic SQL
+Basic Linux
+
+Three-tier
+Client tier(Developed by using frontend technologies-html,css,js,etc.) – Middleware(developed using languages using java, servlets, jsp, .net, etc.) – DB server(user must have privileges to interact with db server. DBA is also a user with all privileges. There is always a DBA).
+
+Roles of DBA – 
+-	Installation of Oracle software.
+-	User management (Which privileges to be granted to which user, creating users, allocation of tablespaces, password expiry dates, etc.)
+-	Taking back up (automation scripts are there).
+-	Monitoring database instances.
+-	Crash/Instance recovery.
+-	Creation of data guard mechanism (When there is failure in one database then automatically load will be redirected to another database. This data guard mechanism).
+-	Applying patches. (When bugs occurs at database level, to fix these bugs patches are applied. DBA can approach to Oracle Corporation and ask them for a patch and according to bug Oracle can send them patches.)
+-	Installation of client software (in order to have client-server communication, client need to have client software and server need to have server version software).
+-	Upgradation (Upgrading Oracle version to higher version)
+-	To create database link (Communication path between to different databases. Suppose one db is in India and another is in USA. To have communication between them we need to have database link).
+-	Monitoring alert log files (Contains complete diagnosis, information about database).
+-	Schema refreshment. (Process of moving data from one system to another system. System means test system , development system, production system)
+-	To create and manage materialized views. (It is a local copy of remote database object. Why we need this -  when ever DBA creates a database link between local and remote dbs and data objects on remote db is increasing then performance of db links is degraded, so to avoid this DBA creates materialized views. When remote copy is modified then automatically local copy is also modified).
+
+Session 2 – Oracle Server Architecture (11g Release 2 version)
+Check Vanderlande Notepad for diagram 
+
+Architecture is divided into two parts – Oracle instance and Oracle database
+
+The moment we start oracle database, the oracle instance will be created. (When we execute start up command).
+
+SGA can be shared by all oracle process. 
+PGA is not sharable. It is for specially for a particular user session.
+
+Oracle Instance (SGA (Shared Global Area) + PGA (Program Global Area)) -
+---- Instance 
+	--SGA
+		--- DbBuffer – Area where actual transaction data is stored temporarily. When user commits then dbwr will transfer this data in data files.
+Divided into three main sections  - 
+1.	Dirty blocks (modified blocks) -  Modified data is stored in dirty block.
+2.	Free blocks – It doesn’t contain anything.
+3.	Pinned blocks – Blocks which are currently being used. 
+
+		---Cache
+		---Shared Pool -  Is divided into two sections –
+1.	Shared library cache – contains information about SQL and PL/SQL ,recently executed pl/sql statements. 
+2.	Shared Data Dictionary chache – contains complete metadata of the database. It contains all info of tables, views, privileges, etc. 
+		---Large Pool (Optional) – Whenever DBA is performing a bulk amount data operations like backup and restore operations ,then millions of records will be involved, so in such cases they can set up a additional component called large pool.
+		---Java Pool (Optional)  - contains all jvm and java code information.
+----Background Process (Mandatory oracle processes to run database)
+	---dbwr (db writer) – Write data from database buffer cache (DbBuffer) to data file. To shift/transfer data from database buffer cache to data files (data files are permanent files where data is stored). Whenever user executes commit then dbwr process is invoked. Secondly whenever checkpoint is executed then also dbwr process is invoked. Thirdly once in every 3 seconds dbwr will invoke.
+	---logwr (log writer) – To shift data from online redo logs to  online redo log files(redo log files are permanent data files used for recovery process). Logwr will get invoked in following situations – When there is 1/3 full of online redo buffer cache, whenever user executes commit comment, whenever checkpoint is occurred. 
+	---smon (System Monitor Process) – It is used to recover the DB or instance recovery. Whenever there is abnormal db crash there are changes of losing redo files and system files, so at that time smon helps. It is invoked -  Whenever db recovery is to be done (smon process will recover the db, it performs crash recovery in two format first is roll forward and second is roll backward mechanism. The transaction data is stored in redo log files and data files. And the time of dbwr writing data to data file suppose db is shutdown abnormally. So in such case dbwr will not be able to write complete information. It has written only partial information. So when db is started next time, then smon will perform roll forward, roll forward means the data which is available in online redo files will be written to data file. This maintains consistency of data. So whenever next time instance is started it is responsibility of smon to perform roll forward. Roll forward means the incomplete information in data files will be filled from online redo log files to data files. And roll backward means whatever data is not available in online redo files from data files is completely erased.)
+	---pmon (Process Monitor Process) – Its responsibility is to monitor processes. It maintains complete user sessions, whenever user disconnects from the server automatically the resources allocated for that user will be cleaned up and released by using pmon process i.e. it frees memory for disconnected users.  
+	---ckpt (Checkpoint background Process) - 
+
+Oracle Database – (This is a physical database system)
+	---Control Files (*.ctr) 	- It stores database name, timestamp when db was created, physical location of control files, redolog files, data files, check point no, system change no, etc. It contains complete key information. It is heart of every db system. We can store control files from  1 – 8 files. (These are number of files per database).
+	---RedoLog Files  -It is for recovery purpose. When we perform any transactions, transaction data is stored in redo log files. So whenever crash is occurred using this files we can recover database. We can store redolog files from  1 – 5 files. (These are number of files per database).
+	---Data Files (*.dbf) – User data will be stored in database. We can store control files from  1 – 1024 files. (These are number of files per database).
+
+Listener is a component on server whose job is to listen to the client request. Listener will have a list of services. From this list of services an appropriate service is selected and client request and this service is handed over to dispatcher. Dispatcher is another component of server. After handing over the dispatcher listener will disappear. 
+Above was the overall architecture of oracle instance.
+
+
+
+Session 3 – Startup and shutdown modes. 
+
+Idle – startup nomount – startuo mount – startup open
+1.	Startup nomount – In this mode oracle will scan the control file. We are going to create a parameter file first, in this file we will specify the control file location and info, db name, diagnostic information, SGA size, block size etc. In this mode it will scan parameter file. If parameter file is ok then it will enter into next mode.
+2.	Startup mount – We can perform maintenance operation or archive log(for backup and recovery) operations. End user or developer cannot access db in this mode. Only DBA can access
+3.	Startup open – DBA and Developers will be working with database
+4.	Startup restrict – only for DBA (dropping db)
+ 
+u01/app/oracle/product/11.2.0/dbhome_1/dbs -  This folder contains parameters file.
+
+Shutdown Modes – 
+1.	Shutdown normal – Graceful shutdown. Everything goes fine. Oracle database server waits for the clients to be closing the session. Oracle will wait for end users to close their sessions.
+2.	Shutdown transactional – Oracle waits for users to execute either commit comment or rollback comment. Till user execute any of this the oracle db doesn’t shutdown. This is also successful shutdown, in next start up no recovery is required.
+3.	Shutdown immediate – Immediately db is closed by committing the committed transactions and rolling back the uncommitted transactions.
+4.	Shutdown abort -  Critical shutdown.  Whenever some control files, redo log files are missing it is necessary to shutdown abort. In this mode without closing any data files automatically oracle db will be shutdown, so in next instance startup and instance recovery is required. That is when you start the db next time instance recovery will take place. Oracle will perform either roll forward or roll backward.
+
+
+Session 4 – Parameter file and server parameter files – 
+Parameter file -  
+1.	Database name 
+2.	SGA size
+3.	Control file location (Where control file has to be created)
+4.	Diagnostic information (Specifies one location where all user errors, background errors and all OS errors will be stored. Introduced in 11g R2 version. In 10 g version we have files – adump, bdump)
+It is text file, we can modify.
+It is static means whatever changes we make to db it is not affected currently. 
+
+Server parameter file – It is a semi text file means some part is in text and some is in binary format.
+It cannot be understood by users.
+Changes are affected dynamically.
+
+When we are creating a db manually it is our responsibility to create parameter file. 
+When we are creating db using GUI mode, which is achieved using utility called DBCA, then automatically server parameter file is created. 
+
+
+Session 5 – Oracle Server Architecture – II
+1.	Oracle Instance SGA + PGA + Background Process
+2.	Oracle database
+
+Oracle database s	tructure
+1.	Logical structure – 
+--- Tablespaces (several segment make tablespace. It is a logical entity which can group data files. We have data files in tablespace)
+	--- Segment (several extent makes segment)
+		--- Extent (several blocks makes extent)
+			--- Blocks (actual data is stored in blocks)
+2.	Physical structure - 
+--- Control files – Heart of db. Divide into sections  - 
+	--- Reusable section. (Can store RMan backup information. Stored upto 7 days. We can specify expiry policy.)
+	--- Non-reusable section – Contains dbname, date and time of db creation, location of db files and redolog files, SCN, etc.
+
+--- Redolog files –Recovery operations. Whatever data we are storing in db server the data is stored in redo log files. From redo log files we can perform recovery operations.
+
+--- Data files
+
+
+Session 6 – Oracle Versions
+Started from 2.0, 3.0, 4.0, 5.0,
+6.0 – pl/sql concept was introduced
+7.0 – stored procedures we introduced
+ 8.0 (Table partitioning was added)
+8i – we can install db on remote servers and applications can access them through internet. (i stands for internet)
+9i
+10g, 11g (g stands for grid computing. Grid is a combination of several db instances. If once instance is failed the another can be used.)
+12c
+
+We have three types of servers – 
+1.	Enterprise Edition – 82-90% people use
+2.	Standard Edition – 10-20%
+3.	Express Edition – very limited. Only 4 GB of data can be stored.
+
+
+10.1.0.1 (Base version)
+10.2.0.1 (Base version)
+11.1.0.6 (Base version)
+11.1.0.7 (Patch Set)
+11.2.0.1 (Base version)
+11.2.0.2 , 11.2.0.3, 11.2.0.4, 11.2.0.4, 11.2.0.5 (Patch set)
+12.1.0.1 (12 – Major release number, 1 – Maintenance release number, 0 – Application server number , 1 – Component specific number)
+
+Patch Set fix some bug.
+
+
+
+
+
+
+Session 7 – Creating tablespaces with auto extend on
+
+V$DATABASE displays information about the database from the control file. 
+
+---Create tablespace userdevts datafile ‘u01/app/oracle/sample.dbf’ size 10m autoextend on next 10m maxsize 1000m;
+(tablespace name is ‘userdevts’ , datafile name is ‘sample.dbf’)
+
+We can again off autoextend – 
+--- alter database datafile ‘/u01/app/oracle/sample.dbf’ autoextend off;
+
+
+Once tablespace is created we can assign that table space to a particular user.
+(First dba will create user, grant privileges to that user, then he will create tablespace, then assign tablespace to that user, then user can start working like creating database, db objects etc.)
+
+Creating a user – 
+--- create user u2 idendified by u2;
+---grant connect, resource to u2;
+
+Assigning a tablespace to user as default tablespace–
+---alter user u2 default tablespace userdevts;
+
+How to create Big file tablespace – Each block can be upto 4g. Instead of having tablespace with small files we can have a big file tablespace with large files. Drawback is the space is wasted when we are not using that much space.
+---Create bigfile tablespace bigts datafile ‘u01/app/oracle/bigdevts.dbf’ size 10m;
+
+Dictionary managed and local managed tablespace – 
+--- create tablespace samts datafile ‘/u01/app/oracle/sample.dbf’ size 10m extend management local;
+(local means all free extend information will be managed by tablespace itself, in case of dictionary all extend information will be managed by data dictionary.)
+
+We can add auto extend to big file tablespace – 
+---alter tablespace bigts autoextend on next 20m
+--- alter tablespace bigts resize 15m;
+
+If we want to see tablespace information then there is a view – 
+--- select file_id, file_name, autoextensible from dba_data_files;
+
+
+Session 8  - Archie File Management 
+Archive log mode and No Archive log mode – These are the two different modes which DBA can enable.
+By default when you start DB then it is started in No Archive mode. 
+When we start DB in Archive mode then Archive log background process is started. 
+Functionality of archive log background process is to shift redolog files to archive destination. (check diagram – 2:33) 
+In normal no archive mode, when all redolog files are filled then automatically the very first redolog file will be overridden and then second and so on. 
+In case of archive mode, when redolog files are filled, first data from first redolog file will be shifted to archive destination and then only it will be overridden. 
+Chpt(checkpoint) background process will be executed whenever time interval specified is expired and on execution of this process DBWR will move data from db-buffer cache to data files. At the same time LGWR (log writer) will write data from RedoLog Buffer to redolog files. 
+Parameter file will contains all the database parameters given at the time of database creation.
+Archive log mode will play an important role in back up and recovery. If we don’t run it in archive log mode we will be able to recover only most recent data. To collect past data we need to run it in archive log mode. 
+Archive destination is set by database administrator. 
+
+To confirm if db is running in archive mode or no archive mode run below query – archive log list;
+Changing mode -  
+Alter database close; 
+Select open_mode from v$database;
+Alter database noachivelog;	--before this take db to mount mode. Select status from v$instance;
+
+Archiving is nothing but saving.. saving redolog file to offline destination. 	
+
+
+Session 9 – User Management in Oracle
+It is responsibility of DBA to assign privileges.
+Privileges are of two types – 	
+	---Object privileges – Are the privileges which is defined on objects like tables, sequences, synonyms, etc.  
+	---System privileges – granting privileges to users. Connect , resource privileges, etc.
+
+Roles – Collection of privileges. Instead of granting individual privileges DBA can create a role with multiple privileges and then assign this role to users. 
+Roles can be – 
+	--- Predefined 
+	---DBA created
+
+Default users – When Oracle is installed automatically these user are created –
+	---sys (Highest privilege user)
+	---system
+---sysman
+	--dbsnmp
+
+Profile – DBA also specifies profile. Profile is nothing but resources. It can be granted to user. 
+	---Predefined
+	---User created
+
+User authentication –
+	---OS level
+	---DB level (asks username and password)
+	---Network level
+
+Views – In order to view information about users oracle provides three type of views – 
+	---dba_users (list of user and there info)
+	---dba_roles (roles assigned to users)
+	--session_privileges (privileges given to user)
+
+Tablespaces – Every user has three types of tablespaces – 
+	--- default tablespaces (which is defined at the time of database creation)
+	--- Quota tablespaces
+	--- temporary tablespaces
+
+
+Session 10 – Undo Management
+
+Undo tablespace old/past images are stored.
+Whenever user executes rollback then Oracle should be able to provide old images. So the purpose of undo tablespace is to keep commit and uncommitted information. 
+Diagram – 2:07
+Status – 
+	Online
+	Offline
+	Pending online 
+
+Views – 
+	dba_rollback_segments
+	v$rollname
+	v@rollstat
+	dba_undostats
+
+Errors – 
+	Outerspace error
+	Snapshots too old error(ORA-1555)
+
+SQL – 
+	Create – creating a new undo tablespace
+	Alter – altering undo tablespace
+	Drop – droping a undo tablespace
+
+Problems Prior to 9i –
+1.	DBA had to create rollback tablespace 
+2.	Under rollback tablespace they created rollback segments
+3.	Under a rollback segment 2 extents are allocated
+4.	After creation or rollback segment by default they are offline.
+5.	Once the db bounce(stop and start) the segments goes offline. (they had to started again)
+
+9i Onwards – 
+	Undo-management = auto (everything is done by oracle – extend allocation, deallocation, etc.)
+	Undo-tablespace = ‘undotablespacename’	--tablespace will be created automatically	
+	Undo-retention=900sec	--by default oracle will retend the commited data for 900 secs in undo tablespace. After this oracle will override.
+	
+10g onwards – 
+	Retention guarantee was introduced. Means even if space is not available, oracle guarantees it will retend the committed information (for time specified in undo_retention). 
+	
+Expired data -  The committed data which is older than the retention period.
+Unexpired data – The uncommitted data which is lesser than the retention period. 
+Undo tablespace will retend expired and unexpired. 
+
+Creating rollback tablespace – 
+	Create tablespace rbts_dev datafile ‘/u01/app/oracle/oradata/dev/rbts.dbf’ size 10m;
+To view tablespace name – 
+	Select tablespace_name from dba_tablespaces;
+
+Create rollback segment rbs1 tablspace rbts_dev;
+	
+	Alter rollback segment rbs1 online; 	--to make it online
+	
+Above commands we needed to be executed before 8i version. 
+
+	Drop rollback segment rbs1; 	
+	Drop tablespace rbts1;		--coz from 9 onwards it will create automatically.
+	
+From 9 onwards
+	Create undo tablespace uts datafile ‘u01/app/oracle/oradat/dev/uts.dbf’ size 10m;
+	Select tablespace_name, segment_name, status from dba_rollback_segs;
+	Show parameter undo;	--will status
+	
+	Select tablespace_name from dba_tablespaces;
+
+	Alter system set undo_tablespace = uts;
+	
+	Alter system set undo_retention = 1000;
+
+	Show parameter undo;
+
+	Alter tablespace uts retention_gaurantee;
+
+Session 11 – Back up and Recovery
+
+Diagram – 2:00
+
+User managed backup – 
+	Hot back up/ Online backup/ Inconsistent backup 
+			By using OS commands we can achieve this (cp – copy command, move command). Copying control, redolog and data files.
+			SCN (Sequence Change Number) - DB is combination of CRD files(control, redolog, data). When chpt(checkpoint) background process is executed its responsibility of oracle 
+				to update SCN number into control files and data files. SCN is a unique identified number which identifies a particular transaction. 
+				Every time commit command is executed it is responsibility of oracle to update SCN number into control files and data files. Both control files and data file will 
+				have same SCN number. When we take backup and at that time when control file and data file have same SCN number then it is called consistent backup.
+				In case db is shutdown in abort mode then oracle may not be able to update SCN number, so in this case both files may have different SCN numbers and if we take backup 
+				then it will be inconsistent backup.
+				Online backup is taken when db is up and running. 
+
+	Cold back up/ Offline backup/ Consistent backup
+		Normal OS command to take backup
+	
+Logical backup – 
+	We can take backup of logical structure of database like - tables, procedures, etc. 
+	
+	Traditional logical backup- 
+		Utilities(tools) – exp and imp	--till 9i
+	
+	DataPump – 
+		Utilities – expdp and impdp
+
+RMAN backup - 
+Build in oracle tool. 
+Full back up
+Incremental/differential backup
+Compressed backup
+	
+	It can be configured in two modes – 
+		No catalog mode 
+		Catalog mode
+
+Recovery Process – 
+	Complete recovery
+	Incomplete recovery
+	
+
+Whole database backup-
+	Includes control, redolog and data files
+
+Partial database backup-
+	It may exclude either of CRD files.
+	
+	
+Session 12 - Traditional logical backup
+
+Logical backup - Schema, tablespaces, procedures, tables, etc. 
+DB should be on, unless you don't open the db you cannot do logical backup.
+
+Utilities - exp and imp 
+	It will be exported to a dump file. Dump file will contains all db objects.
+	
+Backup level - Database level (complete db),  Schema level, Table level, Tablespace level
+
+Innovation - (how we will execute) Using command line, parfile, shellscript
+
+Buckup destination - disk, tape drive, or nfs
+
+Files - dump files and logfiles
+
+We can import using dump file created by exp.
+
+exp and imp version must be same.
+
+Views - 
+	dba_exp_files
+	dba_exp_objects
+	dba_exp_versions
+
+Backup types - Full backup, incremental backup
+
+From 10g onwards - expdp and impdp. Advanced tools
+
+Pre-requisites - 		
+	Db up and running
+	create a logical folder(directory) where dump file and log files will be stored.
+	
+
+Session 13 - Logical incremental backup
+
+Logical incremental backup means only the updated objects will be backed up. 
+
+imctype = complete/ incr/ cumulative	
+	imctype = complete -- means complete backup will be taken.
+	imctype = imcr --incremental. Only modified object since last back is taken. 
+	imctype = cumulative --
+
+	full = Y --similar to imctype = complete but it would not be helpful for next level database. This difference between them.
+	
+Views - 
+		dba_exp_files
+		dba_exp_objects
+		dba_exp_versions
+		
+(The Oracle System ID (SID) is used to uniquely identify a particular database on a system. For this reason, one cannot have more than one database with the same SID on a computer system.
+	Set the ORACLE_SID environment variable (or ORA_SID on VMS systems) to work on a particular database. SID is case sensitive.
+		Windows: set ORACLE_SID=orcl
+		Unix/Linux: export ORACLE_SID=orcl )
+
+
+Session 15 - Database links
+
+To have communication between two database. We can access database situated at remote location.
+
+In oracle networking tnsnames.ora and listner.ora are two important files.
+
+Using database links we can have oracle networking and materialized views(local copy of a remote database). 
+
+listener.ora is maintained by server. tnsnames.ora is on client side machine.
+Purpose of listener.ora is to listen to client requests. It will take the client request and forward to dispatcher. (In case of RAC we have multiple listeners in 
+listener.ora)
+
+netca(net configuration assistant) utility - this a utility using which we can create listener.ora and tnsname.ora graphical interface. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

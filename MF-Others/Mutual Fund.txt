@@ -1,0 +1,626 @@
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+3 categories of MF
+- Equity
+- Debt
+- Balance fund - Equilty + Debt
+
+----------------------------------------------------------------------------------------------------------------------
+
+ELSS - 
+Diversified equlity mutual funds. (Majority are invessted in equity
+Benefits - Saves tax
+
+If we start SIP it will be locked in for 3 years from date of investing
+
+ELSS comes in 2 options - 
+	Growth - We get lumpsum amount after completion of locking period.
+	Divident - Invester gets divident whenever it is announced at MF house even in lock in period. 
+
+Returns are tax free
+
+Low lock in period 3 years
+(National saving certificate has lock of 6 years
+PPF has lock in of 15 years 
+Tax saving FDs has lock in of 5 years)
+
+ELSS has high liquidity
+
+Better returns
+
+----------------------------------------------------------------------------------------------------------------------
+
+MF : Growth Vs Divident Options -
+
+Growth : Profits are not given out made by underlying investments. Profits are reinvested. 
+	Reinvestment of profits increases the nav.
+
+Divident : Part of the profits made are paid out to the investors. 
+	When profit is made nav rises, then part of profits are paid out then nav reduces. 
+
+
+----------------------------------------------------------------------------------------------------------------------
+Saving account VS Liquid funds - 
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+Mutual fund is like fixed deposit where we deposit our money and it will give us return.
+
+There are three types of mutual funds, they are debt fund, equity fund & balanced fund.
+
+Debt fund is similar to Bank. When we invest our money in debt fund, fund house will use our money to give loans to private companies or 
+Indian government or State government.
+Debt fund - Risk is low. Return is around 8%. If you withdraw money within 3 years, you need to pay tax based on your 
+income tax slab (like 10% or 20% or 30%). If you withdraw after 3 years, you need to pay 20% tax with indexation.
+
+Indexation: 20% tax with indexation means you will be discounting inflation while paying tax. So you will be paying less tax after discounting 
+inflation (less than 15%)
+
+Inflation: Inflation is most important factor when comes to finance. It means decrease in purchasing power of money. To give you an example, before 
+10 years Rs.10 is a big amount. But now??? In 10 years from now Rs.10 will be nothing. Thats the inflation, every year value of money will get reduced. 
+Government regularly release inflation details.
+
+	There are many types of debt funds like gilt, income, short term, liquid, ultra short term.
+Gilt fund - your money will be loaned to government. Risk is very low since borrower is Government.
+
+Income fund - you will receive monthly income. Suitable for retired people.
+
+Liquid fund - you can withdraw your money anytime without any charges. It is like savings account.
+
+Short term or Ultra short term - if you like to invest only for some months.
+
+
+Equity fund. As the name says, your money will get invested in Share market.
+Equity fund is riskier than debt fund. But it gives good return like 12% to 25%. If you withdraw withing an year you need to pay short term capital 
+gain tax of 15%. If you withdraw after 1 year and if your return is more than 1 lakh, you need to pay capital gain tax of 10%.
+It is recommended to hold equity mutual funds at least 3 years to see decent return.
+Equity mutual funds comes in many types like large cap, mid cap, small cap, sector.
+
+Large cap or Bluechip fund - your money will get invested in big companies. Risk is low and return is around 10% - 13%.			-- big amount for 15 years.
+
+Mid cap fund - your money will get invested in medium size companies. Return is more than 13%. Medium risk.			-- small amount for 5 years
+
+Small cap fund - your money will get invested in small companies. Very risky but good return, more than 20%.			-- small amount for 4 years
+
+
+
+Sector fund - your money will get invested in companies in specific sector. For example, Equity Infra fund means, your money will get invested in 
+Infrastructure companies. Return varies based on sector, but it will be more than 15%.
+
+
+Index fund - Return is around 10%. Medium risk.
+What is index fund? There are many indices in India like Nifty, Sensex, Bank nifty, etc., Each index comprise of many companies with different 
+weightage. For example, Nifty comprise of top 50 companies in NSE. If you invest your money in Nifty index fund, it is like investing in top 50 
+companies in NSE.
+
+
+ELSS - It is tax saving mutual fund. You can save tax under Section 80C. It is getting popular now. Lock in period is 3 years. Return is around 12%.
+
+
+Arbitrage fund - It is very very low risk equity fund. Arbitrage fund won’t get affected by markets up and down. Return is 8%. Taxing is same as 
+equity mutual funds.
+
+
+Balanced or Hybrid fund. It is mix of Equity and Debt fund. (65% equity and 35% debt). Low risk. Return around 12%. Taxation is similar to equity fund.
+
+
+First, choose fund type based on your risk potential (like debt or equity or balanced).
+If you are retired person or if you don’t want to take any risks then choose Debt funds.
+If you like to take only small amount of risk, choose balanced fund.
+If you earn average income, then choose balanced fund or large cap or both.
+If you fall under huge income category, then mix large cap, mid cap and small cap.
+
+To choose fund, visit Funds - Value Research Online(https://www.valueresearchonline.com/funds/). Here are the list of things to note while choosing 
+fund…
+See the fund’s performance from inception. See yearly, 3 year, 5 year and overall return.
+See the expense ratio. Expense ratio is the amount you are going to pay as commission. Less than 1% is better.
+See exit load. This is amount you need to pay when you withdraw.
+Value research online gives star rating for all funds. Choose funds with atleast 4 Stars.
+IMPORTANT NOTE: All funds comes in two plans Regular & Direct plan. Regular means you invest via Broker or Agent. Direct means you invest directly. 
+Broker or Agents charge commission. Their commission will be around 1% per year. IT IS LOT OF MONEY. So never go with Broker or Agents.
+If you are new to mutual fund, you need to register KYC first. It is one time process and it is centralized. Once you get registered, you can invest 
+in any mutual funds just by giving your PAN number. 
+To register KYC, first select fund house (example, SBI Mutual fund or HDFC mutual fund). Find their office in your city and go and register KYC. 
+You can also register e-KYC online, but it has some limitations. So i suggest you to visit office and do it in person.
+Once KYC is done, you can invest in any mutual funds. If you do KYC in SBI mutual fund, you can also invest in HDFC or ICICI mutual funds. 
+KYC is centralized.
+Once KYC is done, visit mutual fund company website (like SBI mutual fund site or LT mutual fund site). Register there. Start investing. 
+You can either invest as Lump sum. Or as SIP. SIP means you can invest small amount monthly. Money will be automatically deducted from your account.
+
+FAQ:
+
+When should i invest?
+If you are planning to invest via SIP you can start anytime. But if you are planning to invest as Lumpsum then you should invest only when the 
+market is down. To figure out when the market is down, search Google for “nifty chart”. You will see a chart. Select 5 years timeframe. 
+Use your logic to figure out whether the market is down or up.
+
+Note: It is impossible to predict the future movement of market. You will invest lumpsum thinking that market is down, after investing it may go 
+down further and you will see loss in your capital. But don’t worry, in long term market will turn up.
+
+Is there any service which helps me to invest in Mutual funds easily?
+Yes, you can try Zerodha Coins. It is paid service which costs Rs.600 per year. But the money you pay is actually worth what they are offering. 
+You can invest in any funds easily and also you can track your investments (daily profit or loss). The good thing about Zerodha coins is, you will 
+be investing in Direct plan, not regular plan.
+
+I heard mutual fund is risky.
+Every investment is risky, whether it is real estate, gold or FD.
+Gold. What if someone stole or you lose is somewhere? Think how many times you heard from your friends or relatives (or happened to you) that 
+they lost Jewels?
+FD. FD return is very low. If you are a tax payer and if you invest in FD, then you are LOSING MONEY because of tax and inflation. You will be losing 
+1% or more per year if you invest in FD. And also, what happens if bank goes bankrupt? FD is insured for Rs.1 lakh. If you have 10 lakhs in FD and 
+bank goes bankrupt, you receive Rs.1 lakh.
+Real estate. Many factors affect real estate like current government, policies, economy, water issue, etc., And there is liquidity problem . 
+You can’t buy or sell real estate fast.
+Like these mutual funds also carry risk. If you plan properly you can reduce the risk by investing GILT fund or Arbitrage fund. Remember, mutual fund 
+house invest your money in companies like ICICI bank, TCS, ITC, Tata motors, etc., It is very unlikely that these companies shut down their business.
+
+Is it true that debt fund carry Zero Risk?
+No. As i said earlier Risk is everywhere. When compared with equity, debt fund carry low risk. Still there is some risk. Companies default their 
+loan (remember Kingfisher?). Companies goes bankrupt.
+
+What funds are you investing?
+I am investing in…
+
+Aditya Birla SL Balanced '95 Direct-G (Balanced fund)
+IDFC Focused Equity Direct-G (Large and mid cap)
+L&T Emerging Businesses Direct-G (Small cap)
+What should i choose? Growth or Dividend or Dividend reinvestment?
+
+Growth - To unleash the power of compound interest choose Growth. It will give you massive return in long term. (Recommended)
+
+Dividend - If you want regular income from your investment, then choose Dividend. This option is recommended for retired people.
+
+Dividend reinvestment - Companies release dividend regularly. If you choose this option then fund house will buy new units of the fund with 
+dividend money.
+
+If I choose dividend fund, do I need to pay income tax for dividend income?
+No, there is no income tax for dividend income.
+
+What is the minimum age required to invest in mutual fund?
+There is no minimum age. You can start at any age. If you are below 18, you need to provide birth certificate.
+
+What is the minimum amount needed to invest in mutual fund?
+You can start with as low as Rs.500.
+
+I am already investing via Regular plan. How to switch to direct plan?
+Visit fund company website. Register yourself and login. There will be option to Switch. While switching select Direct plan. Simple.
+
+How do I know whether I am investing in Regular plan or Direct plan?
+Login to your account or check your statement. See the fund name. If the name ends with Direct, it is direct plan. Or if it ends with regular it 
+is regular plan.
+
+What should i do after investing?
+It takes atleast 3 years to see decent return from equity mutual funds. Bookmark the website value research online. It is popular site about 
+mutual funds. They give star rating for all mutual funds. Good fund should have atleast 4 stars. Every once in a while check number of stars for 
+your fund. If it goes below 3 stars, i suggest you to switch fund.
+
+I am investing in equity mutual fund. I got negative returns. Now i have less money than what i invest. What should i do?
+Market fluctuates. It is normal. As i said earlier, you need to wait atleast 3 years to see decent return from equity mutual funds.
+
+How to withdraw money?
+Login to your account. Choose redeem option. Money will be withdrawn to your bank account.
+
+How to terminate mutual fund?
+First redeem your money. Then you need to send post (physical, no email) to mutual fund company asking them to terminate. But it is not necessary. 
+Just withdraw money and done with that.
+
+What happens if I fail to pay monthly instalment for SIP because of no funds in my savings account?
+Nothing will happen. Don't worry.
+
+How to switch funds?
+Case 1: Switch funds from same fund house. For example, LT Fund A to LT Fund B. Login to fund house website. Choose switch option. It is simple.
+Case 2: Switch funds of different fund house. For example, LT Fund A to SBI Fund A. There is no direct option for this. First you need to 
+withdraw money from fund A and invest freshly in Fund B.
+
+How to track my mutual funds investments?
+Open account in Value research online website. Go to portfolio. Create new portfolio. Specify details about your investments like fund name, 
+amount, date, NAV, etc., Daily by 9.15 PM this website will get updated with latest NAV. You can see your daily profit or loss there. I have a 
+habit of checking my profit/loss daily. It will be fun.
+
+What are open ended and close ended mutual funds?
+When comes to mutual funds always go with open ended funds. Open ended fund gives better return than close ended. And also you can enter and exit 
+open ended funds anytime.
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+Multi-Cap Funds
+Multi Cap Equity funds are type of mutual funds that are commonly known for investing across different segments of companies categorized into small, mid and large 
+caps.
+Small size companies fall under small cap, whereas others go for medium or large cap companies depending on the amount of value they have in stock markets.
+Equity Multi Cap funds are also known as diversified funds and are suitable for first-time investors.
+Equity Multi Cap funds are relatively less risky compared to a pure mid cap or small cap funds as the risk is distributed well over all the market.
+It has returns that are taxed at 15% if sold before one year, post this period a 10% tax is applicable on the gains.
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+ALL ABOUT SIP: A Complete Guide On Systematic Investment Plan
+August 18, 2018 kapil
+
+Just earning a monthly salary is not sufficient. You must make your hard earned money to work for you as well.
+
+As Napolean Hill said   “Make your money work so hard for you; so that you do not have to work for it”
+
+You must invest your money to accumulate wealth. Investing intelligently is the first and most important step towards achieving Financial Independence.  
+
+There are various good investment options in India. One such investment option is Mutual fund. You can invest money in mutual funds either through Lump-Sum mode or through SIP mode.
+
+In this article I have tried to cover all aspects of SIP by answering most of the Frequently Asked Questions. But if your certain questions remain unanswered after going through this article, you can ask me in the comment section. I will try to answer all your questions quickly.
+
+Table of Contents	
+What is SIP?
+Which is the best interval to invest in SIP?
+For How Long Shall I Invest In SIP?
+What Is The Best Time To Invest in SIP?
+Why Market Timing Doesn’t Matter?
+Can I Change The SIP Amount?
+Why increasing SIP amount is important?
+How Can You Increase The SIP Amount?
+How To Reduce The SIP Amount?
+How To Calculate The Tax on SIP?
+Tax Saving Mutual Funds
+Non-Tax Saving Mutual Funds
+Does SIP Has Exit Load?
+How is Exit Load Calculated in SIP?
+Can We Stop The SIP Anytime?
+Any Penalty On Skipping SIP Payment?
+What Is SIP?
+SIP or Systematic Investment Plan allows you to invest a fixed amount in mutual funds at regular intervals. The regular interval can be daily, weekly, fortnightly, monthly or quarterly.
+
+Which Is The Best Interval To Invest In SIP?
+All about SIP
+
+Ideally daily interval is the most beneficial as it will take care of all the market movements. But doing daily transactions means creating unnecessary clutter in the bank statement. Also mutual funds have minimum amount to be invested per transaction. So investing daily and if minimum amount per transaction is Rs 500 then you will end up investing Rs 10000/month in only single mutual fund.
+
+Also there is marginal effect in return whether you invest weekly, monthly or quarterly. So keep your life simple and invest monthly. 
+
+For How Long Shall I Invest In SIP?
+SIP basics
+
+Equity mutual funds give you greater return when invested for longer period i.e atleast for 5-7 years. Equity mutual funds are riskier in short term. If market falls suddenly you can lose 5%, 10%, 20% or maybe more of your invested money. But in long term risk is mitigated to a greater extent. Let’s see with an example.
+
+SIP basics
+Source- Valueresearchonline.com
+If you had started a monthly SIP of Rs 5000  in Aditya Birla Sunlife Equity Fund back in 2003 by now you would have accumulated over 45 lakhs with an investment of just over 9 lakhs despite of the fact that it has gone through some financial crisis.
+
+What Is The Best Time To Invest In SIP?
+SIP BAsics
+
+You can start SIP right now! Don’t even think twice, go online and start investing. Yes, the best part of investment through SIP mode is you don’t have to worry about existing market levels. But as discussed above make sure you are investing for long term.
+
+Why Market Timing Doesn’t Matter?
+As you are investing at regular intervals, so when market level is low you end up buying more number of units. On the other hand when market level is high you end up buying less units. Averaging comes into play and you save yourself from becoming the victim of volatility.
+
+Can I Change The SIP Amount?
+We have discussed above that SIP is all about investing fixed amount at regular interval in the mutual fund of your choice. But with annual increase in your salary you may decide to increase the SIP amount annually. Also there is probability that due to some unforeseen circumstances you might have to reduce the SIP amount.
+
+SIP basicsSo three questions arise here-
+
+Why increasing SIP amount is important?
+How can you increase the SIP amount?
+How can you reduce the SIP amount?
+Let us take these one by one.
+
+Why Increasing SIP Amount Is Important?
+Let’s assume you are investing Rs 5000 every month in a fund for the next twenty years. Also let us assume moderate return of only 12%. After 20 years you will end up making almost Rs 50 lacs. On the other hand if you top up your SIP with Rs 500 annually, you accumulate 80 lacs. Hence you must adhere to this formula of increasing SIP amount to accumulate wealth.
+
+Systematic Investment Plan
+
+How Can You Increase The SIP Amount?
+There are two ways in which you can increase the SIP amount.
+
+First way is to select the top up option and the amount by which you want to top up your SIP right at the time when you are starting the SIP. All fund houses do provide us with this option.
+
+Second way is to start a fresh SIP in the same fund or some new fund with the amount you want to increase. Even if you are investing in the existing fund there is no way that both SIPs can be clubbed.
+
+How To Reduce The SIP Amount?
+May be you have quit to your job or due to some unfortunate circumstances you get fired and with no job in hand you have no income to invest.
+
+Sad part is you can’t reduce the SIP amount in between. But one way is to stop the SIP and start the new SIP with lesser amount. The SIP that you have stopped will remain invested and give you returns as per market trends, till the time you decide to withdraw.
+
+How To Calculate The Tax On SIP?
+The amount of tax that you have to pay on capital gain depends upon the time period of your investment and in which type of mutual funds you have invested in. 
+
+SIP basics
+
+Let’s categorize mutual funds into two-
+
+Tax saving mutual funds. (ELSS)
+Non-Tax saving mutual funds ( Equity oriented/Balanced funds/ Debt funds)
+Tax Saving Mutual Funds
+Equity linked saving scheme(ELSS) are tax saving mutual funds where you can invest upto 1.5 lac under section 80C.
+
+ELSS funds have lock-in period of 3 years. Upon redemption after three years, LTCG upto Rs 1 lacs is tax free and above it is charged at 10%.
+
+Holding period for each SIP installment is different. 
+
+For example- You had started investing in ELSS funds through systematic investment plan in August 2015.  So till Aug 2018 you have paid 36 instalments. But only First Instalment(Aug’15) has completed the lock-in period of 3 years in Aug’18. Second instalment(Sep’15) will complete the lock-in period in Sep’18 and so on.  Hence, You can only redeem that SIP instalment which has completed the lock-in period of 3 years.
+
+LTCG( Long Term Capital Gain) upto Rs 1 Lac is Tax free.
+
+Non-Tax Saving Mutual Funds
+For Equity oriented and Balanced funds if investment is done for less than 12 months it is considered as a short term investment. If investment is more than 12 months then it is a long term investment.
+
+For Debt funds if investment period is more than 3 years then it is considered as long term investment otherwise a short term investment.
+
+In case of Equity oriented funds, Long term capital gains more than Rs 1 Lakh are charged at 10%.  LTCG upto Rs 1 Lakh is Tax Free. Short Term Capital Gains( If withdrawn in less than 12 months) are taxed at 15%.
+
+For Balanced funds, as equity exposure is greater than 65% the tax structure is similar as that of Equity oriented funds.
+
+For Debt funds, LTCG are taxed at 20% after indexation. Indexation is a method of factoring in rise of inflation between the year when debt units were bought and year when they are sold. You can refer investopedia to know more about indexation.
+
+How to calculate tax on SIP
+
+Does SIP Has Exit Load?
+How to calculate Exit load in SIP
+
+Mutual fund houses charge the exit load if redemption is done before the specified time prescribed by MF house.
+
+Most fund houses levy exit load if redemption is done before 1 year.
+
+How Is Exit Load Calculated In SIP?
+Many people are in dilemma with the fact that if they had started Systematic investment plan in Aug’17 and redemption is done in Aug’18 then why they are required to pay certain exit load.
+
+The fact is SIP holding period is calculated on per installment basis. If SIP is done in Aug’17 and redemption is done in Aug’18 then exit load will not be levied for units purchase in August 2017. But 2nd, 3rd, 4th……… installments will complete 12 months in Sep’18, Oct’18, Nov’18….. and hence redemption of these units will lead to exit load.
+
+ 
+
+Can We Stop The SIP Anytime?
+You can stop the Systematic Investment Plan anytime you want to. Generally fund house takes 30 days to stop your SIP. Stopping SIP means that next installment won’t be deducted from your bank account. But the installments paid till date will remain invested till the time you decide to withdraw from Systematic Investment Plan. The returns will depend upon the fund performance on the date you have requested to withdraw.
+
+Any Penalty On Skipping SIP Payment?
+Missing SIP payment doesn’t lead to any Penalty. But installment is missed when we don’t have sufficient balance in the bank account. Bank can decide to levy penalty on you for dishonoring the payment.
+
+My advise is to pause the SIP when you feel you won’t be able to make payment.
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+
+Equity -
+	Large cap		10-13%		low risk
+	Medium cap		13% +		medium risk	
+	Small cap		20% +		high risk
+	Sector			15% +	
+	Index			10%			medium risk
+	Arbitarage 		8%			very low (doesn't get affected by market up and down)
+	Multicap 		their portfolio comprises of large cap, midcap and small cap stocks. They are relatively less risky compared to a pure mid cap or a small cap 
+					fund and are suitable for not-so-aggressive investors.
+
+Balance/Hybrid - 
+	65% equity and 35% debt		12% 	Low risk 
+
+
+Debt funds (8%)-
+	Gilt fund - your money will be loaned to government. Risk is very low since borrower is Government.
+
+	Income fund - you will receive monthly income. Suitable for retired people.
+
+	Liquid fund - you can withdraw your money anytime without any charges. It is like savings account.
+
+	Short term or Ultra short term - if you like to invest only for some months.
+
+
+ELSS -
+	Tax saving
+	12%
+	Lock in 3 years
+
+
+7k 	
+Long period 15 years - 2000		(Balance/Hybrid)	12%
+Long period 15 years - 2000		(MultiCap)	12%	
+Short period 7 years - 1500		(Equity Small cap/Medium Cap)	20%
+Short period 3 years - 1500		(ELSS)				12% 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+SBI Magnum Balanced Fund (G)
+ICICI Pru Value Discovery Fund (G)
+
+Invest in 5-star-rated ELSS MFs stated below, For Tax Saving, taking the Monthly SIP route. (Lock-in period is of 3 years for ELSS.)
+1. Axis Long Term Equity Fund (G) (5 star rating on Value Research)
+2. DSP Blackrock Tax Saver Fund (G) (5 star rating on Value Research)
+3. Birla SL Tax Relief 96 (G) (5 star Crisil rating on MoneyControl)
+
+>> Invest 50% amount in 2 MultiCap MFs (Medium Risk, with doubling of investment in about FOUR years) Remain invested for 5 years.
+1. ICICI Pru Value Discovery Fund (G) (5 star) On both VR & MoneyControl
+(G: Growth)
+2. Franklin India High Growth Companies Fund (G) (5 star on VR)
+3. Birla Sun Life Equity Fund(G) …………………………..(5 star on VR)
+4. SBI Magnum Multicap Fund (G) (5 star) On both VR & MoneyControl
+5. L&T India Value Fund (G) ……….(5 star on MoneyControl)
+6. UTI MNC Fund (G) …………………(5 star on MoneyControl)
+All are good for Long-Term (=more than 5 years) investment.
+
+
+TERM INSURANCE for Your Own Life-Insurance to PROTECT your family. 
+
+Also consider Rs. 3-5L Family Floater Medical Insurance to PROTECT your family.
+Apollo Munich-Canara Bank Mediclaim is one of the best policies available today. Go to any Canara Bank branch to get the same.
+
+If you want your money back in less that 5 years, then invest in FDs or Debt MFs or short-term bonds. In such a short-term case, MF investment is not recommended.
+
+
+>> Where are people going wrong with respect to saving & investing?
+Most of the young people in India today, spend their entire earnings on trying to show off their wealth by splurging on the latest mobile phones, latest watches, 
+latest bikes, latest cars, latest gadgets, expensive restaurants………. to impress their boy/girl friends & the society in general.
+Almost everything is purchased on loan with monthly EMls with Very High Hidden-Interest-Rates. So, they live beyond their means and thus save almost nothing.
+So, the best way to save money is to lead a reasonably simple life like the Billionaire Mr Warren Buffet and our own Billionaires, Infosys founders, like Mr Murthy 
+& Mr Nilekani.
+
+
+Most of the people think,
+>> (Monthly Earnings minus Monthly Expenses) = (Monthly Savings)
+In reality (as per the Billionaire Warren Buffet), it should be,
+>> (Monthly Earnings minus Monthly Savings) = (MonthlyExpenses)
+So, you should FIRST put your money in savings (=investment) on a monthly basis and THEN start spending for the month from the balance money available to you 
+after your monthly systematic savings/investments.
+The best MFs to start Monthly SIP are given below:
+>> Invest in 5-star-rated Balanced & MultiCap Mutual Funds (MFs).
+
+
+>> For Tax Saving: (3-yr Lock-In period) (These are ELSS for tax saving & are also a very good investment.)
+1. Axis Long Term Equity Fund (G) (5 star rating on Value Research)
+2. DSP Blackrock Tax Saver Fund (G) (5 star rating on Value Research)
+3. Birla SL Tax Relief 96 (G) (5 star Crisil rating on MoneyControl)
+>> Invest 50% in Hybrid / Balanced Equity Oriented MFs (Low Risk, with doubling of investment in about FIVE years)
+1. SBI Magnum Balanced Fund | Invest Online
+2. Tata Balanced Fund - Regular Plan
+3. ICICI Prudential Balanced Fund
+>> Invest 50% in MultiCap MFs.
+1. ICICI Prudential Value Discovery Fund
+2. Franklin India High Growth Companies Fund
+3. Birla Sun Life Equity Fund
+4. SBI Magnum Multicap Fund
+All are good for Long-Term (=more than 5 years) investment.
+
+
+
+>> 5-star rated Hybrid/Balanced MFs (Returns ~ 15% per year tax-free in a block of 5–6 years. Typically, your invested amount will double every 5 years.) 
+Prices of Hybrid/Balanced MFs fluctuate less than the prices of MultiCap MFs.
+>> 5-star rated MultiCap MFs for medium risk (Returns ~ 18% per year tax-freein a block of 5–6 years. Typically, your invested amount will double every 4 years.) 
+Prices of MultiCap MFs fluctuate more than the prices of Hybrid/Balanced MFs.
+
+
+
+20 years is a long time to invest in Mutual Funds and would require constant monitoring. I would suggest you to invest in a mix of investment options (that include both equity and debt) so that you earn stable returns and the chances of losing money are less. Some of the best fund in which you can invest include-
+Best large cap funds to invest-
+DSP BlackRock Tax Saver Plan— 18.56% (1Yr), 17.67% (3Yr), 21.73% (5Yr)
+Birla Sun Life Tax Plan— 16.90% (1Yr), 17.75% (3Yr), 20.8% (5Yr)
+Best mid cap funds to invest-
+Reliance Midcap & Smallcap Fund— 17.95% (1Yr), 18.34% (3Yr), 23.46% (5Yr)
+Axis Midcap Fund— 14.62% (1Yr), 14.44% (3Yr), 22.13% (5Yr)
+Best ELSS Funds to invest-
+Kotak Tax Saver Regular Plan— 19.25% (1Yr), 17.68% (3Yr), 107.38% (5Yr)
+Birla Sun Life Tax Relief 96 Plan— 17.40% (1Yr), 18.53% (3Yr), 21.66% (5Yr)
+Best diversified funds to invest-
+ICICI Prudential Value Discovery Fund— 9.24% (1Yr), 13.01 (3Yr), 21.39% (5Yr)
+Birla Sun Life Equity Fund— 22.65% (1Yr), 18.09% (3Yr), 22.81% (5Yr)
+Best balanced funds to invest-
+L&T India Prudence Fund- Reg — 17.94% (1Yr), 16.19% (3Yr), 19.42% (5Yr)
+HDFC Balanced Funds— 18.70% (1Yr), 15.75% (3Yr), 19.09% (5Yr)
+Best long term income funds to invest-
+Reliance Dynamic Bond— 8.50% (1Yr), 10.95% (3Yr), 9.68% (5Yr)
+IDFC SSIF-Investment Plan R— 10.28% (1Yr), 11.17% (3Yr), 9.71% (5Yr)
+Best gilt funds to invest-
+Invesco India Gilt – LDP— 9.84% (1Yr), 11.35% (3Yr), 9.09% (5Yr)
+ICICI Pru Gilt Inv Plan – PF— 10.62% (1Yr), 13.16% (3Yr), 10.71% (5Yr)
+You can also calculate the estimated returns of your SIP investment using our SIP Calculator.
+#Analysis
+Monthly Investment: ₹ 1,000
+Investment Period: 20 years
+Expected long-term inflation rate: 5% p.a.
+Expected long-term growth rate in the equity market: 14% p.a.
+Total investment: ₹ 2,40,000
+Amount earned after investment: ₹ 6,72,897
+Net Profit: ₹ 4,32,897
+
+So, you are earning a profit of ₹ 4,32,897 in 20 years, which is approximately double the investment amount. That’s great!
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Location
+Name & Address
+Contact Person/e-mail
+Tel. No./Fax No.
+Pune
+BAJAJ CAPITAL INVESTOR SERVICES LIMITED,1ST FLOOR, OFFICE NO.2 LAND SQUARE, F.C COLLEG ROAD NR.RUPALI RESTAURANT,PUNE - 411001,MAHARASHTRA
+MR.OMPRAKASH GUPTA
+Tel. : 020-40185600
+Fax. : 020-40185600
+Pune
+BAJAJ CAPITAL INVESTOR SERVICES LIMITED,SHOP NO.6, SANAS PLAZA 1302,SUBHASH NAGAR BAZIRAO ROAD,PUNE - 411002,MAHARASHTRA
+MR.ABHAY SHITRE
+Tel. : 020-24493355
+Fax. : 020-24493355
+Pune
+COMPUTER AGE MANAGEMENT SERVICES PVT. LTD.,NO.6, 1ST FLR, NIRMITI EMINENCE OPP ABHISHEK HOTEL, MEHANDALE GARAGE RD, ERANDAWANE,PUNE - 411 004,MAHARASHTRA
+YATIN DESAI
+Tel. : 020-30283005
+Fax. : 020-30283005
+Pune
+DEUTSCHE INVESTOR SERVICES PVT. LTD.,SHOP NO. 7, JALAN CORNER, N C KELKAR ROAD, NARAYANPETH,PUNE,MAHARASHTRA
+KAMAAL ASHRAFI
+Tel. : 9373337513
+Fax. : 9373337513
+Pune
+ING MUTUAL FUND,927, FIRST FLOOR, SANAS MEMORIES F C ROAD,PUNE - 411004,MAHARASHTRA
+SHILPA LOKHARE
+shilpa.lohokare@in.ing.com
+Tel. : 020-25660270/32935440
+Fax. : 020-25660271
+Pune
+INTEGRATED ENTERPRISES (INDIA) LTD.,7 & 8 ARTHSHILP, GROUND FLOOR 1349, 1350, SHUKRAWAR PETH BAJIRAO ROAD,PUNE - 411 002,MAHARASHTRA
+MR. L. SUDHAKAR
+Tel. : 020-24473944
+Fax. : 24481891
+Pune
+INTEGRATED ENTERPRISES (INDIA) LTD.,SHOP NO.23, EAST STREET GALLERY, EAST STREET, CAMP,PUNE - 411 001,MAHARASHTRA
+PRAKASH VVSS
+pune2@iepindia.com
+Tel. : 26361633
+Fax. : 26361634
+Pune
+INTEGRATED ENTERPRISES (INDIA) LTD.,SHOP NO 2, SAI SAYAJI VILLA 163, AZADWADI , SHASTRINAGAR, NEAR VIVEKANAND CHOWK, KOTHRUD ROAD,PUNE - 411 038,MAHARASHTRA
+MILIND MUGLIKAR
+pune3@iepindia.com
+Tel. : 25389232
+Fax. : 25389232
+Pune
+KARVY COMPUTERSHARE PVT. LTD.,SRINATH PLAZA, C WING, 58 & 59 3 RD FLOOR, SURVY NO. 184/4, F C ROAD DYANESHWAR PAKUKA CHOWK,PUNE - 411 004,MAHARASHTRA
+MR. ROOPESH BALARAMAN
+Tel. : 020-25533795
+Fax. : 25532783
+
+------------------------------------------------------------------------------------------------------------
+
+Pan card
+passport
+photo
+kyc form
+self attested copies of all docs
+
+submit at AMCs, CAMs, Karvy, Franklin tempelton, Sundaram BNP 
+carry originals
+
+
+--------------------------------------
+
+It is the same website in my credential.
+Here what I did:
+I made a website within an hour.
+Set it up within a day.
+Put my “Stock Market Course” which was in demand.
+Priced the course 7, 500/-
+Put almost 40+ blogs which are written by me on Stock Market.
+Hired freelancers to make promotional videos. We made only 2 high quality videos.
+Marketed it through Facebook Ads.
+What I got?
+170+ people enrolled in my course.
+I made 170 x 7500 = 11.5 lakh. (Including discounts and offers)
+How much did it cost me?
+Website making - 800 rupees only with SSL certificate (You can see that https on my website) as I learnt and did it myself.
+Promotional videos - 300 USD
+Facebook Ads - Around 30, 000 rupees. (For highly targeted traffic)
+I have not counted yet. But the profit till now is around 10 lakhs.
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+Not necessary to open demat account for direct MF
+
+To know the official websites of fund house - go to https://www.amfiindia.com/ (Association of mutual funds in india. All AMS as in it)- investors corner - Invest online - online center tab - locate a AMC branch 
+
+
+

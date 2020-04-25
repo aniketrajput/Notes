@@ -1,0 +1,150 @@
+AOP - 
+
+
+Functional programming model- different functions call each other until last function is done, all these function make a program. The problem here is it is complex, we have whole lot of functions and inter-dependencies between them. 
+
+Object Oriented Programming model - In this we won't think of a functions, but of individual entities as objects. Each object will contain the member variables as well as the methods. So we have encapsulated entities. So we can now design more complex code, because we have cleaner design and separation of concerns. 
+But, now lets take eg, suppose we have a log(), this method is there in all the objects, but here we are just repeating the code by including the same method in all the object. This isn't the good design. 
+So to refine this code, we can take that method our and put in into a new class - Eg - Logger - log()
+So now whenever logging is needed in any object we can get Logger object and do it. 
+
+Aspects can have multiple advices, and advices can be configured to run on particular method of a particular class. 
+
+
+@Before("execution(public * get*())")		//no arg for getter
+@Before("execution(public * get*(*))")		//1 or more arg for getter
+@Before("execution(public * get*(..))")		//0 or more arg for getter
+
+
+PointCut : is terminology for all the points of execution in our code where we want the advice methods to cut in. 
+
+@Pointcut("execution(* get*())")	// all methods that start with get.. and can have any return type 
+public void allGetters(){}			//dummy method. No code in it
+
+@Pointcut("within(org.koushik.javabrains.model..*)")		//model..* means inside a package or sub packages. 
+
+JointPoint is the argument to the advice method. JointPoint has information about the actaul method call that triggered this advice. JointPoint means al the places in our code where we can apply advice.
+jointPoint.toString() prints info about JointPoint. 
+jointPoint.getTarget() it gives us the object who's method was called. And we can get handle on that object. 
+
+
+Using Spring AOP we can apply advice on methods, but we want an advice to run on update of some member variable then AspectsJ can do it. 
+
+
+@Before("args(String)")
+public void StringArgumentMethods(){
+	SOP("Methods that takes String arguments has been called")
+}
+
+
+
+@Before("args(name)")
+public void StringArgumentMethods(String name){
+	SOP("Methods that takes String arguments has been called, name : " + name);		// Suppose we want to do some preprocessing on method arguments before the method actaully executes. 
+}
+
+
+@Around("allGetter()")
+public void myAroundAdvice(ProceedingJoinPoint proceedingJoinPoint){			//this parameter is compulsary
+
+	//this to do before target method executes
+
+	proceedingJoinPoint.proceed();		// this will start the actual execution of the target method.
+	
+	//this to do after target method executes
+}
+
+
+---------------------------------------------------------------------------------------------------
+
+package com.vanderlande.mediaserver.soapadapter.aspectj;
+
+import java.util.Arrays;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class LoggingAspect {
+
+	private final Logger log;
+
+    public LoggingAspect(Logger logger) {
+	
+    	this.log = logger;
+    }
+
+	/**
+     * Pointcut that matches all repositories, services and Web REST endpoints.
+     */
+    @Pointcut("within(@org.springframework.stereotype.Repository *)" +
+        " || within(@org.springframework.stereotype.Service *)" +
+        " || within(@org.springframework.web.bind.annotation.RestController *)"+
+        " || within(@org.springframework.stereotype.Controller *)")
+    public void springBeanPointcut() {
+        // Method is empty as this is just a Pointcut, the implementations are in the advices.
+    }
+
+    /**
+     * Pointcut that matches all Spring beans in the application's main packages.
+     */
+    @Pointcut("within(com.vanderlande.mediaserver.soapadapter..*)" +
+        " || within(com.vanderlande.mediaserver.soapadapter.endpoint..*)" )
+    public void applicationPackagePointcut() {
+        // Method is empty as this is just a Pointcut, the implementations are in the advices.
+    }
+
+    /**
+     * Advice that logs methods throwing exceptions.
+     *
+     * @param joinPoint join point for advice
+     * @param e exception
+     */
+    @AfterThrowing(pointcut = "applicationPackagePointcut() && springBeanPointcut()", throwing = "e")
+    public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
+        log.error("Exception in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
+            joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL");
+    }
+
+    /**
+     * Advice that logs when a method is entered and exited.
+     *
+     * @param joinPoint join point for advice
+     * @return result
+     * @throws Throwable throws IllegalArgumentException
+     */
+    @Around("applicationPackagePointcut() && springBeanPointcut()")
+    public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
+        //if (log.isDebugEnabled()) {
+            log.info("Enter: {}.{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
+                joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
+        //}
+        try {
+            Object result = joinPoint.proceed();
+          //  if (log.isDebugEnabled()) {
+                log.info("Exit: {}.{}() with result = {}", joinPoint.getSignature().getDeclaringTypeName(),
+                    joinPoint.getSignature().getName(), result);
+            //}
+            return result;
+        } catch (IllegalArgumentException e) {
+            log.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.getArgs()),
+                joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
+            throw e;
+        }
+    }
+}
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+"execution(* * com.vanderlande.mediaserver.soapadapter.endpoint.MediaRequestWebServiceImpl.*(..))"
+"within(com.vanderlande.mediaserver.soapadapter.endpoint.MediaRequestWebServiceImpl)"
+

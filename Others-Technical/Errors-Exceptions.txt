@@ -1,0 +1,53 @@
+1.
+	Why am I getting Unknown error in line 1 of pom.xml?
+	Please install the m2e connector for mavenarchiver plugin 0.17.3 from https://download.eclipse.org/m2e-wtp/releases/1.4/
+	Update in IDE - m2e connector for mavenarchiver plugin
+
+2. 
+	Port already in use - 
+	
+	Checking which application is using a port:
+	Open the command prompt - start » run » cmd or start » All Programs » Accessories » Command Prompt.
+	Type netstat -aon | findstr '[port_number]'. Replace the [port_number] with the actual port number that you want to check and hit enter.
+	If the port is being used by any application, then that application’s detail will be shown. The number, which is shown at the last column of the list, is the PID  (process ID) of that application. Make note of this.
+	Type tasklist | findstr '[PID]'. Replace the [PID] with the number from the above step and hit enter.
+	You’ll be shown the application name that is using your port number.
+
+
+	Checking which port is being used by a application:
+	This is exactly the reverse of the above steps.
+
+	Open the command prompt - start » run » cmd or start » All Programs » Accessories » Command Prompt.
+	Type tasklist | findstr '[application_name]'. Replace the [application_name] with the application that you want to check (for example, apache) and hit enter.
+	Make note of the PID (second column) from the details shown.
+	Type netstat -aon | findstr '[PID]'. Replace the [PID] from the above step and hit enter.
+	You’ll be shown the application detail and the corresponding port to which it is listening.
+	
+3. 
+	javax.management.InstanceNotFoundException: org.springframework.boot:type=Admin,name=SpringApplication
+
+	Are you launching this from Eclipse? If so, I found a way to overcome this issue from my Eclipse oxygen: Go to the launch configuration either from the STS plugin Spring Boot dashboard or from Run Configurations from the Run menu. Then untick Enable JMX checkbox and run it. Hope it helps
+	
+4. .w.s.m.s.DefaultHandlerExceptionResolver : Resolved exception caused by Handler execution: org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported
+	
+	You are using @GetMapping instead of @PostMapping
+
+	
+5. 
+Java exception FAQ: What is a Java NumberFormatException?
+
+Answer: A Java NumberFormatException usually occurs when you try to do something like convert a String to a numeric value, like an int, float, double, long, etc.
+	String s = "FOOBAR";
+    int i = Integer.parseInt(s);
+
+6.
+	Spring+hibernate java.lang.StackOverflowError
+	
+	Update toString() methods in the entities class. Don't add properties which are objects. 
+	
+	
+7. Caused by: java.io.IOException: Wire format negotiation timeout: peer did not send his wire format.
+	
+	Restart of ActiveMQ resolved it. 
+	
+	

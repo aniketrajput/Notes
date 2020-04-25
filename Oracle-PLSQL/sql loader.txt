@@ -1,0 +1,202 @@
+How to Export Data To CSV from Oracle Database using PLSQL script.
+
+Oracle and most DBMS system will let you write a query result on a text file. The process of writing query result to a file is called a spooling. 
+
+set serveroutput on;
+spool d:/emp_rec.csv
+@d:\emp.sql
+/
+spool off;
+
+
+sql loader
+sql client
+limitation of import export
+sql loader command
+
+
+SQL Loader Bad file and Discard file Part 1 | Oracle SQL Tutorial | Mr.Murali
+Sql loader tool - To load data from flat file to sql database.
+
+- We cannot directly load data from flat file to sql database. 
+- Sql loader is exe tool(sqlldr.exe), it always loads an control file. 
+- So based on flat file we need to create control file and submit that control file to sql loader. Then sql loader will transfer data from control file to sql database.
+
+Flat file -  means structured files.
+	1. Variable length record flat file
+		- have delimiters. 
+		eg. 101, abc, 2000
+			202, sds, 3000
+			
+			delimiter is comma
+				
+	2. Fixed length record flat file
+		- Doesn't have any delimiter
+		eg.
+			101abc2000
+			202sds3000
+			
+- Control file extension is .ctl	
+	
+1. Create a control file based on a flat file
+2. Submit control file to sqlldr.exe or sql loader. 
+3. Then with help of control file sql loader reads flat file and stores data in database. (All the details like where the flat file is available, where is db is mentioned in 
+	control file)
+
+- During this process some files are also created. They are called log file (.log - errors, num of records, etc. It also other files info. Also loaded, rejected and skipped number of 
+records. Oracle error no and msg are also there. )
+- If some records are rejected those records are stored in two types of file - bad file(.bad) and discard file(.dsc)
+- If problem is occurred in a flat file or in oracle database, then only those rejected records will be inserted in bad file. (data type mismatch)
+- In control file we have a when condition ,based on this if some records are rejected then those records are entered in discard file. 
+
+- Using some syntax we submit a control file to sql loader.
+- C:\> sqlldr userid = 'which user has target table' / Password
+	msg will be displayed as  -> Control = (give control file path) 
+	
+
+Creating a control file for variable record flat file - 
+(Below are the things we can put in control file)
+- Control file execution start with some class, 'load data' is that class.
+- 'infile' is a class through which we specify the path of the flat file.
+- 'insert/append/truncate/replace' classes. If table is empty then insert, else append. 
+- 'into table tablename' class allows to store flat file data into oracle db.
+- fields terminated by 'delimitername' ('fields terminated by' class to mention delimiter).
+- optionally enclosed by 'delimitername'
+- trailing nullcols
+- oracle database table column names (col1, col2,..) 
+
+Submitting control file -
+sqlldr userid = username/password
+control = path of controlfile
+
+Eg - 
+
+Create a text file with some data like - 
+101,abc,1999
+102,asd,1122
+
+Create table target(empno number(10), ename varchar2(10), sal number(10));
+We need the flat file data in this table
+
+Create a control file -
+	load data
+	infile 'C:/file1.txt'		--flatfile path
+	insert
+	into table target
+	fields terminated by ','
+	(empno, ename, sal)
+save a .ctl extension.	
+
+Open Sql Loader tool - 
+	- Open cmd
+	- Type sqlldr userid=scott/tiger	(table is in schema scott)
+	- control = (path of control file) C:\murali.ctl
+
+Commit point reached msg is displayed.	
+
+Log files which are created have same name as control file. We can check its automatically created.
+
+If data is less then we can put data directly in control file instead of flat file.
+Like eg - In control file we can specify data at the end - 
+	load data
+	infile *					--As we have specified data below don't mention path of the flat file, just mention *
+	insert						-- if table has data already then mention append 
+	into table target
+	fields terminated by ','
+	(empno, ename, sal)
+	begindata					-- we need to specify this class if we are adding data below
+	101,abc,1999
+	102,asd,1122
+
+	
+SQL Loader Bad file and Discard file Part 2 | Oracle SQL Tutorial | Mr.Murali
+
+- Bad file (.bad) - Automatically created by sql loader with same name as control file name. 
+- We can also create bad file explicitly using 'badfile' clause
+- Stores rejected records based on two reasons -
+	1. Data type mis-match
+	2. Business rule violation	(eg - problem occured in db, like due to check constraint)
+	
+1. Data type mis-match - 
+		In flat file - 
+			101,abc
+			'102',xyz	--will be considered as string. Required was number. And data type mis-match will happen and this record will be rejected and stored in bad file. 
+			103,pqr
+		
+			In table only first and third records will be inserted.  
+
+We can create a bad file explicitly by specifying in control file - 
+	load data
+	infile 'C:/file1.txt'		
+	badfile 'C:/file2.bad'
+	insert
+	into table target
+	fields terminated by ','
+	(empno, ename, sal)
+
+2. Business rule violation
+	Create table target(empno number(10), ename varchar2(10), sal number(10) check(sal > 5000));
+
+	and if we are giving data as - 
+	101,abc,4000
+	102,ads,3333
+	103,pas,7777
+	
+	then on 3rd record will be inserted and other will go in bad file.
+	Errors can be checked in log file.
+	
+	Another case can be - Suppose last field(trailing field) is not there (empty/null) then those records will also be automatically rejected and stored in bad file.
+	But if we still want to keep trailing column empty/null and insert null into table then we can use 'trailing nullcols' clause in control file as - 
+	load data
+	infile 'C:/file1.txt'		
+	badfile 'C:/file2.bad'
+	insert
+	into table target
+	fields terminated by ','
+	trailing nullcols
+	(empno, ename, sal)
+
+	
+SQL Loader Bad file and Discard file Part 3 | Oracle SQL Tutorial | Mr.Murali
+	
+Discard file - Stores rejected records based on when condition specified in control file.
+When condition is inserted after 'into table tablename' clause
+To create discard file we need to specify. Bad file was getting created automatically.
+
+Syntax - 
+	discardfile 'path of discard file'	
+
+eg - 
+	flat file - 
+			101,abc,10
+			102,ads,20
+			103,pas,10
+			104,pas,10
+			105,pas,30
+	
+	suppose we want to transfer records whose last column(dept) is 10 to table.
+
+	Control file - 	
+		load data
+		infile 'C:/file1.txt'		
+		discardfile 'C:\file3.dsc'			--Its not automatically created so we need to specify
+		insert
+		into table target
+		when deptno='10'		--even for integers we must use single quotes
+		fields terminated by ','
+		trailing nullcols
+		(empno, ename, deptno)
+
+	rejected records will be stored in file3.dsc
+	
+09:05
+
+	
+	
+	
+	
+	
+	
+	
+
+

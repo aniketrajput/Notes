@@ -1,0 +1,297 @@
+SOAP Web Services in Java.
+
+There are two web services in java - 
+	SOAP 
+	REST
+	
+In Java world there are two different specification for web services 
+	SOAP (JAX-WS)
+	REST (JAX-RS)
+	
+Service that is available through web is web service. Is accessible through network.
+
+Website is made for human consumption, web service is made for code or application level consumption. 
+
+We can have applications written in different technologies communicate between each other through web services.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Suppose I have some implementation and there is one consumer which wants to use this implementation. So I need to share implementation details(method name, parameters, return type, etc) or contract with consumer. I can do by creating interface.
+
+We have a web service and we want to share the details of the web services to the consumer. Here the consumer and WS can be implemented in different technologies. So we want consumer to understand WS details or contract irrespective of there technologies. Here we cannot use interface(eg. written in Java), because consumer(written in c++) might now understand it. 
+So the developers of WS come up with a format that will be understood by all technologies. That format is XML.
+So the contract is shared as a XML document and is called as WSDL(Web Service Definition Language.).  There are tools which generate the WSDL. We can even generate it manually. 
+WSDL has information like methods, arguments, return type, etc. and the consumer application knows what to call. 
+WSDL is the interface to WS.
+
+How consumer can get hold of WSDL? 
+There some directories of WS which we can query and get WSDL. These directories are called UDDI(Universal Description Discovery and Integration). Its like allocator of WS. Its a registry where we can register our WS. And anybody that whats to use that WS can query this UDDI for that WS. 
+
+When we exchange the data between client and WS we need to exchange it XMl. (like sending the input and receiving data). So there is a protocol how to data needs to be send and received and this protocol is called SOAP(Simple Object Access Protocol)
+
+
+Conversion of Java objects (in our client application - one which will call WS) to SOAP message is done by a class called SEI (Service End-Point Interface). SEI acts as an interface to WS end-point. We can have SEI generated for us. 
+If our application is Java application then we will have Java SEI to convert Java objects to SOAP message.
+If our application is C++ application then we will have C++ SEI to convert C++ objects to SOAP message.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Commands to generate SEI - 
+
+mkdir sei
+cd sei/
+wsimport http://....... (wsdl url)(wsimport is provided by java) 
+
+a net folder will be generated and it will have all .class files. If we want the .java files the we can use options of wsimport.
+
+wsimport -keep -s src http://........			(-s means source directory, here src)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+wsimport generated 9 java class, so which class should be exactly used? 
+For this we need to check WSDL and look for <wsdl:service name="..">
+												<wsdl:port name="..." binding="...">
+												
+Whatever names are there in wsdl:service and wsdl:port we will be using those classes.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Setting up Java EE 7 SDk. 
+
+When we are installing Java EE, it comes with open source glassfish server. 
+
+How to start and stop domain?
+glassfish4/bin >  ./asadmin start-domain domain1(default is domain1 so no need to specify domain)
+
+glassfish4/bin >  ./asadmin stop-domain domain1(default is domain1 so no need to specify domain)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Writing a Web Service: Eclipse setup
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Write a method and annotate the class with @WebService. This will make it a web service. 
+
+We can access the glassfish admin console and actually test our web service. You can also get wsdl link and see that it has created wsdl automatically. Glassfish also provides testers link to test our web service. 
+
+If we want we can also annotate the method with @WebMethod annotation. 
+
+Any public method in @WebService class will always be a WebMethod, no need to annotate it as @WebMethod.
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Service First and Contract First Web Services - 
+
+By using @WebService annotation we are auto generating the wsdl. But suppose I made any changes in web service then again the wsdl will be changed. Now if the wsdl was already being used by some clients, the newly generating wsdl will impact them. To fix this we need to first fix down the wsdl and then implement web service. 
+
+
+This leads to two different ways in which we write web services - 
+	Service First
+	Contract First (Write WSDL first)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Understanding the WSDL - 
+
+@WebMethod(exclude=true), glassfish will exclude these methods. 		
+
+WSDL tell two things - what a web service does and how it does it?
+	What - definations, types, messages, operations, porttype
+	How - binding, service
+	
+Elements in WSDL - 
+	- definition
+	- types
+	- message
+	- portType
+	- binding
+	- service
+
+definition - The whole WSDL elements are encapsulated by this element.
+	
+portType - has an inner element called <operation name="getProductCategories">, this name is same as our method name. Further operation element has inner elements called <input> and <output>. Input represents the input arguments and output represents the returning argument. Even if a method has multiple arguments, there will be only one input element. If there are multiple input arguments in a method then it is bundled together into a message. Every method in the WSDL takes one method as an input and one message as an output. Input and output elements has a reference to these messages and these messages are defined in <message> element. Irrespective of whether method has any arguments, input and output and message will be created. 
+
+types - If the method arguments or return type is a custom type, then this custom type is defined in this element. Message element consists of types element. 
+
+binding - binding is how WS accepts these values. Information about how the service accepts requests and gives response. 
+
+service - service has a port element and in port element address is mentioned at which WS is made available. Its also mentions which binding the service is using.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Customizing the WSDL - 
+
+We are going to go with WSDL first approach by writting the java class first. So this will generate the initial WSDL, now we can customize this WSDL according to our need and lock it down. 
+In the WSDL first approach, writing the throwaway java class first can give us a good starting point. 
+
+Properties provided by @WebService annotation - 
+
+	@WebService(name="TestMartCatalog") 	//This name will the portType name in the WSDL. If we don't provide it the default will be the class name. 
+
+
+	//After below change the WSDL url will not work, because we have changed the service name and the url contains the service name. Changing the service name changes the default WSDL url. 
+	@WebService(name="TestMartCatalog", portName="TestMartCatalogPort", serviceName="TestMartCatalogService") 	
+
+
+	//definition has a targetNamespace, it like package in java. By default it gets it value from the class package(It reverses the order). We can change it using targetNamespace attribute. It changes every where, like in types, etc. 
+	@WebService(name="TestMartCatalog", portName="TestMartCatalogPort", serviceName="TestMartCatalogService", targetNamespace="http://www.testmart.com") 	
+
+
+Properties provided by @WebMethod annotation -
+
+	@WebMethod(exclude= true)	// this method is not considered in WSDL
+
+	//default operation name is the method name. Everywhere operation name will be changed, in portType, binding, etc. <soap:operation soapAction="fetch_categories">
+	@WebMethod(action="fetch_categories", operationName="fetchCategories")		
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Schema Types and Binding Styles - 
+
+WSDL url will name of the class +(appended) Service ?wsdl
+
+message element are referring to types element. If you go to location given in schemaLocation you can see types defined there and same being used in message.
+
+@SOAPBinding(style=Style.RPC)	//default style is Document. We are using this annotation to just mention about types, if we don't want default way. After this the WSDL won't have the types section. We will have a message section with inner element part and type as its attribute. Binding element will also change, it will have style as RPC now, previously it was Document. 
+When the RPC style is used, no schema gets generated for types. 
+
+We can change the name of the part element by using @WebParam annotation to argument, by default they are arg0 and return - 
+	
+	@WebMethod
+	@WebResult(partName="lookupOutput")			//this will give name to output or return type partName
+	public String getShopInfo(@WebParam(partName="lookupInput") String property){...}
+
+
+@SOAPBinding(style=Style.RPC, use= ENCODED/LITERAL)		//literally means values are literally in the xml and encoded means values are encoded in the xml. 
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Service Interface and Custom Types - 
+
+Previously we had a class for web services and all annotations we in this class. But in earlier version they created an interface for this class and that interface had all the annotations. This interface is also called SEI(Service Endpoint Interface.). We need to add one annotation though to the implemented class to tell the framework what the endpoint interface is - @WebService(endpointInterface="org.javabrains.ProductCatalogInterface")
+
+Advantage is we can decouple interface from implementation.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Using JAXB annotations Part - 1 =
+
+
+JAXB - Java Architechture for XML Binding - It helps in conversion of java objects to xml data elements. It actually binds different parts of java object with different xml structure and also vise versa.
+
+We can use JAXB annotations to customize default generated xml structure (from java object). 
+
+@XmlRootElement - It is added above the class, it tells that class name is the root element name in xml. 
+
+@XmlRootElement(name="Product")	//root element name is Product
+
+@XmlType(propOrder={"price","sku","name"}) - using propOrder we can customize the order of inner elements within root element. 
+
+@XmlElement(name="ProductName") //add the annotation above getter, to change property name in xml structure. 
+
+When we add JABX annotations to the class we need to make sure that we have public no args constructor in the class, because JAXB needs to create the instance and initialize it. Remember JAXB does XML to java object conversions too, which is why it needs a no-args constructor - it will need to instantiate the object first. 
+
+@WebResult - It is covered before, check. 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Handling Faults - 
+
+It is possible that an output is not return in java, eg if an exception occurs before return statement.
+
+When we declare a method is throwing a exception using throws keyword, then in operation element a new inner element message can be seen called fault. It represents the exception we are throwing. fault is web service terminology for exceptions. We can have multiple fault messages depending upon number of exceptions thrown. 
+In Types schema as well new type will be added for the exception.
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Using SOAP UI we can get SOAP response directly.
+
+We can use glassfish tester page to test webservices that are deployed in glasssfish, but what if we want to test some external service or web service that we deployed on another server, at that time this tester won't be available. SOAP UI is one of the tools that allows us to test webservices. We can send SOAP request and get back SOAP response through this tool. 
+
+We can also install it as a plugin in eclipse. 
+
+When we create a project in SOAP UI, it will look into wsdl, it identifies the operations and create a sample request for each of the operations. 
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Using Web Service Explorer - It comes with eclipse. 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+So far we created web services and we deployed it on glassfish server.  
+
+There is another way in which we don't have to deploy again and again on glassfish while testing. Actually we don't require any server, java provides support for webservices in JDK itself. We can write a code to publish a webservice, using class Endpoint.
+
+Endpoint.publish("http://localhost:1234/productcatalog", new ProductCatalog()); 	//Endpoint.publish(address,implementor);		//http://localhost:1234/productcatalog - this is the url where we want to publish 																																our webservice.
+																																	//Second argument is the instance of the class that is the webservice. 
+
+We can directly access the url in browser. 
+
+JAX-WS is the standard, it provides guidelines to us about how to write webservices, like which annotation to be used and where. And there is anther part of it which is actaully the implementation, which takes the code we have written, validates it and then does the work of publishing it. So there are lot of such webservice implementation and one of them is called metro. Metro is called reference implementation. Metro also comes bundled in glassfish, so its not the glassfish but metro doing the work. Metro also comes bundled with JDK, so its possible to publish using Endpoint class in java. 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+wsimport Revisited - 
+
+We used it to generate the client stub using wsdl, and then using that stub we made call to the webservices.
+
+There are few things which we can use to customize how stub is generated. 
+
+Basic command - wsimport [option] <WSDL URL>		//URL can be web address or local file in file system.
+
+
+wsimport -d <directory>			//allows you to specify directory name where you want generated classes to go. 
+
+wsimport -keep	// allows to save the source files, by default wsimport deletes all the .java files and just keeps the .class files. 
+
+wsimport -s <directory>			//-d lets you to specify where you want .class files to be saved and -s lets to specify where we want .java files to be saved. It will automatically turn on the keep flag.
+
+wsimport -verbose	//gives more detial output. Doesn't have any effect on the generated classes, just the console output.
+
+wsimport -quiet		//gives little output. Doesn't have any effect on the generated classes, just the console output.
+
+wsimport -p <package_name>	//class will be in mentioned package.
+
+wsimport -b	binding_file.xml	//wsimport tool doesn't provide the guarantee that the code it generates will always compile. Using binding files we can override certain names, code generated by wsimport. 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

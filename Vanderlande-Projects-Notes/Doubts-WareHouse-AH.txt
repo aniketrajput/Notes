@@ -1,0 +1,25 @@
+RRP (Retail Ready Packing)?
+NC (Non Conveyables)?
+XDock?
+Replenishment?
+RF(Radio Frequency)?
+Pack Groups?
+Pack group Lines?
+Destination Tsu?
+Source Tsu?
+Product Tsu?
+Order Tsu?
+LC (Load Carrier) ? (Load carrier is a generic Ahold term used for TSUs that can be received, picked and shipped. Thus trays and slave pallets are not LCs in VISION.)
+Quantum?
+Velocity Class?
+Secondary LC?
+Collo number?
+Collo GTIN?
+ASN(Advance Shipping Notes)?
+ASN Lines?
+
+
+
+Pack group - A pack group represents a part of a store order to be picked into one LC.
+Pack group line - A pack group line represents the full or partial quantity of a store order line to be picked into one LC.
+

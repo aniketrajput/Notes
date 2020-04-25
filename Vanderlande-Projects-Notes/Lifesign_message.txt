@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ELLifeSignRequest>
+	<Header>
+		<MessageTime>2018-10-31T10:06:46.038Z</MessageTime>
+		<Source>
+			<ProcessID>RAW_01990002</ProcessID>
+		</Source>
+		<Target>
+			<ProcessID>SAC_01997111</ProcessID>
+		</Target>
+	</Header>
+	<EventTime>2018-10-31T10:06:46.038Z</EventTime>
+	<Sequence>2726</Sequence>
+	<AreaID>2</AreaID>
+</ELLifeSignRequest> 
+-------------------------------------
+<?xml version="1.0"?>
+<ELLifeSignResponse>
+  <Header>
+    <MessageTime>2018-10-31T04:44:14.964Z</MessageTime>
+    <Source>
+      <ProcessID>SAC_01997111</ProcessID>
+    </Source>
+    <Target>
+      <ProcessID>RAW_01991002</ProcessID>
+    </Target>
+  </Header>
+  <EventTime>2018-10-31T04:44:14.964Z</EventTime>
+  <RequestSequence>2726</RequestSequence>
+</ELLifeSignResponse>

@@ -1,0 +1,99 @@
+JIRA - 
+Part 1 - 
+
+It is a defect management tool or project management tool.
+Not only defect we can manage test cases, project, sprint, get reports out of JIRA.
+
+There will be a jira repository - hhtps://jira.companyname.com/
+You will get username and password. JIRA login. 
+
+- Create project.
+- Then start with creating a story point after creating project. (Click on Create. Select the project.) (Story means task(eg. net banking integration, credit card integration in payment page).. 
+	Epic is bigger story, it can be diveided into multiple stories). 
+- Click on Backlog. We can create a sprint. 
+- Stories which we created will be in the backlog. So we can drag and drop it in the created sprint or we and right click and add.
+	From sprint also we can say create issue and create new story.
+- We need to start the sprint after adding story. Click on start sprint and define for how many weeks we want that sprint to go on. Then click on start, sprint will get started.
+- When we click on Active sprint, here we can see To DO and In Progress and Done. 
+
+
+Part 2 - 
+https://www.youtube.com/watch?v=oVdeoSN2b98&index=2&list=PL5NG-eEzvTtjmzgslgWJwWGmAn8BB7eRH
+
+- When we click on Boards then we can see the board(project) we created. 
+- If we click on any story we can see details on right side.
+- Now since we have started working on it we can click on '...' and then go to More Actions and the select 'In Progress'. Which means work has been started. 
+	The story will move from To Do to In Progress. 
+	If story is done then again we can click on '...' and then go to More Actions and the select 'Done'. Which means work has been done. 
+	The story will move from In Progress to Done.
+- Now if we go in Backlog the we can see on ticket has been closed.
+- If we feel like some story cannot be completed by one developer then we make subtasks. Click on story. Click on '...' and Create sub-task. 
+	JIRA has mail configuration, so if assign any story to any developer then a mail will be sent to that developer. 
+- After clicking on story we can also add comments. 
+- We can add watchers(like manager, leads). Whenever we add a comments then mail goes to all watchers.
+	(You can also click button - In Progress, To Do, Done)
+
+Once the sprint time is complete we can click complete sprint button. 
+If a story has two sub-tasks and only one sub task is complete and we have also marked main story as complete, then it will still show this story as incomplete coz one sub-task
+is still remaining.
+We can then move this incomplete story to backlog. (A pop diaog box is displayed asking if you want to move it to backlog)
+We can also see sprint report in Report page.
+
+We can again create a sprint 2 and add backlog stories into sprint 2.
+
+
+Part - 3:
+
+https://www.youtube.com/watch?v=QsoDfGMzBF4&list=PL5NG-eEzvTtjmzgslgWJwWGmAn8BB7eRH&index=3
+
+How we can create and issue how particular reciepent will get an mail about it.
+
+If we want create a bug we can click on create and then select Issue type as bug, fill other details -  description - enviornment(testing, pre-prod, developmetn) - assignee - which sprint
+,etc.
+To see bugs go to Issues tab - click on my open issue, we can see bugs there.
+We can add the watchers. Mail will go to them.
+Tester will create a bug and assign to developer, then mail will go to developer. Then he goes to that bug and adds watchers to manager and lead(comma separated) so that they will know that this 
+bug is comming.
+Then developer will start working on it and change it status to In Progress.
+Now you will not see it in Issues - My open issues. To view select the project and then change status to In Progress. 
+
+(Work flow means status - To Do, In Progress, Done. We can customize and add more.) 
+
+While creating issue we assign a sprint and automatically we can see that bug in that sprint.
+
+
+
+This is all we need.. Watch it once again... 
+Watch more videos.
+
+
+Bamboo - 
+https://www.youtube.com/watch?v=524WEU3PvRU
+
+What is continuous integration - 
+Continuous integration is a process of automatically building and testing your software on a regular bases to prevent integration issues.
+
+When developer wants to make any changes they make a copy of main repository to work on. After making the changes those copies goes through test and builds and should be merged 
+back to main line only when those tests and buils are passed. Making this work flow an easy automated process is the main role of any CI tool. So a good tool like Bamboo reduces
+the risk of running into integration issues by checking new changes frequently. 
+
+Bamboo also offers Continuous Dilivery.
+Continuous Dilivery is all about the release process. Taking a build making it to a release number and releasing it. 
+In other words its a process of automating and improving the cycle of software dilivery to make sure the software checked in on the main line is always in a state that can be
+deployed to users. 
+
+While installing applications make sure we are not deploying multiple atlassian applications in a single tomcat container. It is not supported and not recommended.
+
+--------------------------------------------------------------------------
+
+Four building blocks that bamboo uses to structure builts - tasks, jobs, stages and plans.
+
+Typical build chain with other CI servers - 
+Compile & Unit test -> Deploy to QA -> UI Test / Integration Tests / API Tests / Performance, Load Tests -> Deploy to Prod. -> Integration Smoke Tests, UI Smoke Tests.
+
+
+
+
+
+
+

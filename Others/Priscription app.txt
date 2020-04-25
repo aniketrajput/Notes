@@ -1,0 +1,80 @@
+Prescription Viewer App is an easy to use medication management app which helps you to monitor and keep track of your medication. It is an android app which helps you to view your medication anytime, anywhere through your phone. A website is created for the doctor to enter the prescription details. The prescription is then sent to the Prescription Viewer App, installed in the patient’s phone, using Google cloud messaging (GCM). The app stores the prescription and displays it in the patient’s phone.
+
+
+Doc will enter the patient details -> store in db
+When patient comes -> fetch patient details 
+Doc enters priscription for patient 
+
+
+entered priscription can be seen by patient on andriod app 
+
+
+Future scope - 
+A website has been developed for entering the prescription details which is sent to the Prescription Viewer App present in the patient’s phone using Google Cloud Messaging. Three people have access to the website – Admin, Doctor and Receptionist. They can access the website by logging in using their respective username and password. The admin controls the website. New Doctor accounts are created by the admin. The receptionist enters the details of the patients into the website when the patients visit the hospital for the first time. A patient is registered under a particular doctor. The doctor can view the details of his patients. The doctor enters the prescription details into the website and it is sent to the patient’s phone.
+
+The patient’s phone registers with the GCM service by sending the sender id to the GCM server. The server registers the phone and sends back the registration id. Then the phone sends the registration id along with the patient’s name and email address to the website. The website stores the registration id, email address and name in a separate table. After entering the prescription details the doctor click the send button. The email address of the patient is compared with the email ids stored in the new table and the corresponding registration ids are found out. Then the prescription details are sent via the GCM server to the patient’s phone. The application in the phone displays the prescription details.
+
+
+Technologies Used
+java, php :- For back end developement
+HTML, CSS, Javascript :- Front end developement
+MySql :- Database
+
+
+
+
+
+
+
+The different modules in the system include:
+Login Module:
+Only the authorized users can login into the site. Admin, Doctors and Receptionist can login
+using their username and password. If invalid username or password is given, then access will be
+denied.
+
+Administrator Module:
+The administrator can add new doctors as well as change the password of the receptionist.
+
+Registration
+The patient details are entered by the receptionist and it is stored in the database.
+
+Provide Prescription
+The doctor provides the prescription and it is stored in the database.
+
+Send Prescription
+The prescription details are sent to the Prescription Viewer App installed in the patient’s phone
+using GCM.
+
+
+
+
+
+The database is hospital. It consists of following tables:
+admin(username, password)
+
+doctor(id,fname,lname,gender,department,email,address,mobile,username,password).
+
+patient(id, doc_id, fname, lname, gender, email, address, mobile).
+
+prescription (id, patient_id, name, time, days, dosage).
+
+receptionist (username, password).
+
+gcm_users(id, name, email, gcmregistration_id, created_at).
+
+
+
+
+
+
+
+
+
+
+GCM concept - 
+Android app will do registration for GCM (will send emailid ,etc) then GCM server allocates a Registration ID for that app and that particular device.
+Android app then sends the Registration ID to our application server which will store that Registration ID against that patient.
+Whenever our application wants to send any message it will use the Registration ID and an Sender Auth Token(An API key that is saved on the 3rd-party applicationserver that gives the application server authorized access to Google services. TheAPI key is included in the header of POST requests that send messages.) to GCM and then GCM will send the msg to android app.
+
+
+
