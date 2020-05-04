@@ -1,0 +1,121 @@
+All slides are available in pdf format.
+
+
+10. Maven Installation
+
+	Maven Installation
+	Maven is distributed in several formats. The simplest way to install Maven is to download a ready-made binary distribution archive and follow the installation instructions. Maven 3.3+ release requires JDK 1.7 or above to execute. (Java 11 or higher recommended for this course)
+
+
+
+	General Requirements
+	Java JDK must be installed on system.
+
+	Java 1.7 is needed for Maven; Java 11 recommended for this course.
+
+	To verify the Java JDK is properly installed, from your command line run the following command:
+
+	jt$ javac --version
+	You should see:
+
+	javac 11
+	This command verifies the Java complier (javac) is installed. If javac is not found, check your Java JDK installation.
+
+	Maven will not function without a properly installed.
+
+
+
+	Installing Maven on Windows 10
+	To install Maven on Windows 10, ensure JAVA_HOME is set.
+
+	echo %JAVA_HOME%
+	Verify the above command returns a proper value. If nothing is returned, verify the Java JDK is installed on your system. JDK 1.7 is needed for the Maven. JDK 11 is recommended for the course
+
+	Download the binary zip archive from a downloaded mirror.
+
+	Extract the archive to a suitable location.
+
+	Add the bin directory of the extracted Maven directory to the PATH environment variable. The steps to do so on Windows 10 is:
+
+	Right-click This PC and select Properties.
+
+	On the left pane, select Advance system settings.
+
+	Click the Environment Variables button.
+
+	In the Environment Variables dialog box that appears, double-click Path under System variables.
+
+	Setting PATH as System Variables
+
+	In the Edit environment variable dialog box that appears, click the New button.
+
+	Add the path to the bin directory of the Maven installation. An example path is C:\apache-maven-3.6.0\bin
+
+	Edit Environment Variables Dialog Box
+
+	Click the OK button.
+
+	Click the OK button to close the Environment Variables dialog box.
+
+	Finally, click the OK button to close System Properties.
+
+	Open a new command prompt window and type the following command.
+
+	mvn -v
+	This command displays the version information. This also verifies that Maven is installed on your computer.
+
+
+
+	Installing Maven on POSIX compatible Operating System (Linux and Mac OS X)
+	To install Maven on a POSIX compatible Operating System, such as Linux or Mac OS X
+
+	Ensure JAVA_HOME is set.
+
+	echo $JAVA_HOME
+	Download the binary archive from a download mirror.
+
+	Switch the Maven contents.
+
+	mv Downloads/apache-maven* /opt/apache-maven
+	Add Maven binaries to the PATH and append.
+
+	export PATH=/opt/apache-maven-3.6.0/bin:$PATH
+	Open a new terminal window and type this command.
+
+	mvn -v
+	This command displays the version information and verifies that Maven is installed on your computer.
+	
+	
+----------
+
+	java -classpath ./lib/*../ HelloWorld
+	
+	javac -classpath ./lib/* HelloWorld.java
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

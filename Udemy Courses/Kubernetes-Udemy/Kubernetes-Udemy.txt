@@ -5131,7 +5131,13 @@ Step 03 - Using Helm Charts to manage Releases to Kubernetes Cluster
 	we can see that both the yaml files will be evaluted and we can also see that the configmap is created.
 	
 	
+Section 12: Kubernetes on AWS with EKS
 
+	Amazon Elastic Kubernetes Service - EKS
+	
+	Azure Kubernetes Service - AKS
+	
+	
 	
 	
 	

@@ -1,0 +1,622 @@
+
+Section 1: Introduction
+
+2. Walkthrough of the AWS Certified Cloud Practitioner Exam Guide
+
+	Format - multiple choice
+	
+	Time - 90 mins
+	
+	65 questions
+	
+	Cost - 100 USD (Practice Exam : 20 USD)
+	
+	Delivery Method - Testing center or online proctored exam.
+	
+	Scoring scaled between 100 - 1000
+	Minimun passing score - 700
+	
+	Question format: 
+		- Multiple-choice: has one correct response and three incorrect response
+		- Multiple-responses: Has two or more correct responses out of five or more options
+	
+	AWS Whitepapers (removed from exam guide, but recommended): 
+		- Overview of Amazon Web Services whitepaper
+		- Architecting for the Cloud: AWS Best practices whitepaper
+		- How AWS pricing works whitepaper
+		- Cost management in the AWS Cloud whitepaper
+		
+	
+	https://aws.amazon.com/certification/certification-prep/	
+	
+	Exam Syllabus and guide - https://d1.awsstatic.com/training-and-certification/docs-cloud-practitioner/AWS-Certified-Cloud-Practitioner_Exam-Guide.pdf
+	
+	Sample questions - https://d1.awsstatic.com/training-and-certification/docs-cloud-practitioner/AWS-Certified-Cloud-Practitioner_Sample-Questions.pdf
+
+
+	We will be downloading few resources, very useful. There are all slides, images and also links to docs which we can read and are useful.
+	For links, there are two links one for amazon website and other to digital cloud. We can use digital cloud one, because amazon one will have lots of info which might not be relevant for this certification.
+	
+	
+	Please download the course materials including slides, exam cram PDF and files and commands used in the course using the link below:
+
+	https://digitalcloud.training/aws-ccp-exam-training-course-downloads/
+
+	NOTE: The option to register for a free copy of our AWS Certified Cloud Practitioner Training Notes ebook which is an offline version of the training notes on our website and a really useful cheat sheet, can be found on the page link above.
+
+
+Section 2. 
+
+	We have all slides available.
+	
+	
+	Cloud Computing Cloud computing is the on-demand delivery of IT services from a
+	third-party provider over the Internet - Gmail, FB, Dropbox, etc.
+
+	Hypervisor - Software that runs OS.
+	
+	
+	FB, Gmail are SaaS. We don't have to do anything, just consume the service.
+	
+	
+	Private cloud, its not a multi-tenant enviornment that is shared with other customers.
+	
+	
+19. AWS Global vs Regional Services
+
+	AWS services have either a global or a regional scope. 
+	
+	That means that they are administered either what in one place globally or they're administered in regions.
+
+	The services highlighted in read here are in ones that are global services. 
+
+	For example AWS IAM service we create them in one place, we don't create them in different regions.
+	
+	
+	The AWS IAM service is a global service which means you create your users, groups, roles and policies in one place
+	
+	Compute, storage and outbound data transfer are the three fundamentals of AWS pricing
+	
+	On-demand is the best option when you need the most flexibility. There are no long-term commitments or upfront payments.
+	
+	The AWS Acceptable Use Policy describes the prohibited uses of AWS
+	
+
+Section 4: Identity and Access Management (IAM)
+
+24. IAM Overview
+
+
+	We can also create a user account that's used by a service, means rather than an individual using it to log on, an application is using those credentials. We can do it using IAM roles. 
+	
+	Policy is the document that defines what the permissions are for that group.
+	
+
+27. IAM Roles
+
+	Example - You have an EC2 instance and you assign that EC2 instance a role and that role provides full access to the Amazon S3 free storage service so that EC2 instance is able to read from S3 or write data to S3. 
+	So what this means is we are actually giving the EC2 instance those permissions but because it's using an IAM role what happens is you don't have to configure any username or password on that EC2 instance. So it's much more secure way of providing that EC2 instance the access it needs.
+
+	So again if you give your EC2 instance access to S3 using a role you don't need to place a username and password somewhere on the EC2 instance or somewhere in its code. 
+	
+	IAM users or AWS services can assume the role and they actually get temporary security credentials that they then use to make those API calls. 
+	Now the security credentials are temporary, means that when your EC2 instance requires access to S3 it goes to IAM and it gets some temporary security credentials which will expire. It will get renewed. Means it will expire after a period of time but it will just get some new ones and it will continually be able to access S3 unless you make a change to the configuration and you don't want it to be able to access S3 anymore. 
+	
+	
+	
+	STS (AWS Security Token Service) is the way that you request temporary limited privilege credentials.
+	
+	
+	An access key ID and secret access key is associated with a user and is used for granting programmatic access using the CLI or API
+	
+	
+	This is the correct answer, an Amazon Resource Name (ARN) is associated with entities such as users and groups
+	
+	
+	When assigning permissions always grant the least privileges required. This is a security best practice
+	
+	
+	You can delegate permissions using roles. It's a great way to provide permissions to resources for users and services without using permanent credentials
+	
+	
+	So even if you create an IAM user and give them the full administrative privileges to your account there's still a few privileges that they don't get but the root account has everything.
+	
+	
+Section 6: AWS Compute
+
+42. Amazon EC2 vs Traditional Servers
+
+	Amazon EC2 - Amazon Elastic Compute Cloud.
+	
+	
+	Traditional servers - 
+		
+		CPU - Processors
+		RAM 
+		Disk - Storage
+		NIC - Network Interface Card for sending data over a network
+		
+		So if we want to upgrade, we either buy the complete server or by any of the hardware component to scale.
+	
+	
+	Now as we know AWS is a web service. So as a web service we go into the Amazon EC2 management console and launch an EC2 instance. 
+	
+	So an instance is an individual server, it's a virtal server.
+	
+	https://www.youtube.com/watch?v=JGtr-O3KJlE
+	
+	Physical server - I can actually see it, go and open it up.
+	
+	Virtual server - Server which host virtual machines. We may not see it, it may be on cloud.
+	
+
+Section 6: AWS Compute
+
+44. Amazon Machine Images (AMI)
+	
+	EBS snapshot is copy of EBS volume. EBS (Elastic Block Store) volume is a persistent storage device and its like a virtual hard drive in the cloud. So we can think of it as a place where we store data and that data is stored persistently it doesn't get lost. 
+
+	So our AMI can be backed by an EBS snapshot and whatever data is on that snapshot like our windows or linux OS and your configuration and software packages you might have installed will be part of your instance. 
+
+	Now alternatively our AMI can be backed by what's known as an instance store and an instance store is a non-persistent device. That means the data is lost when you shut it down. And these are very high performance. 
+	
+	
+46. Launch EC2 Instance Hands-on (optional)
+	
+	EC2 is a regional service, means you must select a region in the AWS management console and you launch your instance into that region.
+	
+	VPC (Virtaul Private Cloud), we can think of this as a virtual data center so everything within this VPC is just for you. 
+	Now it's logical it doesn't mean you have any physical segmentation within the AWS cloud but it does mean that its kind of like a security boundary and a networking boundary and within that all the resources are yours and they're very private.
+	
+	We have public and private subnet and if we want to be able to connect directly to our instance from the Internet we put it into a public subnet and that means it gets a public address. So it gets a public IP address so we can find it on the Internet. 
+	
+
+46. Launch EC2 Instance Hands-on (optional)
+
+	Step Configure Security Group - it is a instance level firewalls. Firewall is a networking service which determines or allows certain traffic to reach your instance or it denies traffic from reaching your instance.
+	And it can do the same for the traffic leaving your instance. So you can configure which port or protocols what type of traffic should be allowed to your instance and allowed from your instance out to internet.  
+	
+
+
+Youtube video - Introduction to AWS Services - https://www.youtube.com/watch?v=Z3SYDTMP3ME
+
+	Edge Locations - We can consider it as a caching devices. All the media like fb, youtube videos, images they get cached at the nearest Edge locations and when user request for these media instead of going back to seerver and fetching it from storage, they are directly served from these Edge locations, hence latency is low. 	
+
+	
+	Global services - IAM, Billing, Route53, etc.
+	
+	Regional services - S3, DynamoDB
+
+	Availability services - EC2, RDS, EBS. 
+							We will have one instance of EC2 on one availability zone. That means one EC2 instance can't be in multiple AZs, it will be in only one AZ.
+							
+	Now, let's try to build an Social Media application. 
+	First we will see how we can build without AWS services and then we will see how we can build it using AWS services.
+	
+	
+	Check Diagram - fb-architecture-without-aws-on-premises.JPG
+	
+	Now if we want to deploy this fb.com application on our on premise data center then first thing we will need is Private Network. 
+	
+	Next we will require Web Server. So if we want to extend out application and have some business logic and UI then we will also add an Application Server. So frontend will be taken care by Web Server and backend will be taken care by Application Server. 
+	
+	We might also need a Relational Database. 
+	
+	And users will be using this application by using an IP address. 
+	
+	So till now we have this three tier application.
+	
+	Now as our application is becoming popular, and number of users is increasing then at some point our Web server and Application server becomes bottle neck, they are not able to handle the increase load on our application. 
+	So the solution to this would be scaling, typically it would be vertical scaling means we increase the capacity of these machines (by add some hardwares) or we can do haorizontal scaling, that means we bring more web servers and more application servers. 
+	
+	Now as we have multiple web servers now that means there will be multiple ip address, so now we need an intelligent entity who can distribute loads between these web servers. That's were we bring in Load Balancer service.
+	So user will hit request to Load Balancer and load balancer will evenly distribute the load to backend servers. 
+	
+	So now we don't want people to access our application using ip address, we want them to use some domain name. So we need some DNS service where we will map domain name with the ip address.
+	
+	Now everything is fine but now we are having lot of data and our relational database is not able to handle those. So for these we need scalable databases. So we bring in the No Sql database. So now some part of data is stored in relational database and other in No Sql database. 
+	But still our relational database could be a performance bottle neck. May be there some read heavy operation happening on this db, so for that we bring in DB Cache engine. So frequently accessed data will be cached here and our application won't always have to hit the db. 
+	
+	So our fb.com might be getting millons of picture and video upload daily, and the disk which are attached to the VMs are not capable of extending on the fly, they have size restrictions and thus all this media is never stored on Web servers or an application servers. 
+	For this we need some uplimited kind of storage and that's where we use External Storage. And this should not be necessarily block storage like our disk, it can be a file storage. 
+	
+	Now when we upload some photos, videos we need some kind of Content Filter, so that we can filter the content which is not permited. 
+	
+	Now we know that fb also continuously throws ads and it also continuously watching what activity we are doing while we are on fb page, like what kind of products we are liking, what posts we are liking, And based on that it gives use suggestions, ads, etc. So this is called Click Stream Analysis. Every click is being captured some where and it is getting analysed in real time. So we need some kind of Click Stream Analysis engine there.
+	
+	Now whatever data this Click Stream Analysis capture it has to be further stored into some kind of External Storage. And future we can use this data to run some operations, like aggregations, sort, find some meaning out of it. So for that we need some kind of Hadoop/Spark platform.
+	
+	And over the time we will also need a Data Warehouse, because fb does lot of data analytic, like may be at the end of the year they want to know which kind of user are accessing fb more, there age, region they come from, what is trending, etc. All this info is taking out from some kind of data warehousing engine and then doing some kind of Business Intelligence on top of it. So we need some kind of Business Intelligence tool which will query this data and analyse this data and generate some kind of reports from it. 
+	
+	Now all the photos and vedios stored in the external storage can be directly served on the internet. So user may come from web browser and watch a video. 
+	But our user can also come from mobile devices. And in that case we will need same video but in some kind of different format because mobile divices might play a different format of the video. And this will need some kind of video converter. 
+
+	Now whenever some video get viral, millons of people watch that video, now everytime if that video is fetch from the External Storage, this might become a bottle neck. So to solve this problem we have something called CDN(Content Delivery Network). 
+	CDN will cache these videos in the nearest caching devices from where the user is accessing your videos. So that all the user's from that geography when they want to watch that same video it can be served from CDN and not from external storage. So user will experience a low latency.
+	So application like fb, youtube have a large CDN networks from where they serve videos.
+	
+	Now we know that fb also sends us mobile notifications, for this we need some kind of notifications service like SMS Mobile Push Notifications.
+	
+	Also it can send Emails, so we need an Email service.
+	
+	We can also chat in fb, for this we need a Messaging Queue service.
+	
+	And we will also need some kind og Monitoring Service to monitor how our VMs is doing, how our db, storage is doing, etc.
+	
+	
+	Now we will see if we want to do same thing on AWS, then how we will do this.
+	
+	Check Diagram - fb-architechture-with-AWS.JPG
+	
+	
+	So the Private Network we had in AWS it is called VPC(Virtual Private Cloud). 
+	
+	All the VMs we had are nothing but EC2(Elastic Cloud Compute) machines. 
+	We can have auto scaling enabled for EC2.
+	
+	And the Disk we had are EBS(Elastic Block Storage). They have limitation of maximum size. 
+	
+	For Relational Database there is a service called RDS and for No Sql DB there is service called DynamoDB.
+	
+	For DB-Cache we have service called ElastiCache. 
+	
+	For Load Balancer we have ELB (Elastic Load Balancer) Service.
+	
+	For DNS we have Route53 service.
+	
+	For External Storage we have S3 service. It is unlimited storage and accessible over the internet directly. No size limitation on how much data we can store in S3 buckets.
+	
+	Also we need some Content Filter, so for that we have Rekognition service which can filter out an objectible media and it can filter it out before uploading to S3 bucket. 
+	
+	As we need some service to convert videos from one format to some mobile friendly format, for this one option is, we can have some EC2 instances which continuously watch our S3 bucket for new videos and as new video comes they download it there and converts it to some format and put it to some another S3 bucket. 
+	But there is a better option for this, that is Lambda service. Lambda is a serverless service of Amazon, where we just write a code to convert a video and we can execute this whenever a new upload is happening in S3. So when new video come Lambda function is trigger, conversion is done and it may upload the converted video to some new S3 bucket.
+	So here there are no servers to manage. Everything is taken care by Lambda and they scale automatically.
+	
+	For Click Stream Analysis we have a service called Kinesis.
+	
+	For Spark/Hadoop there is a service called EMR. 
+	
+	And we also need to do ETL transactions from our DynamoDB tables. So we need Glue service to do extract, tranfrom and load operations. 
+	
+	For Data Warehouse we have Redshift service. 
+	
+	For Business Intelligence we can use Amazon Quicksight and we can also use Athena. 
+	Athena is an SQL query interface. So we can pull data from S3 perform some sql operation on that and all those results can be seen in Quicksight.
+	
+	For CDN there is CloudFront service. 
+	CloudFront service stores or caches the data in Edge Locations. 
+	
+	For SMS, Mobile Push notifications there is SNS(Simple Notification Service) service.
+	
+	For Emails there is SES(Simple Email Service) service.
+	
+	For Messaging Queue we have SQS (Simple Queue Service)
+	
+	For Monitoring we have CloudWatch service. 
+	We can also set alarams here.
+	
+	
+	Now we will see some Application Services. Check Diagram - AWS-application-services
+	
+	
+	We know that fb, twitter, amazon it exposes all its service via an API calls so that different 3rd party application can integrate with this applications. And for that they need an REST API service where they can expose all there APIs. So in Amazon we can have managed API Gateways. It takes care of scaling, throtling, everything.
+
+	Web and Mobile User Management Service - Cognito
+	
+	
+	
+	Security Service. Check diagram - AWS-securities-services.JPG
+	
+	IAM(Identity and Access Management) service.
+
+	Encrypt our data at various storage locations like EBS, S3, RDS, DynamoDB, SQS, EMR, Redshift, etc. using KMS(Key Management Service) service. KMS manages all encryption keys for you. We don't have to store keys.
+	
+	As we know these application will be probabily accessed over HTTPS, So we can secure this communication using digital certificates. We can deploy it on either Load Balancer or we can deploy it on CloudFront so that our communication is secured. For this AWS has service called ACM (Amazon Certificate Manager)
+	
+	We can also have the application Firewalls. They are called WAF(Web Application Firewall). It can prevents attacks like SQL injection, etc. We can deploy it on ELB, CloudFront or API Gateways.
+	
+	AWS Inspector service makes sure our machines are free from vulnerabilities. It puts an agent inside our machine and scan our machine for any known vulnerabilities. And then it gives us reports.
+	
+	
+	We will now see AWS Development and DevOps Service.
+	Check diagram - AWS-development-and-DevOps-services.JPG
+	
+	In our architechture we have lot of services and they are all connected. So if we want to deploy everything by hand may be manually then it will take lot of time. Couple of days.
+	With AWS it gives us ability to code our infrastructure. That's called Intrastructure as a code. So for this we can have a service called CloudFormation. It takes kind of template from us which is in JSON or yml format and it will just create this infrastructure from scratch for us. It takes around max 30 mins.
+	The template can be written by DevOps people.
+	
+	At the same time we have DevOps, Developers, QAs and everyone need some kind of code repository. For that AWS has CodeCommit service, where they can checkin the code. 
+	So DevOps guys write that template, put it in CodeCommit and CloudFormation can pick it up from there. 
+	
+	Once we have our infrastructure up, we actually need our application to be build. For that we have CodeBuild service. So the Amazon CodeBuild will take the source code from CodeCommit and build it using some kind of build tool like Maven, Ant, etc. While building it will also do some unit tests and it produces some artifacts. 
+	
+	Now we can deploy artifacts using CodeDeploy service. 
+	
+	This is Continuous Dilivery.
+	If we want this pipeline to be automated, like developer checkin code, it gets build and then deployed automatically. Then we can have a CodePipeline service. 
+	We can completely build our CI platform here. 
+	
+	And if we want to integrate all this with Project management tools like Jira, etc. then we can use CodeStar service. CodeStar is project management, issue tracking, continuous Delivery service. 
+	It integrate well with Atlassian Jira and other tools. 
+	
+	
+Section 6: Amazon EC2 instance in a Public Subnet.
+
+	Within region we have VPC. We can think of it as a Virtual data center, so everything within this VPC is just for us. Its logical, it doesn't mean we have any Physical segmentation within the AWS cloud. 
+	
+	
+	Select an existing key pair or create a new key pair - we now need to selct or create a key pair.
+	So a key pair is something which consists of a public key and a private key. 
+	So this is a way of securely connecting to our instances using public key cryptography.
+	
+	You have to download the private key file (*.pem file) before you can continue. Store it in a secure and accessible location. You will not be able to download the file again after it's created.
+	
+
+48. Instance user data and Instance metadata
+
+	User data is a data that we enter in our EC2 instance at the launch time. 
+	Its a series of commands. And those commands are run as the instance is launched. 
+	
+	Metadata is the way that you can learn information about your instance and you do so by running a command which is a URL and that URL is a local address. 
+	(The address in URL shown in slide is local to machine, it doesn't make any sense anywhere else.)
+	
+	So that's what metadata is it's information about your instance and its located at this location(URL).
+	
+	So in exam if question comes like how would you find address or availability zone or region then metadata would be the answer and not user data. 
+	
+	There is also the instance Metadata Query tool that allows you to query the instance metadata, so we don't have to use command line.
+	
+	
+49. Instance User Data and Metadata Hands-on
+(optional)
+
+	We will see how we can lauch a web server using the user data.
+	
+	In step 3: Configure instance details, if we scroll down we have a option to put user data. 
+	
+	This time in Step 6: Configure Security Group we will select option - Select an existing security group and then select the Security that has HTTP configured. If HTTP is not configure we can add it by going into security menu and then come back here.
+	We want HTTP because we will connect throught Browser and if it was SSH, we would have need SSH client or Putty.
+	
+	So what's going to happen now is the instance is going to launch and it's going to run the user data we provided and that user data remember told it to go and install some software. So it's going to install the Web server software. So it's going to go out via the Internet gateway to the internet and it's going to pull down that software and it's going to install the web server on this instance and we are then going to connect using HTTP so we are going to use our Web browser to connect. 
+	
+	If we now copy the Public DNS and paste it in browser we would get reply.
+	
+	Using this we have actually installed a web server on our EC2 instance. 
+	
+	To check metadata we can connect to our instance using Putty and then do curl http://169.254.169.254/latest/meta-data
+	We can then see that it has recorded some meta data.
+	We can then query this like - http://ip-address/latest/meta-data/instance-id. 
+	
+	
+	[ec2-user@ip-172-31-10-90 ~]$ curl http://169.254.169.254/latest/meta-data
+		ami-id
+		ami-launch-index
+		ami-manifest-path
+		block-device-mapping/
+		events/
+		hibernation/
+		hostname
+		identity-credentials/
+		instance-action
+		instance-id
+		instance-type
+		local-hostname
+		local-ipv4
+		mac
+		metrics/
+		network/
+		placement/
+		profile
+		public-hostname
+		public-ipv4
+		public-keys/
+		reservation-id
+		security-groups
+		[ec2-user@ip-172-31-10-90 ~]$
+
+		
+		[ec2-user@ip-172-31-10-90 ~]$ curl http://169.254.169.254/latest/meta-data/hostname
+			ip-172-31-10-90.ap-south-1.compute.internal
+
+
+50. Amazon Elastic Container Service (ECS)
+
+	Slides are self explainatory. Its a container running on top of EC2 instance (Node). 
+	
+	Next we will see how to create a container running nginx on top of Amazon Fargate. So it's a web service that's going to run as a container on Amazon Fargate. 
+
+
+51. Launch Container using Fargate Hands-on
+(optional)
+
+	Here we will see how to create a container running on ECS.
+	
+	Along with Amazon ECS, we have couple of other options like Amazon EKS (Elastic Kubernetes Service). It is an implementation of Kubernetes, which is a open source container orchestration platform.
+	
+	We also have a Elastic Container Registry (ECR) which is where you can store images of containers.
+	
+	We also have Marketplace where we can purchase images of containers as well. 
+	
+	
+52. AWS Lambda
+
+	You don't have to manage any of the underlying servers. So with Lambda all you do is worry about code. 
+	So you literally take your code and you put it onto Lambda and something called a trigger is executed.
+	So for instance a trigger might be that somebody visits a certain web page or another service might trigger Lambda.
+	And when that trigger occurs Lambda starts executing your code.
+	
+	So when we say serverless, there's obviously a server somewhere running which executes your code. The key point is you don't know anything about that server.
+	
+	CloudWatch is a monitoring service and it has a logging function.
+	
+
+53. Create Simple AWS Lambda Function Hands-on (optional)
+
+	Execution role are permissions that enable the Lambda function to work.
+	
+	You may not see CloudWatch Logs connected to Lambda in your console as Lambda is now always connected by default.
+	
+
+54. Amazon LightSail
+
+55. Create Amazon LightSail WordPress Instance Hands-on (optional)
+
+56. Choosing the right compute service
+
+
+Quiz 3: AWS Compute
+
+
+	User data can be run at instance launch time. You can use it to run commands
+
+	Amazon Elastic Container Service (ECS) is used to run Docker containers on AWS
+	
+	AWS Lambda is a serverless services that runs code as "functions"
+	
+	Amazon LightSail is great for users who do not have deep AWS technical expertise as it make it very easy to provision compute services
+	
+	An Amazon Machine Image (AMI) provides the information required to launch an instance. 
+	AMIs used for Launching an Amazon EC2 instance.
+	
+	As AWS Lambda is a serverless service, there are no instance types to choose from
+	
+	Amazon Elastic Block Store (EBS) is used for the root volume on EBS-backed instances
+	
+	This is a key benefit of the AWS Cloud. You can elastically increase or decrease capacity by changing instance types whenever you need to
+	
+
+	
+	
+	EBS - It is a storage system that we can connect to a OS. It's very similar to a hard disk drive or SSD drive in fact that's what the storage system is made up of. .
+	And then your instance can mount that volume and it does so in the case of EBS over a network.
+	In many cases it would be a hard drive that's actually inside your computer but with a block based storage. 
+	You are able to connect to the volume and create partitions and format file systems, install OS, etc.
+	
+	In EFS you actually connect using a protocol such as NFS and with NFS you then mount the file system to a mount point. That's just means that if you change directory to mount point directory you would see whatever's on this file system.
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
