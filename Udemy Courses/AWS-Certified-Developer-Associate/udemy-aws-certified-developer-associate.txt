@@ -1,0 +1,1667 @@
+
+Section 3 - AWS fundamentals: IAM + EC2
+
+11. AWS Regions and AZs 
+
+	And most of the AWS services we're going to use in this course, are going to be region-scoped.
+	So that means you can use a service in a specific region and if you use the same service in another region, you will not have your data being replicated or synchronized.
+	So, we'd have to recreate your infrastructure in different regions and that makes sense.
+	
+	Datacenter - lots of computer in a big room.
+	
+	
+12. IAM Introduction
+	
+	And roles are only for internal usage within the AWS resources and services.
+	So roles is what we're going to give to machines. 
+	So this is a strong distinction to make. Users is going to be for a physical person and roles is going to be for a machine.
+	
+	Now for big enterprises you use something called IAM Federation.
+	We will not use it in this course 'cause we're not a big enterprise we're just users, but basically if a big enterprise has like their own repository of users, such as Active Directory, you know they can integrate this with IAM.
+	And this way the users of a big enterprise can log into AWS using their company credentials.
+	This uses something called the SAML standard and Microsoft Active Directory for example, is one of these big users of the SAML standard.
+	So it's just something you need to know about for the exam but we will not practice this.
+	
+	One IAM user per physical person.
+	You do not share an IAM user with anyone.
+	Your account is your account and no one else's.
+
+	One IAM role per application.
+	Each application has it's own lifecycle, their own independence and so you want one IAM role per application, nothing shared.
+	
+	Now never, ever, ever, ever write IAM credentials in code, ever.
+	This is extremely bad if you put your credentials in code 'cause if that code ends up in someone's hands or on Github or on the Cloud or whatever and someone intercepts them, I promise you someone will mine bitcoin in your account and you'll end up with a $20,000 bill in one day.
+
+
+14. EC2 Introduction
+
+	It consists of the capability of launching virtual machines in the cloud, okay, but also storing data on virtual drives, that's called EBS, distributing load across machines, that's called ELB, or load balancing, and scaling servers using an auto-scaling group, or ASG. 
+	So it uncompasses a lot of different services.
+	Knowing EC2 for me, it's fundamental to understanding how the Cloud works.
+	
+	
+	So AMI stands for Amazon Machine Image.
+	And this is basically the software and the operating system that will be launched on that server.
+
+	When you start a Instance, it has to have it's operating system somewhere, and that's a disc, and basically that's called storage.
+	So, storage is EBS volume.
+	And currently, we just want the root storage, so that's where our operating system is going to run.
+	And we'll leave it at /dev/xvda.
+	
+	And Tags are basically key value pairs, which allow you to just identify that Instance and classify it.
+	
+	Now security group wise, this is basically going to be a firewall around your Instance, okay.
+	And so, when we get started with our Instance, the first thing we want to under Linux is make sure we can SSH into it.
+	So there's an SSH rule, and then you can define a port, and you can define a source.
+	
+	And the last thing we have to do when we click on Launch is to create a key pair.
+	Now, basically a key pair is what's going to give you access to log in to, or to SSH into the, a machine you just launched.
+	
+
+16. How to SSH using Linux or Mac
+
+	SSH is one of the most important functions when you deal with Amazon Cloud.
+	It basically allows you to control a remote machine or a server all using your terminal or your command line.
+	
+	To connect using Mac/Linux => 
+	
+		ssh ec2-user@IP-Address
+		
+			ec2-user is basically the Linux user into our Amazon Linux machine
+	
+	Now using above command we will get accessed denied. We don't want just anyone to access our EC2. So we will have to use the key.
+	
+		ssh -i EC2Tutorial.pem ec2-user@IP-Address
+	
+			make sure the key file is there in that directory.
+			
+	Again we will get warning and access denied like - 
+	
+	It says, warning: unprotected private key file!
+	And so that's a very common exam question which says that when you first download a file, the permission is something called 0644, and that's too open,and basically the private key can leak.
+	So basically because the private key is accessible by others it will say bad permissions, and it will not allow you to SSH into that machine.
+	So to fix this very common question, you do chmod 0400 and then you reference the key name, so just like this - 
+	
+		chmod 0400 EC2Tutorial.pem
+		
+	And now run the command again -
+	
+		ssh -i EC2Tutorial.pem ec2-user@IP-Address
+		
+	Now I'm basically into my ec2 server, and I can run commands from here,Now, to exit you can just press exit, or you do control D to log out, and then you see the connection is closed and I am back to my directory.
+	
+	
+17. How to SSH using Windows
+
+	Now using PuTTY Gen we are going to convert the key we have downloaded from the EC2 console and we're going to convert it into a format that PuTTY likes, which is called PPK.
+	
+	On windows 10 we do have SSH. We can check by typing "ssh" either in command prompt or in windows power shell. Now the steps are exactly same as we did to connect using Mac/Linux.
+	
+	And we're prompted with the fact that we want to verify the authenticity of the host.
+	Because we were never connected to it before, the Windows needs to know that we can trust this host.
+	So I'm just going to say yes and press Enter.
+	
+	Now in windows the "chmod" command doesn't work, so we need to use something else.
+	
+	 now I get an error.
+
+	Warning, unprotected private key file.
+	So you may or may not get it, but it's important that if you get it you know how to resolve it.
+	So this is the same problem that we have when we have a Linus or a Mac.
+	We want the private key file, so the PEM file to be protected correctly and to have the correct permissions.
+	And so how do we fix this on Linux and Mac, we use our command CH mod.
+	But for Windows this CH mod command does not exist.
+	Therefore we need to use something else.
+	So I'm going to clear the screen, and we have the command right here already.
+	But I'm going to go to my PEM file.
+	So right here, in my downloads right-click and click on Properties, and then I'm going to go to Security.
+	And in here we can see who has access to this key.
+	But in there there is an Advanced tab.
+	So click on Advanced, and you are getting into the Advanced Security setting.
+	So the first thing you have to do is make sure that the owner of this key is yourself.
+	So I'm going to go here and I'm going to look for Stephane, and check the names and here I am.
+	I'm making myself an owner of this key.
+	So the owner has to be you.
+	And then you should remove any other user.
+	So this one I can't remove and this one I can't remove as well.
+	Because it has inheritance.
+	So I need to disable inheritance right here.
+	And so, okay, convert inherited permissions into explicit permissions.
+	And now I can remove the SYSTEM and I can remove the Administrator.
+	So here now, this file, EC2Tutorial.pem has inheritance disabled and only me is able to control this file.
+	So I click on Apply and then I have said OK.
+	Now in here, I need to make sure I have full control.
+	So yes I do have full control, this is perfect.
+	And if I didn't, I could click on Permissions and then add myself to full control.
+	So now we have done something that so that's the properties of the Security file is just us having full control over this file.
+	So that's perfect.
+    And now if you try this command again and press Enter we are logged on to our Amazon Linux 2 EC2 instance.
+	And the reason it worked now is that we had the right permissions for security and we were not prompted with a yes/no question because we already told Windows to trust this EC2 instance and this IP.
+	
+
+18. Introduction to Security Groups.
+
+	They control how traffic will be allowed into your EC2 Machines.
+	Basically we'll control the inbound and the outbound traffic.
+	
+
+19. Security Groups Deep Dive.
+
+	Security groups: they're basically firewalls on EC2 instances and you know this already.
+	They will regulate access to ports;
+	They authorize IPs for IPv4 and IPv6;
+	They will control the inbound networks, from anywhere else to the instance, but also the outbound networks, that means from the instance to other places.
+
+	Well they can be attached to multiple instances.
+	There is not a one to one relationship between security groups and instances and actually an instance can have multiple security groups too.
+	
+	Security groups are locked down to a region/VPC combination.
+	So if you switch to another region, you have to create a new security group or if you create another VPC you have to recreate the Security Groups.
+
+	The security groups live outside the EC2, so as I've said: if the traffic is blocked the EC2 instance won't even see it.
+	It's not like an application running on EC2, it's really a firewall outside your EC2 instance.
+	
+	It's good to maintain one separate security group for SSH access.
+	
+	If your application is not accessible (time out, or cursor is just blinking), then it's a security group issue.
+	
+	If your application gives a "Connection refused" error, then it's an application error or it's not launched.
+	
+	
+	Check the Diagram  - 
+	
+	Now there is a small advanced feature that I really like and I think it's perfect
+	if you start using load balances, and we'll see this in the next lecture as well, which is how to reference security groups from other security groups.
+	So let me explain things: so we have an EC2 instance and it has security group what I call group number one.
+	In the inbound rules it's basically saying I'm authorizing security group number one inbound and security group number two.
+	So why would we even do this?
+	If we launch another EC2 instance, and it has security group two attached to it, well by using the security group one rule that we just set up we basically allow our EC2 instance to go connect straight through on the port we decided onto our first EC2 instance.
+	Similarly, if we have another EC2 instance with a security group one attached, well we've also authorized this one to communicate straight back to our instances and so regardless of the IP of our EC2 instances, because they have the right security group attached to them they're able to communicate straight through to other instances and that's awesome because it doesn't make you think of IPs all the time.
+	And if you have another EC2 instance maybe with security group number three attached to it, well because group number three wasn't authorized in the inbound rules of security group number one then it's being denied and things don't work.
+	
+	
+Private vs Public vs Elastic IP
+
+	IPv4 allows for 3.7 billion different addresses in a public space and that's almost running out of IP addresses, and basically, each number can vary between zero and 255 each, where the dots so if you do the math, you get 3.7 billion different addresses.
+
+	Now, let's have an example of what that means if you have a web server and it's public, that could be our EC2 instance or have a public IP and we can have another server with another public IP and using the public IP, these servers can talk to one another, which is great.
+
+	Now, when we have a company, for example, my company and it has a private network, the private network, basically has a private IP range, and private IPs have this very specific way of being defined but basically, that means that all the computers within that private network can talk to one another using the private IP.
+	Whereas, when you touch an internet gateway, which is a public gateway, well, these instances also will get access to other servers, and so on and so that's a common pattern in AWS.
+	
+	For more details check the vedio again.
+	
+	When we stop and again start the instance our public IP will change, but our private IP remains the same.
+	
+	Once we SSH the instance using public IP we can see on the console the private IP as we are connected to there network now.
+	
+
+Install Apache on EC2 
+
+	The first think I'm going to do after connecting to our instance is => sudo su - and this will basically elevate my rights on the machine.
+	I am now the root account, and I can run any command I want, without any problem.
+
+	So, the first thing I want to do is => yum update -y.
+	
+	This basically forces my machine to update itself, and it's really important to keep all the packages updated.
+	The minus y was to basically allow the updates to go through, without prompting me to say yes, I want to updates.
+	
+	
+	Once yum update is done, what we can do is start installing httpd.
+	So, to do this, we're going to do => yum install -y httpd.x86_64
+
+	Then, we basically installed httpd, and the -y was used to basically say yes, and not have a prompt.
+	
+	To start the service, we do => systemctl start httpd.service
+	And it starts the service, and to ensure that the system remains enabled across reboots, we say => enable httpd.service
+	So, these two commands basically allowed us to start the httpd service, and makes sure it is enabled across reboots.
+	
+	If we do => curl localhost:80 we should see some html loaded.
+	
+	Now if we try to access localhost:80 from browser, we will get a timeout and we said when we get a timeout something is wrong with the security group. And yes, we didn't enable port 80, we just had SSH port 22 enabled. We will add a new HTTP inbound rule.
+	
+	To create html file in Apache's /var/www/html folder => echo "Hello world from $(hostname -f)" > /var/www/html/index.html
+	
+	
+26. EC2 User Data
+
+	It is possible to bootstrap our instances using an EC2 user data script.
+	So, what does bootstrapping mean?
+	Well, bootstrapping means launching commands when the machine starts.
+	So, that script is only run once and when it first starts, and then will never be run again.
+	So the EC2 user data has a very specific purpose.
+	It is to automate boot tasks.
+	Hence the name, bootstrapping.
+	So what tasks do you want to automate usually when you boot your instance?
+	Well you want to install updates, install software, download common files from the internet, or anything you can think of, really.
+	So it could be whatever you want.
+	But, just know that the more you add into your user data script, the more your instance has to do at boot time.
+	By the way, the EC2 user data scripts runs with the root user.
+	So, any command you have will have the sudo rights.
+
+	Paste below code in User data => 
+	
+		#!/bin/bash							//This has to be there else thing won't work.
+		#install httpd (Linux 2 version)
+		yum update -y							//update the machine
+		yum install -y httpd.x86_64				//install httpd
+		systemctl start httpd.service			//start httpd
+		systemctl enable httpd.service			//enable httpd across reboots
+		echo "Hello world from $(hostname -f)" > /var/www/html/index.html			//create index.html page
+		
+		
+
+	Dedicated Instance Vs Dedicated Host - https://www.youtube.com/watch?v=sOsALtwltLQ
+	
+	In dedicated instance we can have only our account instances on a host, it will not be shared, other customers instance will never be in that host. 
+	But on start and stop of instance, it may go to some another host. 
+	
+	In dedicated host, the enitre host is allocated to us and we can have our instance there, and on start and stop of instance the instance will always be on the same host. The advantage of this is we can take advantage of hardware bound licenses, like CPU on the host, as host will always remain same.
+	
+	Check the diagram in the vedio.
+	
+
+Quiz 1: IAM & EC2 Mid Way Quiz
+
+	ap-northeast-1a is a...
+	Anything that ends with a letter is an AZ
+	
+	Availability Zones are
+	in isolated data centers.
+	this helps guarantee that multi AZ won't all fail at once (due to a meteorological disaster for example). Read more here: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html
+	
+	All of these are IAM components except...(Users, Roles, Groups and Policies)
+	"Organisations" does not exist in IAM
+	
+	IAM Users are defined on a per-region basis	- false
+	IAM is a global service (encompasses all regions)
+
+	An IAM user can belong to multiple groups - true
+	
+	You are getting started with AWS and your manager wants things to remain simple yet secure. He wants the management of engineers to be easy, and not re-invent the wheel every time someone joins your company. What will you do?
+	I will create multiple IAM users and groups, and assign policies to groups. New users will be added to groups.
+	
+	Never share your IAM credentials. If your colleagues need access to AWS they'll need their own account
+	
+	You pay for an EC2 instance compute component only when its in a running state.
+	
+	You are getting a permission error exception when trying to SSH into your Linux Instance
+	the key is missing permission chmod 0400
+	
+	You are getting a network timeout when trying to SSH into your EC2 instance
+	your security groups are mis-configured.
+	Remember this during your hands on. Any timeout errors (not just in SSH but also HTTP for example) means a misconfiguration of your security groups
+	
+	When a security group is created, what is the default behavior?
+	DENY all traffic inbound and ALLOW all traffic outbound.
+	
+	Security groups can reference all of the following except: (IP address, CIDR block, Security Group)
+	DNS name
+
+	You want to provide startup instructions to your EC2 instances, you should be using
+	EC2 User Data
+	
+
+29. EC2 Elastic Network Interfaces
+
+	They're a logical component in a VPC and they represent a virtual network card.
+	So they're what gives EC2 Instances access to the network, but they're used outside EC2 Instances as well as we'll see later in this course.
+
+	So for example we have an availability zone and we have one EC2 Instance and to it is attached on eth0, your primary ENI and this will provide your EC2 Instance network connectivity and for example, a private IP.
+
+	So each ENI can have the following attributes.
+	Number one it can have a Primary private IPv4 and one or more secondary IPv4.
+
+	So in this example, I have one of zero but you are more than welcomed to add a secondary ENI to EC2 and that will be eth1 and this will give you another private IPv4 as well.
+	Each ENI can also have an elastic IPv4 per private IPv4 or one or more public IPv4, so it gives you a private and a public IP as will see in the hands-on.
+	
+	You can have one or more security groups attached to your ENI.
+
+	You can have a Mac address attached to it and other things but I've just give you the most important bits right now in this lecture.
+
+	And you can create ENI's independently from your EC2 instances and attach them on the fly or move them from EC2 instances for failover.
+
+	They're bounded to a specific availability zone or AZ.
+	So that means that if you create a ENI in the specific AZ, you can only have it bound to that specific AZ.
+
+	So here's another issue to instance and it has another ENI attached to it.
+	And for example, we can do is we can move eth1 from the first EC2 instance into the second EC2 Instance to move that private IP.
+	And what it means is that that private IP will change from the first issue to instance and will be attached to the second EC2 Instance.
+	And it's very very helpful for failovers.
+	For example, if you're easy to instance is accessed by a private static IP, then you can move the IP around between these two instances for failover purposes, 
+
+	If we attach two ENI to one instance, that instance will have two private ips one from each ENI. Public ip will be one only.
+	The primary one cannot be detached and the secondary one can be.
+	
+	
+30. EC2 Good Things to Know and Checklist
+
+	Check Brustable instance.
+
+	Can watch this again.
+	
+	Now, just a quick checklist because we have an exam to pass and you may say, "Wow, that's a lot of information, "what do I really need to know for the exam?"
+	Well, the basics really.
+	
+	You need to know how to SSH into EC2 and change the .pem file permissions if you get an error.
+	
+	You need to know how to properly use security groups, that's super important, so opening the right ports, looking down security to the right IPs or the right security groups, and so on.
+
+	You need to know the fundamental difference between private, public, and elastic IP.
+
+	You need to know how to use User Data, how it allows you to customize instance at boot time.
+
+	And you need to know that you can build custom AMIs to enhance your operating system.
+
+	EC2 instances are billed by the second and they can be easily created and thrown away, welcome to the cloud!
+
+	This is the most important concept.
+
+	You can spin out virtual machines and get rid of them in no time for a very little amount of money.
+
+
+Quiz 2: EC2 Final Quiz
+
+	Question 1:
+	You plan on running an open-source MongoDB database year-round on EC2. Which instance launch mode should you choose?
+	Reserved Instances
+	This will allow you to save cost as you know in advance that the instance will be a up for a full year
+	
+	Question 2:
+	You are launching an EC2 instance in us-east-1 using this Python script snippet:
+	(we will see SDK in a later section, for now just look at the code reference ImageId)
+		ec2.create_instances(ImageId='ami-b23a5e7', MinCount=1, MaxCount=1)
+	It works well, so you decide to deploy your script in us-west-1 as well. There, the script does not work and fails with "ami not found" error. What's the problem?
+	AMI is region locked and the same ID cannot be used across region.
+	
+	Question 3:
+	You would like to deploy a database technology and the vendor license bills you based on the physical cores and underlying network socket visibility. Which EC2 launch modes allow you to get visibility into them?
+	Dedicated Host
+	
+	Question 4:
+	You are running a critical workload of three hours per week, on Monday. As a solutions architect, which EC2 Instance Launch Type should you choose to maximize the cost savings while ensuring the application stability?
+	Scheduled Reserved Instances
+	
+	
+Section 4: AWS Fundamentals: ELB + ASG
+
+31. High Availability and Scalability
+
+
+
+Application Load balancer - It allows load balancing to multiple applications(instance) on the same machine (ex: contianers) (using ECS, ECS is virtual machine like EC2 and it supports docker, we will have multiple docker containers or instance on it.)
+
+
+Quiz 3: Fundamentals 2 Quiz
+
+	Question 1:
+	Load Balancers provide a
+	a. static IPv4 can use in our application
+	b. static DNS name we can use in our application
+	c. static IPv6 we can use in our application
+	Answer - b.
+	
+	Question 2:
+	You are running a website with a load balancer and 10 EC2 instances. Your users are complaining about the fact that your website always asks them to re-authenticate when they switch pages. You are puzzled, because it's working just fine on your machine and in the dev environment with 1 server. What could be the reason?
+	a. The application must have a bug
+	b. The Load Balancer does not have stickiness enabled
+	c. The EC2 instances log out users because they don't see thier true IPs
+	Answer - b.
+	
+	Question 3:
+	Your application is using an Application Load Balancer. It turns out your application only sees traffic coming from private IP which are in fact your load balancer's. What should you do to find the true IP of the clients connected to your website?
+	Answer - Look into the X-Forwarded-For header in the backend
+	
+	Question 4:
+	You quickly created an ELB and it turns out your users are complaining about the fact that sometimes, the servers just don't work. You realise that indeed, your servers do crash from time to time. How to protect your users from seeing these crashes?
+	Answer - Enable Health Checks
+	
+	Question 5:
+	You are designing a high performance application that will require millions of connections to be handled, as well as low latency. The best Load Balancer for this is
+	Answer - Network Load Balancer
+	
+	Question 6:
+	Application Load Balancers handle all these protocols except
+	a. HTTP
+	b. HTTPS
+	c. Websocket
+	d. TCP
+	Answer - d. 
+	
+	Question 7:
+	The application load balancer can redirect to different target groups based on all these except...
+	a. Hostname
+	b. Request Path
+	c. Client IP
+	Answer - c.
+	
+	Question 8:
+	You are running at desired capacity of 3 and the maximum capacity of 3. You have alarms set at 60% CPU to scale out your application. Your application is now running at 80% capacity. What will happen?
+	Answer - Nothing.
+	
+	Question 9:
+	I have an ASG and an ALB, and I setup my ASG to get health status of instances thanks to my ALB. One instance has just been reported unhealthy. What will happen?
+	Answer - The ASG will terminate the EC2 instance.
+	
+	Question 10:
+	Your boss wants to scale your ASG based on the number of requests per minute your application makes to your database.
+	Answer - You create a CloudWatch custom metric and build an alarm on this to scale your ASG
+	
+	Question 11:
+	Scaling an instance from an r4.large to an r4.4xlarge is called
+	Vertical Scaling
+	
+	Question 12:
+	Running an application on an auto scaling group that scales the number of instances in and out is calle
+	Horizontal Scaling
+	
+	Question 13:
+	You would like to expose a fixed static IP to your end-users for compliance purposes, so they can write firewall rules that will be stable and approved by regulators. Which Load Balancer should you use?
+	a. Application Load Balancer with Elastic IP attached to it
+	b. Network Load Balancer
+	c. Classic Load Balancer
+	Answer - Network Load Balancer
+	ALB with Elastic IP is not technically feasible.
+	Network Load Balancers expose a public static IP, whereas an Application or Classic Load Balancer exposes a static DNS (URL)
+
+	Question 14:
+	A web application hosted in EC2 is managed by an ASG. You are exposing this application through an Application Load Balancer. The ALB is deployed on the VPC with the following CIDR: 192.168.0.0/18. How do you configure the EC2 instance security group to ensure only the ALB can access the port 80?
+	a. Open up the EC2 security group on port 80 to 0.0.0.0/0
+	b. Open up the EC2 security group on port 80 to 192.168.0.0/18
+	c. Open up the EC2 security on port 80 to the ALB's security group.
+	Answer - c
+	This is the most secure way of ensuring only the ALB can access the EC2 instances. Referencing by security groups in rules is an extremely powerful rule and many questions at the exam rely on it. Make sure you fully master the concepts behind it!
+	
+	Question 15:
+	Your application load balancer is hosting 3 target groups with hostnames being users.example.com, api.external.example.com, and checkout.example.com. You would like to expose HTTPS traffic for each of these hostnames. How do you configure your ALB SSL certificates to make this work?
+	Answer - Use SNI
+	SNI (Server Name Indication) is a feature allowing you to expose multiple SSL certs if the client supports it. Read more here: https://aws.amazon.com/blogs/aws/new-application-load-balancer-sni/
+	
+	Question 16:
+	The Application Load Balancers target groups can be all of these EXCEPT...
+	a. EC2 Instances
+	b. IP Addresses
+	c. Lambda Functions
+	d. Network Load Balancer
+	Answer - d
+	
+	Question 17:
+	You are running an application in 3 AZ, with an Auto Scaling Group and a Classic Load Balancer. It seems that the traffic is not evenly distributed amongst all the backend EC2 instances, with some AZ being overloaded. Which feature should help distribute the traffic across all the available EC2 instances?
+	Answer - Cross Zone Load Balancing
+	
+	Question 18:
+	Your Application Load Balancer (ALB) currently is routing to two target groups, each of them is routed to based on hostname rules. You have been tasked with enabling HTTPS traffic for each hostname and have loaded the certificates onto the ALB. Which ALB feature will help it choose the right certificate for your clients?
+	Answer - Server Name Indication (SNI)
+	
+	Question 19:
+	An application is deployed with an Application Load Balancer and an Auto Scaling Group. Currently, the scaling of the Auto Scaling Group is done manually and you would like to define a scaling policy that will ensure the average number of connections to your EC2 instances is averaging at around 1000. Which scaling policy should you use?
+	Answer - Target Tracking
+	
+
+Section 5: EC2 Storage - EBS & EFS
+
+43. EBS Intro.
+
+	lsblk => this shows us all the attached drive.
+	
+	How to attach EBS volume and mount it - 
+	Check mores details on the amazon documentation - how to create a flie system on the new EBS volume, how to attach a mount_point and then how to access it, can also check this vedio again.
+	
+	EFS VS EBS
+	- EBS is provisioned, if we have 100GB EBS and we are using 1Gb still we will pay for 100GB
+	EFS is on demand, we pay for how much storage we use
+	- EBS locked for a one AZ.
+	EFS works with EC2 instances in multiple AZs
+	- We can mount only one EC2 to an EBS, data can't be shared
+	We can mount multiple EC2 to EFS hence data can be shared
+	
+
+Quiz 4: EC2 Data Management - EBS & EFS Quiz
+
+	Question 1:
+	Your instance in us-east-1a just got terminated, and the attached EBS volume is now available. Your colleague tells you he can't seem to attach it to your instance in us-east-1b.
+	a. He's missing IAM permissions
+	b. EBS volumes are region locked
+	c. EBS volumes are AZ locked
+	Answer - c. 
+	EBS Volumes are created for a specific AZ. It is possible to migrate them between different AZ through backup and restore (Snapshot)
+	
+	Question 2:
+	You would like to have the same data being accessible as an NFS drive cross AZ on all your EC2 instances. What do you recommend?
+	Answer - Mount an EFS
+	EFS is a network file system (NFS) and allows to mount the same file system on EC2 instances that are in different AZ
+	
+	Question 3:
+	You would like to have a high-performance cache for your application that mustn't be shared. You don't mind losing the cache upon termination of your instance. Which storage mechanism do you recommend as a Solution Architect?
+	Answer - Instance Store
+	Instance Store provide the best disk performance
+	
+	Question 4:
+	You are running a high-performance database that requires an IOPS of 210,000 for its underlying filesystem. What do you recommend?
+	a. Use an EBS gp2 drive
+	b. Use an EC2 Instance Store
+	c. Use and EBS io1 drive - INCORRECT - the max is 64000
+	d. Use EFS
+	Answer - b.
+	Is running a DB on EC2 instance store possible? It is possible to run a database on EC2. It is also possible to use instance store, but there are some considerations to have. The data will be lost if the instance is stopped, but it can be restarted without problems. One can also set up a replication mechanism on another EC2 instance with instance store to have a standby copy. One can also have back-up mechanisms. It's all up to how you want to set up your architecture to validate your requirements. In this case, it's around IOPS, and we build an architecture of replication and back up around i
+	
+	
+	
+	
+	https://www.youtube.com/watch?v=WRUA370p7jE
+	
+	NLB will not have a security group, because when a request comes from client to NLB the connection between them is not teminated, where as in case of ALB it will be terminated. 
+	In case of ALB once the connection is terminated the request will be forwarded to the underlying EC2 instances. In ALB request will be filtered (ip, port) using security groups.
+	In case of NLB connection is still there and no filtering (of ip, port) is done and request is directly send to underlying instances. As no filtering is there, there is no security groups fro NLB.
+
+	In case of ALB if we need the IP of client then we need to take it out from request X-Forwarded-For, because as connection with client will be terminated, now for EC2 instance the source will be ABL ip. Thus the client ip is preseved in Header.
+	In case of NLB as connection with client is not terminated the client's IP will be available.
+	
+	Check comparison diagram. 
+	
+	IP as Target. This IP-Address can be on your VPC or also on your on-premises data center. Supported by ALB, NLB and not by Classic Load Balancer.
+	
+	
+	NLB Static IP - many of times in the firewalls we only get the support to specify IP addresses and not the DNS or domain names. With NLB it's possible to specify the elastic or static IP over there, and hence in any of the firewall if we want to specify any of the rules we can specify it using this static ip. Hence we need not worry about changing those rules at all. 
+	Even if we delete the NLB and create the new NLB we can again use the same static ip and need not change anything in firewall.
+	
+	
+	
+	https://www.youtube.com/watch?v=AtAmcQHxOvE
+	IOP (Input/Output operations per second) - more specifically IOPs are read request from a storage system or write request to a storage system. 
+	(I think how many read operations it can do per second or how mnay write operations can it do per second.)
+	
+	
+	youtube.com/watch?v=VWxGtl5J7WM
+	Bandwidth vs Throughput
+	Bandwidth - how fast a device can send data over a single cable.
+	
+	Throughput - refers to how many bits are actually transfered between two computers.
+	
+	Ex of a highway.. 
+		Bandwidth - a highway with full capacity cars travelling fast
+		throughput - a highway with lesser cars 
+
+	
+	Synchronous Vs Asynchronous
+		Synchronous - if a call is made to something the caller will wait for the response, until he don't get the response it will not continue with the next work.
+		
+		Asynchronous - if a call is made to something the caller will not wait for the response, it will continue to do its next work.	
+	
+	
+Section 6: AWS Fundamentals: RDS + Aurora + ElastiCache
+
+	RDS Read Replica do the replication Asynchronously, that means the Read Replica might have some stale data and in that case the application which is accessing this data may have the older data.
+	But eventually it will catch up with your master DB.
+	
+	Sync replication means it will be always updated with master DB.
+	
+	
+	In-Flight encryption - SSL certification to encrypt data to RDS in flight (in-flight means, while being sent from youe client into your database)
+	
+	
+	In Aurora we have to connect to our Writer Endpoint to write and to Reader Endpoint to read.
+	
+
+Quiz 5: RDS / Aurora / ElastiCache Quiz
+
+	Question 1:
+	My company would like to have a MySQL database internally that is going to be available even in case of a disaster in the AWS Cloud. I should setup
+	Answer - Multi AZ
+	
+	Question 2:
+	Our RDS database struggles to keep up with the demand of the users from our website. Our million users mostly read news, and we don't post news very often. Which solution will NOT help fix this problem?
+	a. An ElastiCache cluster
+	b. RDS Read Replicas 
+	c. RDS Multi AZ
+	Answer - c
+	
+	Question 3:
+	We have setup read replicas on our RDS database, but our users are complaining that upon updating their social media posts, they do not see the update right away
+	a. There must be a bug in our application
+	b. Read Replicas have asynchrounous replication and therefore it's likely our users will only observe eventual consistency
+	c. We should have setup multi-az instead
+	Answer - b.
+	
+	Question 4:
+	Which RDS Classic (not Aurora) feature does not require us to change our SQL connection string?
+	a. Read Replicas
+	b. Multi AZ
+	Answer - b. 
+	Multi AZ keeps the same connection string regardless of which database is up. Read Replicas imply we need to reference them individually in our application as each read replica will have its own DNS name
+	Read replica has it own connection string and master db will have its own
+	
+	Question 5:
+	You want to ensure your Redis cluster will always be available
+	a. Enable Read Replicas
+	b. Enable Multi AZ
+	Answer - b.
+	
+	Question 6:
+	Your application functions on an ASG behind an ALB. Users have to constantly log back in and you'd rather not enable stickiness on your ALB as you fear it will overload some servers. What should you do?
+	a. Create your own Load Balancer and deploy that on EC2 instance
+	b. Store session data in RDS
+	c. Store session data in ElastiCache
+	d. Store session data in a shared EBS volume
+	Answer - c. 
+	
+	Question 7:
+	One analytics application is currently performing its queries against your main production database. These queries slow down the database which impacts the main user experience. What should you do to improve the situation?
+	Answer - Setup a Read Replica
+	Read Replicas will help as our analytics application can now perform queries against it, and these queries won't impact the main production database.
+	
+	Question 8:
+	You have a requirement to use TDE (Transparent Data Encryption) on top of KMS. Which database technology does NOT support TDE on RDS?
+	a. PostgreSQL
+	b. Oracle
+	c. MS SQL Server
+	Answer - a.
+	
+	Question 9:
+	Which RDS database technology does NOT support IAM authentication?
+	a. Oracle
+	b. PostgreSQL
+	c. MySQL
+	Answer - a.
+	
+	Question 10:
+	You would like to ensure you have a database available in another region if a disaster happens to your main region. Which database do you recommend?
+	a. RDS with Read Replica in another AZ
+	b. RDS with Multi AZ
+	c. Aurora Read Replica in another AZ
+	d. Aurora Global Database
+	Answer - d. 
+	Global Databases allow you to have cross region replication
+	
+	Question 11:
+	You are managing a PostgreSQL database and for security reasons, you would like to ensure users are authenticated using short-lived credentials. What do you suggest doing?
+	a. Install PostgreSQL on EC2 and install the pg_iam module. Authenticate using IAM username and password.
+	b. User PostgreSQL for RDS and install pg_iam module. Authenticate using IAM username and password.
+	c. User PostgreSQL for RDS and authenticate using token obtained through the RDS service.
+	d. Use PostgreSQL for RDS and force SSL connection. Authenticate using SSL certificates that you regularly rotate.
+	Answer - c.
+	In this case, IAM is leveraged to obtain the RDS service token, so this is the IAM authentication use case.
+	
+	Question 12:
+	Your organisation wants to enforce SSL connections on your MySQL database
+	a. Change your security group rules to only allow SSL traffic 
+	b. Download certificates and change your application to connect using SSL
+	c. Apply a  'REQUIRE SSL' statement to all users in your SQL database
+	d. Enable RDS encryption
+	Answer - c.
+	
+	Question 13:
+	You are implementing a caching strategy with ElastiCache and would like to ensure that only the data that is often requested will be loaded in ElastiCache, as your cache size is small. Which caching strategy should you implement?
+	Answer - Lazy Loading
+	Lazy Loading would only cache data that is actively requested from the database
+	
+	Question 14:
+	You are serving web pages for a very dynamic website and you have a requirement to keep latency to a minimum for every single user when they do a read request. Writes can take longer to happen. Which caching strategy do you recommend?
+	Answer - Write-Through.
+	this has longer writes, but the reads are quick and the data is always updated in the cache
+	
+	
+	
+	To check which ip the domain name gets resolved - nslookup domainname
+	
+	C:\Users\inarajp>nslookup google.com
+	Server:  UnKnown
+	Address:  192.168.43.4
+
+	Non-authoritative answer:
+	Name:    google.com
+	Addresses:  2404:6800:4009:808::200e
+			  172.217.26.238
+
+
+---------------------------------------------------------------
+	
+	#!/bin/bash
+
+	########################################################
+	##### USE THIS FILE IF YOU LAUNCHED AMAZON LINUX 2 #####
+	########################################################
+
+	# get admin privileges
+	sudo su
+
+	# install httpd (Linux 2 version)
+	yum update -y
+	yum install -y httpd.x86_64
+	systemctl start httpd.service
+	systemctl enable httpd.service
+	EC2_AVAIL_ZONE=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+	echo "<h1> Hello world from $(hostname -f) in AZ $EC2_AVAIL_ZONE </h1>" > /var/www/html/index.html
+
+
+	Security Groups are Region scoped, so if we have different EC2 instances in different regions then we will need different security groups for each of them.
+	
+	Load Balancer are also regional. So a Load Balancer will be able to connect to only the intances in his region.
+	
+
+Quiz 6: Route 53 Quiz
+
+	Question 1:
+	You have purchased "mycoolcompany.com" on the AWS registrar and would like for it to point to lb1-1234.us-east-2.elb.amazonaws.com . What sort of Route 53 record is NOT POSSIBLE to set up for this?
+	a. CNAME
+	b. Alias
+	Answer - a
+	The DNS protocol does not allow you to create a CNAME record for the top node of a DNS namespace (mycoolcompany.com), also known as the zone apex
+	
+	Question 2:
+	You have deployed a new Elastic Beanstalk environment and would like to direct 5% of your production traffic to this new environment, in order to monitor for CloudWatch metrics and ensuring no bugs exist. What type of Route 53 records allows you to do so?
+	Answer - Weighted
+	Weighted allows you to redirect a part of the traffic based on a weight (hence a percentage). It's common to use to send a part of a traffic to a new application you're deploying
+	
+	Question 3:
+	After updating a Route 53 record to point "myapp.mydomain.com" from an old Load Balancer to a new load balancer, it looks like the users are still not redirected to your new load balancer. You are wondering why...
+	Answer - Its because of TTL
+	DNS records have a TTL (Time to Live) in order for clients to know for how long to caches these values and not overload the DNS with DNS requests. TTL should be set to strike a balance between how long the value should be cached vs how much pressure should go on the DNS.
+	
+	Question 4:
+	You want your users to get the best possible user experience and that means minimizing the response time from your servers to your users. Which routing policy will help?
+	Answer - Latency
+	Latency will evaluate the latency results and help your users get a DNS response that will minimize their latency (e.g. response time)
+	
+	Question 5:
+	You have a legal requirement that people in any country but France should not be able to access your website. Which Route 53 record helps you in achieving this?
+	Answer - Geolocation
+	
+	
+	In the VPC that is created for us, we have only public subnet per AZ and no private subnet.
+	
+	Default VPC NACL allows everything in and everything out.
+
+
+Section 8: VPC Fundamentals
+
+76. VPC Peering, Endpoints, VPN, DX
+
+	Endpoints allow you to connect to AWS services, using a private network instead of using the public Internet network.
+	So something you maybe didn't know is that all the AWS services are public and so anytime your EC2 instances, for example, use AWS services, they talk publicly to AWS, but sometimes your EC2 instances are not connected to the public subnets, and therefore you want to have them access privately your AWS services, so this is the VPC Endpoints.
+	So this gives you enhanced security and lower latency to access AWS services.
+
+	So let's take an example, We have a private subnet and an EC2 instance in it, and we want to access Amazon S3 and DynamoDB, which are outside of the VPC into the public realm.
+	Then we can create a VPC Endpoint gateway, and this is only for S3 and DynamoDB.
+	You're EC2 instance, talks to that VPC Endpoints and has access to S3 and DynamoDB privately, as you can see the traffic does not go through the Internets.
+	And then, for the VPC Endpoint interface, that's for the rest of the service, and it's only used within your VPC (I think this means with a subnet), so that means that we can create, for example, a VPC Endpoint interface in your private subnet and through that invoice interface with an ENI we have private access to CloudWatch.
+	So VPC Endpoints are really, really helpful anytime you need private access from within your VPC to an AWS service, Okay, that's what you need to remember.
+
+
+Quiz 7: VPC Quiz
+
+	Question 1:
+	You have set up an internet gateway in your VPC, but your EC2 instances still don't have access to the internet.
+
+	Which of the following is **NOT** a possible issue?
+	a. Route Tables are missing entries
+	b. The security group does not allow network in
+	c. The NACL does not allow network traffic out
+	Answer - b.
+	Security groups are stateful and if traffic can go out, then it can go back in.
+	
+	Question 2:
+	You would like to provide internet access to your instances in private subnets with IPv4, while making sure this solution requires the least amount of administration and scales seamlessly. What should you use?
+	Answer - NAT Gateway
+	
+	Question 3:
+	Your EC2 instance in a private subnet must access the AWS APIs privately. You must keep all traffic within the AWS network. What do you recommend?
+	Answer -VPC Endpoints
+	
+	
+Section 9: Amazon S3 Introduction	
+
+		
+79. Amazon S3 - Section Introduction	
+
+	Even though S3 is a global service Buckets are regional.
+	S3 service is global, so we will see all the buckets from all the regions in one view in S3.
+	
+	
+81. S3 Versioning
+	
+	So your files in Amazon S3 can be versioned but it has to be enabled first at the bucket level.
+	So that means that if you re-upload a file version with the same key, then it will override it, but it won't override it actually, it will create a new version of that file.
+	So instead of overriding the file that already exists, it will create a new file version, and I'm simplifying it here, but it will be version one, then version two, then version three, et cetera.
+	So it is best practice to version your buckets in Amazon S3 in order to be able to have all the file versions for awhile because we can get protected against unintended deletes, because you're able to restore a previous version, and also you can easily rollback to any previous versions you wanted.
+
+
+82. S3 Encryption
+
+	Why we use SSE-KMS over SSE-S3? will give you control over who has access to what keys and also gives you an audit trails.
+		
+	We cann't choose SSE-C option using AWS console. In AWS console we have following options to choose - SSE-S3 and SSE-KMS. To choose these we need to use Command Line Interface.
+	
+	And for Client Side Encryption, we need to upload encrypted Object.
+	
+
+83. S3 Security & Bucket Policies
+
+	So our IAM users have IAM policies, and they authorize which API calls should be allowed and if our user is authorized through IAM policy how to access our Amazon S3 bucket, then it's going to be able to do it.
+
+	Then we have Resource-Based security and this is the infamous S3 bucket policies.
+	They're bucket-wide rules that we can set in the S3 console and what they do is that they will say what principals can and cannot do on our S3 bucket.
+	And this enables us to do cross account access to our S3 buckets.
+
+
+	IAM Principal can be user or role, etc.
+	
+	
+	At the end of ARN we add /* which will indicate - any object in the bucket.
+	
+	
+	Block public access (account settings)
+	Public access is granted to buckets and objects through access control lists (ACLs), bucket policies, access point policies or all. In order to ensure that public access to all your S3 buckets and objects is blocked, turn on Block all public access. These settings apply account-wide for all current and future buckets and access points. 
+
+	
+86. S3 CORS
+
+	Also check Akshay sani's youtube vedio.
+
+	Cross Origin Resource Sharing (CORS) - means we want to get resources from different origin.
+	
+	So now let's talk about CORS, or Cross-Origin Resource Sharing.
+	So what is an origin?
+	An origin is a scheme, so a protocol, a host, a domain, and a port.
+	What that means is that for example, if you do https://www.example.com, this is an origin where the scheme is HTTPS, the host is www.example.com, and the port is port 443.
+	Why?
+	Because as soon as you have HTTPS, it is port 443 as an implied port.
+	
+	Okay, so CORS means Cross-Origin Resource Sharing.
+	So that means we want to get resources from a different origin.
+	The Web Browser are having this security in place CORS basically saying as soon as you visit a website, you can make request to other origins only if the other origins allow you to make these request.
+	This is a browser-based security.
+
+	So what is the same origin and what is a different origin?
+	Well for example, same origin is this, where you go on example.com/app1 or example.com/app2.
+	This is the same origin, so we can make requests from the web browser from the first URL to the second URL because this is the same origin.
+	But if you visit, for example, www.example.com and then you're asking your web browser to make a request to other.example.com, this is what's called a cross-origin request and your web browser will block it unless you have the correct CORS headers.
+	
+	Nice Diagram explaination. Check.
+
+	In the next slide diagram, bucket-html is first origin and bucket-assests is the second origin. 
+	We need to enable CORS on second origin, so that it can provide proper CORS headers.
+	
+	
+87. S3 CORS Hands On
+	
+	Very nice demo. Check.
+	
+
+Quiz 8: Amazon S3 Quiz
+
+	Question 1:
+	I tried creating an S3 bucket named "dev" but it didn't work. This is a new AWS Account and I have no buckets at all. What is the cause?
+	Answer - Bucket names must be globally unique and "dev" is already taken.
+	
+	Question 2:
+	You've added files in your bucket and then enabled versioning. The files you've already added will have which version?
+	Answer - null
+	
+	Question 3:
+	Your client wants to make sure the encryption is happening in S3, but wants to fully manage the encryption keys and never store them in AWS. You recommend
+	Answer - SSE-C
+	
+	Question 4:
+	Your company wants data to be encrypted in S3, and maintain control of the rotation policy for the encryption keys. You recommend
+	a. SSE-S3
+	b. SSE-KMS
+	c. SSE-C
+	d. Client Side Encryption
+	Answer - b.
+	Key rotation is when you retire an encryption key and replace that old key by generating a new cryptographic key. Rotating keys on a regular basis help meet industry standards and cryptographic best practices.
+	Yes. You can choose to have AWS KMS automatically rotate CMKs every year, provided that those keys were generated within AWS KMS HSMs. Automatic key rotation is not supported for imported keys, asymmetric keys, or keys generated in an AWS CloudHSM cluster using the AWS KMS custom key store feature.
+
+	Question 5:
+	Your company does not trust S3 for encryption and wants it to happen on the application. You recommend
+	Answer - Client-Side-Encryption
+	
+	Question 6:
+	The bucket policy allows our users to read/write files in the bucket, yet we were not able to perform a PutObject API call. What is your assessment?
+	a. The bucket policy is wrong
+	b. The IAM user has an explicit DENY in the attached IAM policy
+	c. You need to contact AWS support to lift this limit
+	Answer - b.
+	Explicit DENY in an IAM policy will take precedence over a bucket policy permission
+	
+	Question 7:
+	You have a website that loads files from another S3 bucket. When you try the URL of the files directly in your Chrome browser it works, but when the website you're visiting tries to load these files it doesn't. What's the problem?
+	a. The Bucket Policy is wrong
+	b. The IAM policy is wrong
+	c. CORS is not enabled
+	d. Encryption is wrong
+	Answer - c.	
+	
+	Question 8:
+	Which encryption method requires HTTPS?
+	Answer - SSE-C
+	
+
+Section 10: AWS CLI, SDK, IAM Roles & Policies
+
+
+89. Developing on AWS Introduction
+
+	
+	aws configure will create 2 files on C:\Users\inarajp\.aws 
+	It contains our credentials and should not be shared.
+	
+	IAM roles are attached to applications or to EC2 instances.
+	IAM role comes with a policy where we define what an EC2 instance should be able to do.
+	
+	CLI is already installed on EC2.
+	
+	We can use a role to as many intances we want, but an EC2 instance can have only one IAM role.
+	
+	
+	S3 CLI - https://docs.aws.amazon.com/cli/latest/reference/s3/
+
+	There are lot of service with whom we can interact with CLI. 
+
+
+97. IAM Roles and Policies Hands On
+
+	Inline policy are basically policies that are going to be added inline, so that means on top of whatever you've already chosen, and it turns out that these policies are not possible to be added to other roles.
+	Okay, so this is like basically saying this policy is just for that role.
+	
+	Overall, I don't really recommend using inline policies, it's always better to manage policies globally, just to get a better management view.
+
+	
+	
+	AWS Policy Generator - https://awspolicygen.s3.amazonaws.com/policygen.html
+	
+	AWS Policy Simulator (tool to test our policies) - https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html
+														https://policysim.aws.amazon.com/home/index.jsp
+	
+
+101. AWS EC2 Instance Metadata
+
+	http://169.254.169.254/latest/meta-data/
+	This IP 169.254.169.254 is basically an internal IP to AWS, it will not work from your computer, it will only work from your EC2 instances
+	
+	http://169.254.169.254/latest/user-data/
+	
+	http://169.254.169.254/latest/dynamic/
+	
+	
+	Any time ends with / that means there is more to it, if not then it is a value.
+	
+	
+102. AWS CLI Profiles
+
+	So a common question I get is how do you manage having multiple AWS accounts?
+	So for example right now we are in my AWS directory.
+	And so if we go to config we see there's the default section and then if we go to credentials there's also the default section which contains an AWS access key id and a secret access.
+	So how do we do.
+	Because this links to my one AWS account that I have from before.
+	But how do we do this if I have multiple AWS accounts? For this We use something called a profile and so profiles are quite special to use.
+	Basically what we have to do is define a name for a new profile configure it and then we'll be able to use it into any command line.
+
+	aws configure --profile my-other-aws-account
+	
+	We can switch between the accounts after this.
+	
+	One user - is one account.
+	
+	If we do => aws s3 ls - it will execute agains default profile.
+	
+	aws s3 ls --profile my-other-aws-account	=> will execute for profile with name my-other-aws-account
+	
+	
+103. AWS CLI with MFA
+
+	We can obtain temparary credentials (Access key id, Secret Access key, Session Token) using MFA (MFA should be enabled for IAM user.) 
+	Command => aws sts get-seesion-token --serial-number arn-of-the-mfa-device --token-code code-from-authenticator --duration-seconds 3600
+	
+	Once the credential is obtained, we can create a new profile for that => aws configure --profile mfa
+	
+	After adding Access key id and Secret Access key, we need to update the file credentials, to add the session token.
+	
+	Now if we use this profile, it will use those credentials => aws s3 ls --profile mfa
+	
+
+104. AWS SDK Overview
+
+	If we don't specify the region, then the default region considered by the SDK is us-east-1
+	
+	
+105. Exponential Backoff & Service Limit Increase
+
+
+	If we get intermittent errors, then we should use Exponential Backoff.
+	So if we get a ThrottlingException, that means that we're going over the limit, and this happens once in a while, then to make sure our API calls succeeds, we need to use Exponential BackOff.
+	This is a Retry mechanism, that is already included in all the alias SDK API calls or the CLI.
+	But if you're using the API by yourself, without any SDK, then you must implement it yourself.
+	So what is Exponential Backoff?
+	It's a very simple concept.
+	That means that every time you retry something, you double the amount of time you wait before retrying.
+
+	So, we do an API call, and the first time, we just wait one second because it failed. 
+	Then we do the second API call, we double it, so now we wait two seconds.
+	Then the third API call, we double again, so from two seconds, we go to four seconds of waiting.
+	Then the fourth API call, again we double it, so we go to eight seconds of waiting.
+	And then the fifth API call, we go to 16 seconds of waiting.
+	
+	The idea is that, with Exponential Backoff, you slowly, slowly, slowly, have more and more wait in between your API calls, so you're slowing down the amount of load on your system, hoping that it will go back to normal.
+	And eventually, your API call should succeed.
+	And that is the whole idea behind Exponential Backoff.
+	
+	
+Quiz 9: CLI & SDK Quiz
+
+	Question 1:
+	I have an on-premise personal server that I'd like to use to perform AWS API calls
+	Answer - I should run 'aws configure' and put my credentials there. Invalidate them when I'm done.
+	
+	Question 2:
+	My EC2 Instance does not have the permissions to perform an API call PutObject on S3. What should I do?
+	a. I should run 'aws configure' and insert my personal credentials, because I have access to PutObject on S3.
+	b. I should ask an administration to attach a Policy to the IAM Role on my EC2 instance that authorises it to do the API call
+	c. I should export the enviornment varaibles with my credentials on the EC2 instance
+	d. I should use the EC2 Metadata API call
+	Answer - b.
+	
+	Options a and c could have also solved your problem, but they are not best practices, as we should never put the credential anywhere.
+	In case of option c, EC2 instance would have read the credential from the enviornment variable and the IAM user who's credentials are there should have the right access.
+	
+	Question 3:
+	I need my colleagues help to debug my code. When he runs the application on his machine, it's working fine, whereas I get API authorisation exceptions. What should I do?
+	a. Send him my AWS access key and secret key so he can replicate the issue on his machine.
+	b. Ask him to send me his credentials so I can start working 
+	c. Compare his IAM policy and my IAM policy in the policy simulator to understand the differences.
+	d. Ask him to create an EC2 server and put his credentials there so I can run the application from the EC2 instance.
+	Answer - c. 
+	
+	Question 4:
+	To get the instance id of my EC2 machine from the EC2 machine, the best thing is to...
+	Answer - Query the meta-data at http://169.254.168.254/latest/meta-data/
+	
+	Question 5:
+	The AWS CLI depends on which language?
+	Answer - Python
+	
+	Question 6:
+	I'd like to deploy an application to an on-premise server. The server needs to perform API calls to Amazon S3. Amongst the following options, the best security I can achieve is...
+	a. run 'aws configure' and insert my personal credentials
+	b. create an IAM user for the application and insert the credentials in the application's code
+	c. create an IAM user for the application and put the credentials into environment variables. Here, it's about creating a dedicated user for that application, as using your own personal credentials would blur the lines between actual users and applications.
+	d. attach an IAM role to my on-premise server.
+	Answer - c.		
+	You can't attach EC2 IAM roles to on premise servers
+
+	Question 7:
+	When I run the CLI on my EC2 Instances, the CLI uses the ______ service to get _____ credentials thanks to the IAM Role that's attached.
+	a. user data | temporary
+	b. user data | permanent
+	c. meta data | temporary
+	d. meta data | permanent
+	Answer - c. 
+	
+	Question 8:
+	I want to test whether my EC2 machine is able to perform the termination of EC2 instances. There is an IAM role attached to my EC2 Instance. I should
+	Answer - Use the IAM Policy Simulator Or the dry run CLI option
+	
+	Question 9:
+	Can EC2 Instances retrieve the IAM Role policy JSON document that's attached to them using the CLI without any role attached?
+	Answer - No. You can retrieve the role name attached to your EC2 instance using the metadata service but not the policy itself
+
+	Question 10:
+	I have received an authorisation exception from my EC2 instance while performing an EC2 API call.
+
+	vbguZQlpz4e1h4rtSaXnEfDAFZPii8XvCNW7dLIE4Xy-zE8VcNIeh8tf4DAn1APFw__Nr55bUE0hrS02bg50EimidVBPHH1rtWmhQOtmv5tdUY5VelEAhc5O9OC8h4fYRlegBxfUNrGSCqlH83h_HMyaqC1fQy2G7rNjmFEPcN-pue2NZc9MMZMRdfWbYszMlbkAYlrAmSMmr4F0FE6BWOUxFOCdRnuwwb8OEM9c8RXBK8F91YqgdbW_XvxYBi2_BEI2P-8gFz4LmBkba1UdEylh-WUS95XInC3OU8i3wZZ-xKExGWu1HwoqS9QAqIqm6jmn7wbTK_v9EVv0jMnCzmNxuMHpqmw2Ys3Bu3WdqvAwHxmT5W_XCbGBdtstckPXkeSyNS5hLSNLBjjRgd_I8JfPKTmB79sB_mUBSTlc28z5wjv1UBtxKBLT5GHdHQM8s2dP30cJCObRITmNvJo6Q8zaya1XYpwvCGIQrWF6-xaYQeXFCmMgyfsosIS8bVfpNyzzz2usC1mFJMlwIciissbz10YslH-PQF7Wwvn_6ypipoQVh0z80XglLVYnfbXGFv330ZyviBQnttklCecIK56OMcAxPJfTIWru57RoKedhJaHiKVEdLtILvVJgJ71wn-6wd4QA9aMh38jTpI_-cOPWLsvNq5NbtfqxQZ5BJOUs0rQpTmYRF_FtlY1k
+
+	I want the decode the cryptic error message. How do I do it?
+	
+	Answer - Use the STS decode-authorisation-message API
+	
+	Question 11:
+	My KMS API call just failed against AWS. It's seems I've reached the rate limit of the KMS API. I should retry
+	Answer - Using an exponential backoff strategy
+	
+	Question 12:
+	Which API call should be used to get credentials before issuing API calls against an MFA-protected API?
+	Answer - STS GetSessionToken
+	
+	Question 13:
+	What is the priority in the CLI credentials chain?
+	Answer - Command Line Options > Enviornment Variables > EC2 Instance Profile
+	https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html#config-settings-and-precedence
+	
+
+Section 11: Advanced S3 & Athena
+
+
+108. S3 MFA Delete
+
+	If we enable MFA-delete on S3 (to do this we need to execute a command in CLI), then we won't be able to delete any object or delete marker from console, we also won't be able to disable versioning. To delete object we will have to do it from CLI using MFA. This protects anyone from deleting object from console without MFA.
+	
+	
+112. S3 Pre-signed URLs	
+	
+	If we directly try to open the object from console we will get access denied.
+	
+	Execute below command before generating presigned url.
+	
+	"aws configure set default.s3.signature_version s3v4" => confifure AWS CLI to generate a signature version called s3v4. This will allow the generated url to be comapatable with KMS encrypted object.
+	
+	"aws s3 presign s3-url-to-object --expires-in 300 --region eu-west-1" => This will give a url to download the object and we have 5 minutes to do so.
+	
+	So, pre-sign URL are a really great way of generating basically ways for users to get access to files without getting straight access to the bucket.
+	
+	
+114. S3 Lifecycle Policies
+
+	Moving objects(transition of objects between storage classes) can be automated using a lifecycle configuration.
+
+
+116. S3 & Glacier Select
+
+	Client can request for a csv file and ask to be filter on cetain rows and columns, S3 will then perform filter to get required subset and send us that subset, as a result less network transfer, less cost and faster.
+	
+
+118. Athena Overview
+
+	It's a serverless service and you can perform analytics directly against S3 files.
+	So, usually you have to load your files from S3 into a database which has redshift and do queries there or something.
+	But with Athena, you leave your files in S3 and you do queries directly against them.
+	For this, you can use the SQL language to query the files which everyone knows, and it even has a JDBC or a ODBC driver if you wanted to connect your BI tools to it.
+
+	
+	We created a table in Athena in same query we told the bucket name which contains out logs, Athena then created the table and populated it with the log data. Then we can normal sql the table.
+	
+	So, we get a lot of good information to analyze these S3 access logs.
+	And so, that's the whole power of Athena in here.
+	By just creating a table on top of our data that sits in S3, we were able to get a lot of information without provisioning, for example, an RDS database, or a Redshift database for anything to do analytics on top of our data.
+	
+	So, this what makes Athena very powerful serverless query engine if you want to troubleshoot, if you want to get, analyze your logs, and so on.
+
+
+Quiz 10: S3 Advanced & Athena - Quiz
+
+	Question 1:
+	You have enabled versioning and want to be extra careful when it comes to deleting files on S3. What should you enable to prevent accidental permanent deletions?
+	Answer - Enable MFA Delete
+	
+	MFA Delete forces users to use MFA tokens before deleting objects. It's an extra level of security to prevent accidental deletes
+	
+	Question 2:
+	You would like all your files in S3 to be encrypted by default. What is the optimal way of achieving this?
+	Answer - Enable "Default Encryption" on S3
+	
+	Question 3:
+	You suspect some of your employees to try to access files in S3 that they don't have access to. How can you verify this is indeed the case without them noticing?
+	a. Restrict thier IAM policies and look at CloudTrail logs
+	b. Enable S3 Access Logs and analyse them using Athena
+	c. Use a bucket policy
+	Answer - b. 
+	Restricting their IAM policies could be noticed by the users
+	S3 Access Logs log all the requests made to buckets, and Athena can then be used to run serverless analytics on top of the logs files
+
+	Question 4:
+	You are looking for your entire S3 bucket to be available fully in a different region so you can perform data analysis optimally at the lowest possible cost. Which feature should you use?
+	Answer - S3 Cross-Region Replication
+	S3 CRR is used to replicate data from an S3 bucket to another one in a different region
+	
+	Question 5:
+	You are looking to provide temporary URLs to a growing list of federated users in order to allow them to perform a file upload on S3 to a specific location. What should you use?
+	
+	Question 6:
+	Which of the following is NOT a Glacier retrieval mode?
+	Answer - Instant (10 seconds)
+
+	Question 7:
+	Which of the following is a Serverless data analysis service allowing you to query data in S3?
+	Answer - Athena
+	
+	Question 8:
+	You would like to retrieve a subset of your dataset stored in S3 with the CSV format. You would like to retrieve a month of data and only 3 columns out of the 10. You need to minimize compute and network costs for this, what should you use?
+	Answer - S3 Select
+	
+	Question 9:
+	You're trying to upload a 25 GB file on S3 and it's not working
+	Answer - You should use Multi Part upload when your file is bigger than 5 GB
+	
+	Question 10:
+	When uploading a file that is 1 GB to S3, which type of upload will give you the best throughput performance and resilience?
+	Answer - Do a multi-part upload.
+	
+	When a file is over 100 MB, Multi Part upload is recommended as it will upload many parts in parallel, maximizing the throughput of your bandwidth and also allowing for a smaller part to retry in case that part fails.
+
+
+Section 12: CloudFront
+
+121. CloudFront - Overview
+
+	OAI(Origin Access Identity) allows our S3 bucket to only allow communication from CloudFront and from no where else.
+	
+	You could also use CloudFront as an ingress, to upload files into S3 from anywhere in the world.
+	Okay, the other option is to use custom origin and there must be an HTTP endpoints.
+	So this could be anything that respects the HTTP protocol.
+	So it could be an Application load balancer, it could be an EC2 instance, it can be an S3 website.
+	But we first must enable the bucket as a static S3 website and note that it is different from an S3 buckets.	
+
+
+	The idea here is that for the edge location of CloudFront to access your S3 buckets is going to use an OAI or an origin access identity is IAM role for your CloudFront origin.
+	And using that role is going to access your S3 buckets and the bucket policy is going to say yes, this role is accessible and yes, send the file to CloudFront.
+
+	Now, what if you have a ALB or EC2 two as an origin?
+	The security changes a little bit.
+	So we have our EC2 instance or instances and they must be public because they must be publicly accessible from HTTP standpoint and we have our users all around the world.
+	So they will access our edge location and our edge location will access our EC2 instance and as you can see, it traverses the security group.
+	So the security group must allow the IPs of CloudFront edge locations into the EC2 instance.
+	And for this, there is a list of public IP for edge locations that you can get on this website.
+	And the idea is that the security group must allow all these public IP of edge locations to allow CloudFront to fetch content from your EC2 instances.
+
+
+	An origin access identity is a special CloudFront user that you can use to give CloudFront access to your Amazon S3 bucket. This is useful when you are using signed URLs or signed cookies to restrict access to private content in Amazon S3.
+	An origin access identity is a CloudFront-specific account that allows CloudFront to access your restricted Amazon S3 objects. 
+	
+123. CloudFront Caching & Caching Invalidations - Hands On
+	
+	Okay, so now lets talk about CloudFront caching.
+	So, we can cache based on multiple things in CloudFront.
+	On the headers value, the session cookies, the query string parameters and all the cache will live at the Edge Location.
+	So if we look at the diagram we have our clients making requests to the CloudFront Edge Locations, and the cache will be checked based on the values of the headers and the cookies and the query string parameters.
+	And then the cache will have an expiry based on the time to live in the cache, and if the value is not in the cache, then the query, or the entire HTTPS request, must I say, will be forwarded directly into the origin and then the cache will be filled by query response, okay?
+	So what we want to do with CloudFront is obviously minimize the number of requests on your origin by maximizing the amount of cache hits that you get.
+
+
+Quiz 11: CloudFront Quiz
+
+	Question 1:
+	Which features allows us to distribute paid content from S3 securely, globally, if the S3 bucket is secured to only exchange data with CloudFront?
+	a. Origin Access Identity
+	b. S3 Pre-Signed URL
+	c. CloudFront Signed URL
+	d. CloudFront Distribution Invalidations
+	Answer - c.
+	
+	CloudFront Signed URL are commonly used to distribute paid content through dynamic CloudFront Signed URL generation.
+
+	Question 2:
+	You are hosting highly dynamic content in Amazon S3 in us-east-1. Recently, there has been a need to make that data available with low latency in Singapore. What do you recommend using?
+	a. CloudFront
+	b. S3 Cross Region Replication
+	c. S3 Pre-Signed URLs
+	Answer - b - S3 Cross Region Replication
+	S3 CRR allows you to replicate the data from one bucket in a region to another bucket in another region
+	
+	The need was only in one region i.e. Singapore not all over the world.
+	
+	Question 3:
+	How can you ensure that only users who access our website through Canada are authorized in CloudFront?
+	Answer - Use CloudFront Geo Restriction
+	
+	Question 4:
+	CloudFront is deploying in front of an HTTP origin. After updating your HTTP app, the users still see the old website. What should you do?
+	Answer - Invalidate the distribution
+	
+	
+	
+Section 13: ECS, ECR & Fargate - Docker in AWS	
+	
+	Consider a task as one instance.
+	
+	
+128. ECS Clusters
+
+	When we create our cluster, it will also create an Auto-Scaling Group, and Auto-Scaling Group actually had created out EC2 instance in the cluster.
+	
+	If you check the launch caonfiguration, we can see user data, where it has echoed a varaible 'ECS_CLUSTER=cluster-name' into file /etc/ecs/ecs.config and this is how EC2 instance know to register itself to that cluster when it launches up. ecs-agent present on EC2 instance will register the instance to ECS.
+	
+	A security Group and IAM role is also created for us.
+	
+	If we SSH to the instance and do 'docker ps', we can see the ecs-agent container running.
+	
+	So 'Create Cluster' creates => 'Auto-Scaling Group' which creates => EC2 instance with some userdata 
+	It will also create Security Group and IAM role for instance(So that ecs-agent can communicate with ECS)
+
+	EC2 instance will have some ECS AMI. 
+	It will have ecs-agent container installed on it.
+	ecs-agent will register the EC2 instance to ECS using the ecs.config file (created by userdata)
+
+	
+129. ECS Task Definition
+	
+	If a task want to communicate with someone like S3, then it will need a task role.
+	
+	In task we can add what image we want to run as container in that task.
+	
+	To place the task in instances we have contraints and then placement strategies.
+	
+
+130. ECS Service
+	
+	Now we had created task definition, to run the task we will need Service or ECS Service, which will define how many tasks to run and how they should run.
+	And Service will make sure that our desired number of task are always running.
+	
+	Service gets created at a cluster level.
+	
+	We can specify Service how many tasks to run using service type - replica, service type daemon will run one task on each EC2 instance in our ECS cluster.
+	
+	Its possible to set up Load Balancer and Auto Group for our Service as well.
+	
+	Task definition is for cluster, means if a cluster is auto scaled same task definition will automatically create tasks on new EC2 instances.
+	
+	
+	
+	Delete - ECS, Cluster, Service, Task definition, Tasks, Auto-Scaling Group, Security groups, IAM roles, 
+	
+
+131. ECS Service with Load Balancers	
+	
+	We will update the task definition and won't provide any host port, so the host port becomes random and we will attach an Load Balancer.
+	Application Load Balancer will have a feature called dynamic port forwarding which will basically route the traffic to the random port as it will know how to pick up these random ports.
+	
+	Now we can have multiple tasks of same container on same EC2 instance as there host ports will be different.
+	
+	So we updated the Service, told it we need 4 tasks now.
+	Then we updated the task definition to new revision, and we will edit the container details and leave the host port empty.
+	Again we need to update the Service to use the new version of out task definition.
+	Now if we check the Deployment tab we will have two deployments one is the old one that is active and another one is the our new desired one with 4 tasks. And we can see in Tasks tab that 4 task are actually running.
+	
+	Now we need a Load Balance. We cannot update a Service to have a ELB, it can only be added at the time of Service creation.
+	So what we will have to do is create a new service which will have a ELB.
+	
+	We will also have to explicitly create an Application ELB and then while creating the new Servic attach it.
+	
+	Now another thing we need to do is, as our ELB will be talking to out EC2 instances, we need to allow EC2 instances to do this. So we need to update the EC2 instances sercurity groups (we can remove http or port 8080 rule). We will create a new inbound rule - Type = All traffic, Protocol = All, Port Range = 0 - 65535, Source = Custom - ELB-sg-Id
+
+	If you want to delete a Service, first update it and say we want 0 number of task and later delete it.
+	
+
+132. ECR - Part I
+	
+	So now let's talk about ECR.
+	So, so far when we've used Docker images for our ECS services, we've been using Docker images that were coming from a public repository called the Docker Hub.
+	But sometimes you may want to create your own images with your own software, and you want to keep these images as private as possible.
+	And so you may want to have them on AWS, and for this you can use ECR, which is a private Docker image repository within your AWS account.
+
+	The access to ECR is really cool it is controlled through IAM.
+	So that means that if you want to pull or push an image from ECR, you need the correct IAM permissions.
+	So the correct IAM policy, and if you do get permission errors, this is a common exam question.
+	That mean that your IAM policy is not permissive enough.
+
+	Now, there is a trick about ECR, and the exam may ask you how you can authenticate against ECR using the CLI.
+	And so there's two ways.
+	If you are using the AWS CLI version one, the login command is different than the one from version 2.
+	And so the exam may test you on both.
+	So, if you get the CLI version one, then the login command look like this.
+		
+		$(aws ecr get-login --no-include-email --region eu-west-1)
+		
+	There's a dollar sign and there is parenthesis, then there is aws ecr get login no include email region eu west one and then the end of the parenthesis.
+	So the reason we have this, the dollar sign and the parenthesis is that the output of the aws ecr get login command has to be executed.
+
+	And so the exam will test you on what command should you run, and the answer is you should run the output of the aws ecr get login command.
+	That is for AWS CLI version one, that's not the one I'm going to demo in this hands on cause we don't have version one we have version two.
+
+	And so for version two, it's a newer command, and it may also be asked on the exam, and this one relies on pipes.
+	So, let's have a look at an example.
+	
+		aws ecr get-login-password --region eu-west-1 | docker login --username AWS --pasword-stdin 1234567890.dke.ecr.eu-west-1.amazon.com
+		
+	And I put it in two parts, so the green part is piped into the blue part, this is the vertical pipe you see right before the word Docker.
+
+	And so the first part of the command is gonna give us the login password.
+	And then the second part of the command will take the login password as an input, and use it for the command.
+	So this is how this works, so and we'll see this in the hands on so don't worry about it.
+
+	And so based on if you get version one or version two, you have different mechanisms.
+	Version one is about executing the output of the aws ecr get login command.
+	And version two is about piping the output of the get login password command into the Docker login command.
+	
+	Once we had pushed the image on ECR, and then we updated the Task definition to update container configuration to change image name, then we updated the service to update the task definition version, then service will do rolling update and we will have all our new tasks with new image which we pushed on ECR.
+	The reason our EC2 instance was able to pull the image from ECR was due to the proper IAM role created by service. So if we are getting error like can't pull the image from ECR then the IAM role for EC2 doesn't have proper permissions to pull images from ECR.
+	
+	
+	
+	Binpack - place as many containers as possible on one EC2 instance, if you can't then have a new EC2 instance, cost saving.
+	
+
+Quiz 12: ECS Quiz
+
+	Question 1:
+	You are looking to run Microservices with Docker containers. Which service can help you manage these containers ?
+	Answer - ECS
+	
+	Question 2:
+	Which ECS config must you enable in /etc/ecs/ecs.config to allow your ECS tasks to endorse IAM roles?
+	a. ECS_CLUSTER
+	b. ECS_ENGINE_AUTH_DATA
+	c. ECS_AVAILABLE_LOGGING_DRIVERS
+	d. ECS_ENABLE_TASK_IAM_ROLE
+	Answer - d. 
+	
+	ECS_CLUSTER => This setting helps your EC2 instances register to the correct ECS cluster
+	
+	Question 3:
+	You are looking to push Docker images into ECR with your AWS CodePipeline and CodeBuild. The last step fails with an authorization issue. What is the issue?
+	Answer - Double check your IAM permissions for CodeBuild service.
+	Any permissions issues against ECR is most likely due to IAM policies
+
+	Question 4:
+	You are looking to run multiple instances of the same application on the same EC2 instance and expose it with a load balancer. The application is available as a Docker container. You should use
+	a. Classic Load Balancer + Beanstalk
+	b. Application Load Balancer + Beanstalk
+	c. Classic Load Balancer + ECS
+	d. Application Load Balancer + ECS
+	Answer - d. 
+	
+	Classic Load Balancer won't provide dynamic prot forwarding.
+	
+	Question 5:
+	You are running a web application on ECS, the Docker image is stored on ECR, and trying to launch two containers of the same type on EC2. The first container starts, but the second one doesn't. You have checked and there's enough CPU and RAM available on the EC2 instance. What's the problem?
+	a. The EC2 instance has permission issues with ECR and you must fix the IAM policy 
+	b. The host port is defined in the task definition
+	c. The container port is defined in the task definition
+	d. EC2 instances can only run one container instance for each image
+	Answer - b.
+	
+	Question 6:
+	You have started an EC2 instance and it's not registered with the ECS cluster. What's NOT a reason for this issue?
+	a. The ECS agent is not running
+	b. The AMI used isn't the AWS ECS AMI
+	c. The EC2 instance is missing IAM permissions
+	d. The security groups on the EC2 instance are misconfigured.
+	Answer - d.
+	Security groups do not matter when an instance registers with the ECS service
+
+	Question 7:
+	Which commands must be used to pull an image from ECR? (CLI v1)
+	Answer - 
+		$(aws ecr get-login --no-include-email)
+		docker pull $ECR_IMAGE_URL
+		
+	Question 8:
+	You would like to run 4 ECS services on your ECS cluster, which need access to various services. What is the best practice?
+	a. Create an EC2 instance role with 4 policies and attach it to the EC2 instances in the ECS cluster
+	b. Create 4 ECS instance roles and attach then to the EC2 instances in the ECS cluster 
+	c. Create 1 ECS task role with 4 policies and attach it to each ECS task definition
+	d. Create 4 ECS task roles and attach them to the relevant ECS task definition
+	Answer - d. 
+	
+	Question 9:
+	Which task cluster placement is the MOST cost-efficient?
+	Answer - binpack
+
+
+
+	ECS_CLUSTER=MyCluster     #Assign EC2 instance to an ECS cluster
+	ECS_ENGINE_AUTH_DATA={…}  #to pull images from private registries
+	ECS_AVAILABLE_LOGGING_DRIVERS=[…]   #CloudWatch container logging
+	ECS_ENABLE_TASK_IAM_ROLE=true       #Enable IAM roles for ECS tasks
+
+	
+	
+ECS - https://www.youtube.com/watch?v=pOal0uCrEaA&list=PLTyrc6mz8dg_tg1o1Calg8TOTuXclrGg4
+
+	What are container orchestration tools?
+	Orchestration tools helps us deploy, manage, and scale our containers, so we don't need to do all the heavy lifting ourselves.
+	Eg. ECS, Kubenetes, Docker Swarm, MESOS, etc.
+	
+
+
+Section 14: AWS Elastic Beanstalk	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

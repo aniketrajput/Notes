@@ -1,0 +1,88 @@
+Some networking - https://www.youtube.com/watch?v=Dppl6iA2G8Q&list=PLBGx66SQNZ8ZvdIoctCTWB3ApXQpQGEin&index=3
+
+OSI is a reference model, we didn't implement it practically, we implemented TCP practically.
+
+If your are on sender side then for you the first layer will be Application Layer(upper). And for receiver side the first layer will be Pysical layer(bottom).
+
+If you need to keep layers sequence in mind, this is a simple phase - All People Seems To Need Data Processing
+
+Aaj Phir Se Test Nahi Dena Padega..
+AAj - Application
+Phir- Presentation
+Se-  Sessional
+Test - Transport
+Nahi - Network
+Dena - Data link layer
+Padega - Physical
+
+
+TCP/IP protocol is combination of two protocols - TCP[Transmission Control Protocol] and IP[Internet Protocol]
+TCP protocol supports at Transport layer and IP protocol supports at Network layer.
+
+Whenever two devices or two computers are communicating with each other over the internet, at that time they are following this model.
+
+The goal of this model was to ensure continuance of a conversation between source and destination even if Transmission went out of operation
+
+The protocol that makes up TCP/IP define - 
+- How data is transmitted across a Network
+- How data should be formatted so other network system can understand it
+
+Two key TCP/IP features support decentralisation
+- End node Verification -> The two endpoints of any data transfer are responsible for making sure it was sucessfull. No centralised control system.
+- Dynamic Routing -> End nodes can transfer data over multiple paths and the netwrok chooses the best path for individual data transfer.
+
+Network issues - 
+- Addressing
+- Routing
+- Name Resolution
+- Flow & Error control
+- Interperability
+
+TCP Ip can have different models and different layer, check video. 
+
+4 layer model - 
+Application layer
+Host-to-Host or Transport layer
+Internet layer
+Network Access layer
+
+Application layer provides services to the end users to work over network or internet. For eg - File Transfer. User is always connected here, our applications like gmail are here.
+Protocol present at Application layer - HTTP, FTP, TFTP, Telnet, SSH, SMTP, SNMP, NTP, DNS, DHCP, NFS
+
+The Host to Host layer is responsible for transporting data and setting up communication between the application layer and the lower layer. 
+This layer is responsible for end-to-end communication and error free delivery of data.
+TCP and UPD works here.
+
+TCP protocol is a connection oriented protocol i.e. sender and receiver has a connection established.
+Featues of TCP - It performs sequencing and segmentation of data. It also has acknowledgement feature and controls the flow of the data through flow control mechanism.
+Retransmission is there, if some packet has not reached or failed, thus no loss.
+Used for non-real time data (if we send data, its not necessary that user will read that data immediately, he may read it after few days also.)
+Slow in comparision to UDP.
+But it is very reliable.
+
+UDP (User Datagram Protocol) - It is connectionless protocol and used for real time applications (like applications for vedio calls, voice call, youtube, netflix, etc., because everything is hapeening now or live, in voice call people are talking live) 
+No retransmission. (if while talking to phone voice breaks, its gone, you won't hear it again.)
+No acknowledgement.
+
+Internet Protocol - This layer parallels the functions of OSI's Network Layer. It defines the protocols which are responsible for logical transmission of data over the entire network.
+It will tell Sender and Receiver IP address, it will tell routing, etc.
+It is responsible for delivering packets from the source host to the destination host by looking at the IP address in packet header.
+It is also connection oriented protocol.
+Protocol used here are IP, ICMP, IGMP, ARP and RARP.
+
+Network Access Layer - It is combination of Physical layer and Data Link layer of OSI model. It looks out for Hardware address i.e. MAC address.
+Frames are made here.
+Then in physical layer frames are converted to bits and then bits are transmitted via wires.
+
+
+
+
+
+
+
+
+
+
+
+
+

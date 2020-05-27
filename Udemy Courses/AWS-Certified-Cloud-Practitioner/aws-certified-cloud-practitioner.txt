@@ -494,88 +494,533 @@ Quiz 3: AWS Compute
 	
 	In EFS you actually connect using a protocol such as NFS and with NFS you then mount the file system to a mount point. That's just means that if you change directory to mount point directory you would see whatever's on this file system.
 	
+
+60. Amazon Simple Storage Service (S3)
+
+	Amazon S3 is a public AWS service and that means you connect to it over the public internet so you migt have a browser on an internet based client and you connect to it. 
+	
+	Or we might connect from EC2 instance and that instance could be in a private or public subnet. But you still have to hit an Internet gateway which takes you out to public internet and then to S3.
+	Now there is one exception called a gateway endpoint and it's a way of connecting from an EC2 instance to one of the AWS public services without going over the public internet. 
+	
+	Objects are nothing but files, of any type. 
+
+	S3 is a global service but you have to choose where you store your data(in which region) and that's within a region. 
+
+
+61. Amazon S3 Storage Classes
+
+	There are six s3 storage classes: 
+	- S3 standard (durable, immediately available, frequently accessed)
+	
+	- S3 Intelligent-Tiering(automatically moves data to the most cost-effective tier)
+		This means that there are different storage classes and some more cost effective than others depending on how often you access your data and S3 will intelligently tier, in order word it's automatically going to move data to the most cost effective tier for your usage.
+		
+	- S3 Standard-IA (durable, immediately available, infrequently accessed)
+	
+	- S3 One Zone-IA (lower cost for infrequently accessed data with less resilience)
+	
+	- S3 Glacier (archived data, retrieval times in minutes or hours)
+
+	- S3 Glacier Deep Archive (lowest cost storage class for long term retention)
+
+
+
+	Suppose we have created S3. And when we are uploading the object at that time it asks for storage class. So storage class is someting like object level.
+	
+	To connect to S3 from EC2 instance, there are two ways, 
+		- We can use Access key and Secret Access key to connect
+		- We can create a role with permissions for EC2 to access S3
+		
+	First one is not ideal because when we connect using Access Key and Secret Access key a credentials files is created with these key in it. And this is not good.
+	Thus we should always use second approach of role.
+	
+
+66. Amazon Elastic Block Store (EBS)
+
+	An EBS volume is essentially like a virtual hard disk that's in the AWS cloud and you can attach these volumes to your EC2 instances. 
+	And these are used as Boot volumes for your EC2 instance.
+	And that means that it's like the disk device that your instance uses to find the data to load the OS when it starts up.
+	
+	So firstly we can take an EC2 instance and you can attach multiple EBS volumes to that instance. So one could be the boot volume with the OS and then another one might just be a data volume.
+	
+	But we cannot attache same volume to multiple instances.
+	So that means you can't share that data between two EC2 instances.
+	
+	You also can't connect an EC2 instance to a volume in a different availability zone.
+	
+	EBS volumes are stored within an availability zone. 
+	
+	EBS provides persistent block storage, we can even terminate the instance and detach and EBS volume from it and keep that data in the volume.
 	
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+67. Amazon EBS Volume Types
+
+	The EBS General Purpose SSD(gp2) is default volume type when you launch an EC2 instance.
+	
+	Neither of the HDD options can actually be used as a boot volume so you can't choose this to boot your EC2 instance at launch time.
+	
+	
+68. Amazon EBS Snapshots
+	
+	EBS snapshot are a way that you can take a back up of your volume.
+	
+	
+	
+	EC2 instance is not a whole virtual PC(server), One PC(server) can have multiple EC2 virtual instances. 
+
+	Now the instance store volumes are actually physically located within the service so they're within this physical server. 
+	
+	So EC2 instance can connect to EBS over network 
+	And instance store are in servers that host EC2 instances.
+	
+	So the instance store volume is local to the host server and is attached directly to an EC2 instance whereas an EBS volume is attached over a network connection.
+	
+	We cannot dettach/reattach the instance store volume so unlike an EBS volume where you can detach it and it can exists in your account independently you cannot do so with instance store volume.
+	
+
+71. Take snapshot, create AMI, launch new instance (optional)
+
+	We have a EC2 instance attached to a root EBS. We will create a snapshot of this in S3 and then create a AMI and using this AMI we would create a new volume in different availability zone and attach it to a new EC2 instance in different availability zone.
+	
+	So this is a great way of creating a copy of your existing EC2 instance in different availability zone.
+	
+
+72. Amazon Elastic File System (EFS)
+
+	EFS is a file system rather than a block storage system or an object storage system.
+	And this means that it's a network based file system that you connect to so you connect to it over a network and you mount it as a remote file system.
+	
+	This is different EBS. EBS you connect to over a network but you connect to it at a block level. So that means it's a volume it's almost like having a hard disk in your computer. You can create partitions on it, you can format those partitions.
+
+	With a file system you just mount it. It's like a network Drive or T drive we have in our company. 
+	
+	NFS(Network File System)
+	
+	We can connect multiple EC2 instances to a single File System.
+	
+	So it is a great solution when we want to share data. 
+	
+	That means that you can mount the file system to EC2 instances in multiple AZs within a region.
+	
+	You can also connect your on premises clients so you can connect over a VPN and then mount the EFS file system from a computer in your corporate data center.
+	
+
+73. Create and mount EFS File System(optional)
+	
+	Security groups are the firewalls to the instances.
+
+	To connect to EC2 using cmd prompt => ssh ec2-user@ip-address -i mynewkeypair.pem
+	
+	
+74. AWS Storage Gateway
+
+
+	AWS Storage Gateway is a hybrid cloud storage service that gives you on-premises access to virtually unlimited cloud storage.
+
+	
+Quiz 4: AWS Storage
+
+	
+	Which Amazon Machine Image can be used to mount an Amazon Elastic File System (EFS) file system?
+		- Amazon Linux 2 AMI and not Microsofts...
+		
+	Only Linux AMIs can be used with Amazon EFS
+
+
+Section 8: Amazon Virtual Private Cloud(VPC)
+
+
+76. Introduction
+
+	A VPC is a logical construct into which you can create networking elements such as subnets.
+	So just remember this is a virtual data center essentially so think of it as your virtual data center on AWS cloud.
+
+	Many services are deployed into VPC.
+
+
+	A VPC is a logically isolated portion of AWS cloud within a region. So its private and secured and controlled by you. 
+	
+	And we can create a multiple VPCs within a region.
+	
+	Within a VPC we create subnets and the subnets sit inside AZs.
+	So each subnet is within one AZ. 
+	
+	A VPC has an address block, a block of address that can be assigned to all the instances you deploy. And a subnet just has a block within that, within the larger block.
+	So it's a kind of smaller block of addresses within the overall block of addresses that are assigned to that network.
+	
+	Public subnet means that the EC2 instances in this subnet will get a public IP address so the address that they get is one that you can find on the Internet rather than a private address which is what you have for EC2 instances in private subnets.
+
+	So how does conenctivity works?
+	There's somthing called a VPC router so you don't actually see it but it's there.
+	And the way that you interact with it or control it is through what we call a route table.
+	
+	Internet gateway is attached to a VPC but it kind of sits at the edge of your region because it is the gateway to the Internet itself.
+	So all traffic going in and out of the from the Internet to your VPC and out again has to go via the Internet gateway. 
+	
+	So we can have multiple VPCs and each VPC has a different CIDR block.
+	
+	Subnet cannot go across availability zones, so it's always within an individual availability zone. 
+	
+	VPC Endpoints - Noramally if you are connecting from an EC2 instance to Amazon S3 it would be out in the region somewhere. Which means we actually have to go to the Internet gateway to reach it because it's got a public IP address. Even if you've got a public subnet with an EC2 instance with a public IP address it still has to go out the Internet Gateway and actually reach S3.
+	If you have a VPC Endpoint, amazon S3 would be able to talk directly into your VPC.  
+	
+	A Virtual Private Gateway and a Customer Gateway are both parts of Virtual Private Networks(VPN). So a way to connect into Amazon over the public Internet and create a private or at least a virtual private network, so something that's encrypted and secure.
+	
+	AWS Direct Connect is another way of connecting from in this case a corporate data center or a corporate network into the AWS cloud and you create a private connection that doesn't go over the Internet.
+	
+
+80. Security Groups and Network ACLs
+
+	
+	A Network ACL actually controls access to the subnet. 
+	So it actually is a firewall which controls access to traffic going in and coming out of your subnet.
+	
+	So suppose an EC2 in one subnet wants to talk to EC2 in another subnet, so it will have to first go throught it's ACL then it will go to Router and get routed to ACL of the target subnet and finally to the target EC2 instance.
+	
+	ACL are at subnet level.
+	
+	Security groups are at instance level.
+	
+	The key thing about security groups is you create them and then you attach instances to them and they then control the traffic going into and out of that instance. 
+	
+	So in some case if we have two instances in same security group in same subnet and if they send traffic to each other the security group will have to allow that traffic to go. 
+	And suppose these instances could be in different security groups like we have in diagram, so in that case we need to have the rules that allow the traffic to go out from security group A and into security group B if these two want to communicate with each other.
+	
+
+81. Public Private and Elastic IP Addresses
+
+	Public IP address - This is an address that is routable on the public Internet.
+	That means that you can connect to your instance on its address from the Internet.
+	When we shut down the instance we loose the address, we get new one next time it boots up.
+	Associated with private IP address on the instance.
+	
+	So we will always have an private IP address on the instance.
+	
+	If we don't to loose public IP we can assign an Elastic IP, which is a static IP. They are also associated with Private IP of instance
+	
+	Public IP used in public subnet.
+	
+	Private IP used in Public and Private Subnet.
+	
+	We don't loose Private IP.
+	
+
+82. NAT Gateways and NAT Instances
+
+	NAT - Network Address Transalation.
+	
+	So we have an EC2 instance in a private subnet. That means it only has a private IP address that means it can't communicate directly on the Internet.
+	
+	So how do we get this instance to talk to a device out on the Internet?
+	
+	What we do is we create a NAT gateway in a public subnet. And that NAT gateway has both a private IP address so it can communicate with the EC2 instance and it also has an elastic IP which is a type of public IP.
+	
+	So that means that EC2 instance can send traffic to the NAT gateway and it will forward it out to the Internet.
+	So it does what's called Network Address Transalation.
+	
+	So we need to create NAT gateway in management console then we need to update our route tables so that we have a route in private subnet table that goes to the NAT gateway ID.
+	
+	Other way is to use NAT instance, which is actually an EC2 instance
+
+	So an EC2 instance that we launch from a specific AMI and you set it up so that it does the same thing as a NAT gateway.
+	
+	A bastion host is an EC2 instance in a public subnet that you can connect to on the from the Internet and then use that to jump in to an instance on a private subnet for management purposes.
+	
+	Means we create an EC2 instance in the public subnet which we will use to connect in and connnect to our EC2 instance in the private subnet. That's what we call a bastion host.
+	
+	
+Quiz 5: Amazon VPC
+
+	An Amazon VPC is created within a region. You can created multiple VPCs within a region and there is a default VPC created in every AWS region by default
+
+	How can an organization create a private hybrid cloud connection between their on-premises data center and the AWS Cloud?
+	AWS Direct Connect is a private network connection to the AWS Cloud. It provides high bandwidth and low latency with reliable performance
+	Using AWS direct connect we are connecting from Corporate's private cloud to AWS(public cloud). Thus hybrid.
+	
+	With Elastic IP addresses, the address is retained when the instance is stopped. Remember that you do pay for unused Elastic IP addresses
+	
+	Which AWS-managed network service can be used to enable Internet connectivity for EC2 instances in private subnets?
+	A NAT Gateway is an AWS managed service that can be used for enabling instance in private subnets to access the Internet
+	
+	A company needs a network connection to the AWS cloud with predictable performance. What should they use?
+	AWS Direct Connect is a private network connection and offers predictable performance
+	AWS managed VPN is incorrect because a VPN uses the public Internet, it doesn't offer predictable performance.
+	
+	
+Section 9: AWS Databases
+
+90. Amazon DynamoDB
+
+	DynamoDB is serverless. So that means it's a fully managed fault tolerant service and you don't have to provision the underlying service so it's not like your provisioning in EC2 instance or having to change an instance type when you need to scale its service.
+	So like all the serverless service you don't need to worry about the compute capacity and storage capacity on which it is running.
+	
+	There's also something called Global Tables so you can actually have a fully managed solution where it's a multi region multi master database. 
+	That just means that the daabase is in multiple regions around the world the same database and it's replicated, but multi-master means that you can actually write to all of those different database and all the data is synchronizes.
+	
+	In hand on lab - we don't actually create a db, because it exists, we are more specifically creating a table in dynamo db. becasue this is a managed service.
+	
+	
+	
+93. Amazon ElastiCache
+
+	Memcached and Redis are examples of open source in-memory databases. 
+	So it's about in-memory caching and that helps to improve latency and throughput for read heavy application workloads or compute intensive workloads. 
+	
+	So ElastiCache is a in-memory database and it does in-memory caching.
+	
+	Use cases - 
+		- Web session store - that means you have an application can the seesion state for that application information about a user seesion that's currently running is stored in ElastiCache and that measn that if a server is lost then the session information is still available.
+		
+		- Database caching.
+		
+		- Leaderboards
+		
+		- Streaming data dashboards.
+		
+		
+Quiz 6: AWS Databases
+
+	Amazon RDS is an example of a relational database used for online transaction processing (OLTP) workloads. This means its typically used for production databases that process transactions
+	
+	Which AWS database service offers seamless horizontal scaling?
+	Amazon DynamoDB offers seamless "push-button" horizontal scaling
+
+	How can fault tolerance be added to an Amazon RDS database?
+	Multi-AZ creates a standby copy of the master DB in a separate availability zone
+	
+	How can an organization enable microsecond latency for a DynamoDB database?
+	DynamoDB Accelerator (DAX) is an in-memory cache that increases performance of DynamoDB databases
+
+	Which AWS database service is a relational, data warehouse?
+	RedShift is a relational, SQL database that is well suited for data warehouse use
+	
+	Why might an organization decide to move an on-premises database to Amazon RDS?
+	You can reduce operational overhead by moving to AWS managed services. With RDS this means you no longer need to manage the operating system.
+	
+	How do you increase the capacity of an Amazon RDS database?
+	You can scale Amazon RDS by changing to a larger instance type. This is an example of vertical scaling
+	
+	DynamoDB is a No-SQL database which has a flexible schema and is good for unstructured data
+
+
+Section 10: Elastic Load Balancing and Auto Scaling
+	
+
+	With ELB sometimes an instance becomes unhealthy and the load balancer will take it out of service (means will no more route there). It doesn't actually replace the instance. 
+	
+	This is where Auto-scaling comes in. With auto-scaling when an instance becomes unhealthy and that means it's failing a status check, the Auto Scaling group will replace the instance, it launches a new instance. 
+	So that means every time you have a failure a new instance will be launched and will replace that instance.
+	
+
+Quiz : 
+
+	How can a company emable elasticity for an application running on Amazon EC2?
+	By using Amazon EC2 Auto Scaling.
+	Amazon EC2 Auto Scaling enables elasticity for EC2 by launching and terminating instances as demand changes.
+	
+	Which type of Elastic Load Balancer can direct traffic based on the domain name?
+	The application load balancer can do host-based routing which means it can direct traffic based on information in the host header such as a domain name.
+	
+	Amazon EC2 Auto Scaling launches and terminates instances as demand for your application changes, this ensures you are only paying for instances that you need to service demand.
+	
+	How does Elastic Load Balancing (ELB) assist with fault tolerance?
+	By distributing connections to multiple back-end instances.
+	ELB distributes connections to multiple backend instances and this means your application is fault tolerant. You should couple this with Auto Scaling to ensure the right number of back-end instances are available.
+	
+	Which of the following statements is INCORRECT about Elastic Load Balancing?
+	ELB cannot distribute connections across regions, only availability zones. To direct traffic across regions use Amazon Route 53
+	
+	Health checks are used by ELB to check that an instance is available and healthy
+	
+	The NLB operates at layer 4 of the OSI model only, routing connections based on IP protocol data
+	
+	Scaling policies determine when, if, and how the ASG scales and shrinks (on-demand/dynamic scaling, cyclic/scheduled scaling)
+	
+	Auto Scaling Group (ASG) are collections of EC2 instances
+	
+	What type of template is used by Amazon EC2 Auto Scaling to define instance family, AMI key pair, and security groups?
+	Launch configuration
+	A launch configuration is the template used to create new EC2 instances and includes parameters such as instance family, instance type, AMI, key pair and security groups
+
+
+Section 11: Content Delivery and DNS Services
+
+	CloudFront is Content Delivery Network (CDN), Route53 is Domain Name System (DNS)
+	
+	
+	DDos attach is a malicious attack where someone tries to send lots of data to your service to bring it down.
+	
+	
+Quiz 8: Content Delivery and DNS Services
+
+	
+	How can an organization improve performance for users around the world accessing online videos?
+	Amazon CloudFront can be used to get the content cached around the world, closer to users, which will improve performance
+	
+	A regional edge cache sits between a CloudFront Distribution and an edge location
+	
+	Which types of Origin does Amazon CloudFront support?
+	You can use S3 buckets and EC2 instances as origins for you CloudFront distribution. You can also use S3 static websites, other HTTP servers using Route 53, instances behind an ELB, and MediaStore Containers
+	Can not user - RDS database, EFS filesystem, Auto Scaling Group
+
+	Which services have a Global scope?
+	AWS IAM, Amazon CloudFront, Amazon Route 53
+	
+	Regional - Amazon VPC, Amazon CloudWatch, AWS Lambda
+	
+	Which services does Amazon Route 53 provide?
+	Health checking, DNS, domain registration
+	
+	Amazon CloudFront has built-in Distributed Denial of Service (DDoS) attack protection
+	
+	Which of the following is used to cache data to bring it closer to end users?
+	Edge Locations are part of the AWS Global Infrastructure and are located around the world. They are used to cache content to bring it closer to end users for improved performance.
+
+	In Amazon Route, what is the name for the configuration item that holds a collection of records belonging to a domain?
+	A hosted zone represents a set of records belonging to a domain
+	
+
+Section 12: Monitoring and Logging Services
+
+	Amazon CloudTrail is a service that keeps a record of events that happen in our AWS account. 
+	Everytime yo create or modify a resource in AWS a record of that event is sent to a CloudTrail and that's the API calls. 
+	So AWS is a web service and that means every time you perform any action in AWS an API call is actually being generated. 
+	So you might go through the console and create and EC2 instance or you migt use the command line to modify VPC. Whatever you do an API call is actually generated and CloudTrail records all of those API calls.
+	
+	
+	In CloudTrail by default we can see events for last 90 days, if we want any longer then we need to create a trail and log to an S3 bucket.
+
+
+Quiz 9: Monitoring and Logging Services
+
+	Which service can be used for alerting if the CPU is heavily loaded on an EC2 instance?
+	CloudWatch is used for performance monitoring
+
+	Which statement about Amazon CloudWatch is INCORRECT?
+	CloudWatch only integrates with Amazon EC2 - This is not true. CloudWatch integrates with most AWS services
+	
+	Correct statements - 
+	- CloudWatch Logs collects and centralizes logs from AWS resources
+	- CloudWatch Alarms can be set to react to changes in your resources
+	- CloudWatch monitoring can include application performance.
+	
+	
+	Which service can be used to record information about API activity in your AWS account?
+	CloudTrail can keep a record of all API activity in your account
+
+	Does Amazon CloudTrail permanently record all API activity in your account by default?
+	No.
+	By default Amazon CloudTrail only keeps 90 days of records. To keep records permanently you need to create a Trail and record events to an Amazon S3 bucket
+	
+	
+Section 13: Automation and Platform Services
+
+	CloudFormation and Elastic Beanstalk, these technologies allow us to automate the build of our infrastructure and our applications in the cloud.
+
+	CloudFormation is all about "Template-driven provisioning" that means you deploy infrastructure using code.
+	
+	Elastic Beanstalk is more focussed on deploying applications on EC2(PaaS)
+	
+	CloudFormation is actually used by Elastic Beanstalk. 
+	When you create a beanstalk enviornment it actually goes off and talks to CloudFormation and CloudFormation builds out the stack.
+	
+	Elastic Beanstalk builds what we call Elastic Beanstalk container.
+	
+	So when we create using Elastic Beanstalk, it launches CloudFormation, CloudFormation creates the enviornment, it will create Auto-scaling group, EC2 instance and install enviornment for our application and deploy. 
+	Developer will just upload artifact, select enviornment and all infrastructure is creation is taken care by Elastic Beanstalk. 
+	
+	Same way if we do delete from Elastic Beanstalk it will use CloudFormation to delete the enviornment it created.
+	
+
+Quiz 10: Automation and Platform Services
+
+	An organization is looking for a way to deploy infrastructure on AWS in different regions whilst ensuring consistency configuration. Which service should the organization use?
+	Using the "template-driven" provisioning of CloudFormation organizations can build infrastructure on AWS in multiple regions using the same template file, ensuring consistency in their builds
+	
+	Which service can assist a developer with quickly deploying and managing a web application on AWS?
+	AWS Elastic Beanstalk can be used to quickly deploy and manage applications in the AWS Cloud
+	
+	Which service uses JSON or YAML template files to deploy infrastructure as code?
+	AWS CloudFormation deploys infrastructure using code and uses JSON or YAML template files
+	
+	Elastic Beanstalk actually uses CloudFormation to deploy services used in the environment
+	
+	Elastic Beanstalk is considered to be a PaaS service. This means the underlying infrastructure and the runtime engine are managed for you and you only need to upload the code
+	
+	Which service can be used to automatically create an Amazon VPC and then launch and EC2 instance, Auto Scaling Group and Elastic Load balancer?
+	AWS CloudFormation can automate the entire process of creating a VPC and launching many different types of resources into it
+	
+
+Section 14: Migration and Transfer Services
+	
+Quiz 11: Migration and Transfer Services
+
+	Which service can be used to migrate exabytes of data into the AWS Cloud?
+	Snowmobile is “exabyte scale” with up to 100PB per Snowmobile
+	
+	Which service can be used to quickly and affordably migrate 50TB of data to Amazon S3 for a company with a slow Internet connection?
+	This is the best solution for this amount of data as the company has a slow connection
+	
+	How can a company migrate a database from Amazon EC2 to RDS without downtime?
+	Context makes this one a bit easier! Just remember that DMS can migrate databases online without downtime and it supports many different source / destination options
+
+	You get charged for outbound data transfer. Data going out.
+	You get charged for data that goes in between regions.
+
+	
+	Computing pricing - 
+	- Detailed monitoring(CloudWatch) every one minute your EC2 instance is sending data to CloudWatch. By default basic monitoring is enabled which is every five minutes and that's free.
+	
+
+Section 15: AWS Billing and Pricing
+	
+Quiz 12: AWS Billing and Pricing
+
+	Which pricing model is best suited for a batch computing workload that requires significant compute power and can be stopped at any time?
+	Spot instances are great for this type of workload. You can achieve significant discounts which will mean a big cost saving for such a compute intensive workload. You can be stopped at any time if AWS need the capacity back but that's OK for some batch workloads.
+	On-demand would be very expensive for this type of workload.
+
+	Which AWS services are free?
+	Amazon EC2 Auto Scaling, CloudFormation, IAM
+	However you do pay for resources created by Auto Scaling and CloudFormation
+
+	With Amazon S3, which of the following are NOT chargeable items?
+	You do not pay for inbound data transfer, only outbound data transfer
+
+	What is the most cost-effective storage tier for data that is not often accessed, will be retained for 7 years, and needs to be retrievable within 24 hours?
+	Amazon S3 Glacier Deep Archive - This is the most affordable option for long term data storage where retrieval times of 24 hours are acceptable.
+	
+	What is a key cost advantage of moving to the AWS Cloud?
+	You can provision what you need and scale on demand - This is a great reason to move to the cloud and a key cost benefit. This means you are only ever paying for resources that you are actually using, with little or no idle capacity	
+
+	Which storage classes are available for the Amazon Elastic File System?
+	Standard and Infrequently Access Storage - these are the two storage classes available for EFS
+
+	With Amazon Virtual Private Cloud (VPC) what must you pay for?
+	You do need to pay for VPN connections
+	
+	What can you use to assign metadata to AWS resources for cost reporting?
+	Tags and resource groups are great tools for assigning metadata to AWS resources and then being able to group resources that share one or more tags
+	
+	Which AWS pricing feature can be used to take advantage of volume pricing discounts across multiple accounts?
+	With Consolidated billing you can combine the usage across all accounts in the organization to share the volume pricing discounts and Reserved Instance discounts. This can result in a lower charge for your project, department, or company than with individual standalone accounts
+	
+	What is the best tool for an organization to compare the cost of running on-premises to using the AWS Cloud?
+	The TCO calculator is a free tool provided by AWS that allows you to estimate the cost savings of using the AWS Cloud vs. using an on-premise data center
+	
+	Which AWS support plan comes with a Technical Account Manager (TAM)
+	Only the enterprise support plan comes with a TAM
+	
+	Which of the following needs to be considered in a Total Cost of Ownership (TCO) analysis?
+	Data center operations costs
+	You need to include all costs that are being incurred to run on-premises so you can compare costs to the AWS cloud
+
+	Which of the following is NOT a payment option for Amazon EC2 reserved instances?
+	All at the end
+	This is not a payment option for Amazon EC2 reserved instances
+	
+	Which tool can an IT manager use to forecast costs over the next 3 months?
+	The AWS Cost Explorer is a free tool that allows you to view charts of your costs. You can view cost data for the past 13 months and forecast how much you are likely to spend over the next three months
 
 
 

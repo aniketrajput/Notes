@@ -1,0 +1,300 @@
+Zillow Alternatives
+Hey! 
+
+The following example, as discussed, uses a USA property for demonstration purposes.  And I use Zillow because everyone in the world will be able to access this data for their practice.
+
+Once you learned how to do the analysis and want to explore your own market in your own country, here's a list of alternative resources for finding market comps as recommended by students.  Let me know if you recommend other ones for your market and I'll update the list.
+
+I chose Zillow because the vast majority of my students are based in USA and it's easier to use. Even if you are not in USA, it's easier to practice in a market with easy data access.
+
+Thanks!
+
+Symon
+
+
+
+USA
+
+trulia.com
+
+redfin.com
+
+craigslist.com
+
+loopnet.com (more for commercial)
+
+www.realtor.com
+
+Rentometer.com (get quick rent estimate for your property and comps but requires Pro version for additional data)
+
+
+
+Canada
+
+realtor.ca
+
+rew.ca
+
+remax.ca
+
+craigslist.ca
+
+condos.ca
+
+
+
+United Kingdom
+
+rightmove.co.uk
+
+zoopla.co.uk
+
+
+
+Latin America
+
+pisofincasa.com
+
+
+
+Dubai/UAE
+
+dubizzle.com
+
+propertyfinder.ae
+
+
+
+India
+
+indiaproperty.com
+
+realtor.com/internationa/in
+
+99acres.com
+
+https://housing.com/in/
+
+
+
+Philippines
+
+www.property24.com.ph/philippines/houses‎
+
+homes.trovit.ph/For-Sale/Houses‎
+
+www.lamudi.com.ph/house/buy/
+
+https://www.realtor.com/international/ph/
+
+https://www.olx.ph/real-estate
+
+China (helps if you know Chinese)
+
+www.fang.com
+
+www.dichan.com
+
+www.juwai.com (if you're targeting Chinese buyers with international real estate)
+
+Lots of China focused arms of international brokerage houses worth checking out if they have major presence in your target market.
+
+Singapore
+
+https://propertyguru.com/
+
+ww.99.co
+
+SRX.com.sg
+
+Data provided by the government agency, Urban Redevelopment Authority: www.ura.gov.sg
+
+South Africa
+
+privateproperty.co.za 
+
+property24.com
+
+Lightstone Property
+
+TPN Credit Bureau
+
+
+
+Thailand:
+
+hipflat.co.th
+
+Brazil
+
+zapimoveis.com.br   
+
+vivareal.com.br
+
+
+
+Other International
+
+realtor.com
+
+europeanproperty.com (reach out to agents with listings in your target market)
+
+http://suumo.jp/ (for Japan)
+
+
+
+NOTE ON MODELS
+Hey there,
+
+Just a quick note on the investment models you'll see in the next lecture and in later lectures in the course. You'll se several versions of similar files.
+
+Here's what they mean:
+
+LOCKED - these locked files mean the formulas and calculations are locked and you can only change the assumptions that go into the calculations. If you're using investment models and Excel for the first time, use this version. It will prevent you from making inadvertent errors.
+
+UNLOCKED - these models are identical to the locked ones except all calculations are unlocked. This is for advanced students who want to modify and adapt the model to their own needs. Do this at your own risk! Make sure you know what you're changing.
+
+OTHER - if there is a third or fourth version, it is with some slight modifications as requested by some students. These are optional. The modification made is in the file_name and self explanatory.
+
+If you're just starting out, just use the LOCKED models to get started. As you get more comfortable and want to play with the models yourself, then go to the UNLOCKED ones.
+
+Best,
+
+Symon
+
+
+
+
+
+
+
+
+
+How Are You Feeling?
+Hey, 
+
+One last note before you dive into the foundational content.  
+
+The next few sections are foundational and it's a lot like eating veggies--you might not like it, but it's good for you!
+
+For those with of you some real estate background already, you can breeze through it and go to the case studies if you find the foundational material too easy or basic.  But if you are totally new to this, be patient with it and stick to it...you'll thank yourself for that later.
+
+The material gets progressively more and more advanced.  So if it feels too easy, go faster and skip ahead. The earlier lectures are designed to be easier. If it feels too difficult, slow it down, look up additional resources online, and then come back here.  Ask questions. Reach out to me.  I'm here to help.
+
+99% of you haven't seen the waterfall framework.  Don't skip this.  This is the standard for structuring deals with investment partners.  Maybe you're not thinking about that yet but if you're serious about investing, you will soon.  The students who study this and understand how to use it tell me this section alone is worth 100x their investment in this course. And I agree.  Proper structuring with partners can mean the difference of tens of thousands of dollars.  
+
+Have something that's bothering you? Reach out to me.  I'm told by students that I'm one of the most responsive teachers here on Udemy and I really take pride in that.  I personally respond to every student.  So please give fair me a chance to help you and I can't do that unless you message me or post to the Q&A.
+
+Enjoying the course? Great! That makes me super happy.  If you're learning and getting value from the course, please consider leaving a review. 
+
+Thanks again for taking  my course!
+
+Symon
+
+
+
+
+
+
+
+Advanced Fix and Flip Investment Model Unlocked
+This Model is for advanced students only. Use at your own risk. All formulas are unlocked so there are many places to mess calculations up. =)
+
+Sorry, I will not be doing any one on one exercises with these unlocked models. Thanks for your understanding.
+
+Cheers,
+Symon
+
+
+
+
+
+Advanced Fix & Flip Model - Holding Costs Not Financed
+This Model is for advanced students only. Same as previous model EXCEPT that holding costs are now separated from Renovation costs and not financed. 
+
+Use at your own risk. All formulas are unlocked so there are many places to mess calculations up. =) 
+
+
+
+
+Advanced Rental Investment Model Unlocked
+This Model is for advanced students only. Use at your own risk. All formulas are unlocked so there are many places to mess calculations up. =)
+
+Sorry, I will not be doing any one on one exercises with these unlocked models. Thanks for your understanding.
+
+Cheers,
+Symon
+
+
+
+
+INTEREST ONLY VERSION - Advanced Rental Investment Model Unlocked
+This is an Interest Only version of the Advanced Rental Income Property Investment Model. Everything else is the same except the loan assumptions are for interest only loan without amortization.
+
+
+
+Advanced Multi-Unit Investment Unlocked Model - Different Exit Assumptions
+This is an updated investment model with the following updates (do not use to follow along with the example above--for those, download the associated older version to follow along):
+
+Exit sales price not based on assumed appreciation but based assumed exit cap rate applied to the final year total net rents
+Also all calculation sheets are unlocked for those adventurous enough to want to dive in to the nuts and bolts.
+Sorry, I will not be doing any one on one exercises with these unlocked models.
+
+Thanks for your understanding.
+
+Cheers,
+
+Symon
+
+
+
+Advanced Parking Garage Model Unlocked
+This is an advanced unlocked version for parking garage investment examples.
+
+Formulas are unlocked for advanced students to make their own adjustments.
+
+Symon
+
+
+
+
+Advanced Commercial Model Unlocked - Normal Numbers
+This is an advanced unlocked version for both the operating and non-operating l real estate investment examples. Works for Industrial, retail, office, and self storage examples.
+
+Formulas are unlocked for advanced students to make their own adjustments.
+
+Note, this one uses regular numbers for assumptions instead of abbreviated by 1000s. Cosmetic change only.
+
+Symon
+
+
+
+LIVE DEMO - Las Vegas and Los Angeles Rental Property Analysis & Q&A		----- https://www.youtube.com/watch?v=oSl1dJvvQQ0
+
+Follow along as I use the investment model to analyze properties in Las Vegas and Los Angeles, show you how leverage affects the analysis, and show how to invest with others using the waterfall framework.
+
+There is also a Q&A at the end on syndication and how to determine the appreciation of a property.
+
+
+
+LECTURE SLIDES DOWNLOAD
+Here's a folder with the PDFs of all the slides that I used throughout the course.  Note that because I designed them for me to get most of my points across in my actual presentation, these slides work best for taking notes:
+
+https://www.dropbox.com/sh/88iw81zgqi7bozs/AAC5UdXXZ2peO-JbWpAZR7waa?dl=0
+
+Thanks!
+
+Symon
+
+
+
+BOE Model - Rising Property Taxes
+This is a UNLOCKED BOE model that allows you to put a separate property tax % assumption for each year.
+
+
+Updated LearnAirbnb Model for Airbnb Hosting
+For your Airbnb economics analysis, use this version of the model instead.  There were some errors in the older models that are fixed here.
+
+Target Investment Returns
+These are target investment return ranges by property and market class.  Note these are ROUGH ranges based on what I've seen over the years.  Use them only as a starting point as each asset class, deal, and market will require adjustments. The current state of the market cycle also will have an impact on target returns--lower during peak cycles when cap rates compress and properties are trading at premiums and higher during trough cycles when cap rates expand and properties are trading a discounts.
+
