@@ -1,0 +1,5 @@
+
+Recurssion. 
+
+Break the problem into a smaller problem, keep breaking it until it can be broken no more.
+

@@ -1057,12 +1057,12 @@ Quiz 9: CLI & SDK Quiz
 	My EC2 Instance does not have the permissions to perform an API call PutObject on S3. What should I do?
 	a. I should run 'aws configure' and insert my personal credentials, because I have access to PutObject on S3.
 	b. I should ask an administration to attach a Policy to the IAM Role on my EC2 instance that authorises it to do the API call
-	c. I should export the enviornment varaibles with my credentials on the EC2 instance
+	c. I should export the environment varaibles with my credentials on the EC2 instance
 	d. I should use the EC2 Metadata API call
 	Answer - b.
 	
 	Options a and c could have also solved your problem, but they are not best practices, as we should never put the credential anywhere.
-	In case of option c, EC2 instance would have read the credential from the enviornment variable and the IAM user who's credentials are there should have the right access.
+	In case of option c, EC2 instance would have read the credential from the environment variable and the IAM user who's credentials are there should have the right access.
 	
 	Question 3:
 	I need my colleagues help to debug my code. When he runs the application on his machine, it's working fine, whereas I get API authorisation exceptions. What should I do?
@@ -1124,7 +1124,7 @@ Quiz 9: CLI & SDK Quiz
 	
 	Question 13:
 	What is the priority in the CLI credentials chain?
-	Answer - Command Line Options > Enviornment Variables > EC2 Instance Profile
+	Answer - Command Line Options > environment Variables > EC2 Instance Profile
 	https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html#config-settings-and-precedence
 	
 
@@ -1436,8 +1436,8 @@ Quiz 12: ECS Quiz
 	ECS_CLUSTER => This setting helps your EC2 instances register to the correct ECS cluster
 	
 	Question 3:
-	You are looking to push Docker images into ECR with your AWS CodePipeline and CodeBuild. The last step fails with an authorization issue. What is the issue?
-	Answer - Double check your IAM permissions for CodeBuild service.
+	You are looking to push Docker images into ECR with your AWS CodePipeline and CodeBuildd. The last step fails with an authorization issue. What is the issue?
+	Answer - Double check your IAM permissions for CodeBuildd service.
 	Any permissions issues against ECR is most likely due to IAM policies
 
 	Question 4:
@@ -1505,110 +1505,815 @@ ECS - https://www.youtube.com/watch?v=pOal0uCrEaA&list=PLTyrc6mz8dg_tg1o1Calg8TO
 Section 14: AWS Elastic Beanstalk	
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+142. Beanstalk First Environment
+
+	When we created a sample application on beanstalk, we can check events, first an environment was created, then an S3 bucket was created to store some environment data, then EC2 instance, security group, elastic IP is created. Then application is lauched and url is provided.
+	
+	So we have a environment and an application. 
+	
+	Application can have multiple environments. 
+	
+	Our application will be in a environment.
+	
+	If we create an application first directly, it will also create a web server environment for us. 
+	
+	We can have one application in multiple environments like dev, prod, etc.
+	
+
+147. Beanstalk Lifecycle Policy Overview Hands On
+	
+	When we upload the application zip, it is uploaded on S3 and that S3 bundle is then refered from Beanstalk, there is option to not to delete this bundle from S3 to prevent data loss.
+	We can do this by going into Application version and then Click on Settings button, there we can configure this application version lifecycle.
+	
+	
+148. Beanstalk Extensions
+
+	Okay so now let's talk about Elastic Beanstalk extensions. 
+	So, when we create a zip file, it contains the code that must be deployed to Elastic Beanstalk, but we can also add EB extensions.
+	
+	So all the parameters that we set in the UI, can also be configured with code using files and these are the EB extensions.
+	So the requirements that all these configuration files must be in the .ebextensions/ directory in the root of your source code, okay.
+
+	So It has to be in a directory called .ebextensions/.
+	It must be in the YAML or JSON formats.
+	And even though it is in YAML or JSON format, the extension of that file must end with .config,
+	for example, loggin.config.
+
+	And you have the ability to add resources, using the EB extensions, such as RDS, ElastiCache, DynamoDB and all the other things that you cannot necessarily set through the Elastic Beanstalk console.
+
+	So, by the way, anything that is managed by the EB extensions gets deleted if the environment goes away.
+	So that means that if you create for example, an ElastiCache as part of your Elastic Beanstalk environment, and then you delete your Elastic Beanstalk environment, then your ElastiCache will go away as well.
+	
+	You are able to modify some defaults using the options_settings
+	
+	So the beautiful thing is that Elastic Beanstalk, even though the UI only allows you to configure a few things, with EB extensions and CloudFormation, you can configure anything you want in your AWS.
+
+
+Quiz 13: EB Quiz
+
+	Question 1:
+	I am creating an application and would like for it to be running with minimal cost in a development environment. I should run it in
+	a. Single Instance Mode
+	b. High Availability Mode
+	Answer - a.
+	
+	Question 2:
+	Application versions can be linked to
+	a. One environment
+	b. Many environment
+	
+	Question 3:
+	I would like to customize the runtime of Elastic Beanstalk and include some of my company wide security software. I should
+	a. Provide an EC2 user data script
+	b. Provide a custom platform
+	c. Provide a Docker Image.
+	Answer - b.
+	
+	Question 4:
+	Environments in Elastic Beanstalk
+	Answer - Can be named freely
+	
+	Question 5:
+	I would like to update my development environment as soon as a new version is available. Because my Elastic Beanstalk environment is internal and only used by me, I don't mind downtime. Which deployment options is the best fit?
+	a. All at once
+	
+	Question 6:
+	I would like to update my Elastic Beanstalk application so that we are able to roll back very quickly in case of issues with the new application version. Which deployment mode is the best fit?
+	Answer - Immutable
+	
+	To roll back quickly, this deployment mode terminates the temporary ASG that has the new version, while the current one is untouched and already running at capacity
+
+	Question 7:
+	I want to update my Elastic Beanstalk application gradually without incurring new costs on update. My application has been over provisioned and can temporarily decrease in size for the number of serving instances, but I still want to serve my users without downtime. I do not want to incur extra costs over updates. Which deployment mode is the best fit?
+	Answer - Rolling.
+	
+	Rolling with additional batches and Immutable will always have extra cost, as extra instance are created.
+	
+	Question 8:
+	We would like to update our EB application with minimal added cost, while maintaining the full capacity to serve our current users in production. Which deployment is the best fit?
+	Answer - Rolling with additional batches 
+	As he wants full capacity and ready for minimal added cost
+	
+	Question 9:
+	I would like to create an ElastiCache with my Elastic Beanstalk environment. I should
+	Answer - Create an elasticache.config file in the .ebextensions folder which is at the root of the code zip file and provide appropriate configuration.
+	
+	Question 10:
+	My deployments on Elastic Beanstalk have been painfully slow, and after looking at the logs, I realize this is due to the fact that my dependencies are resolved on each EC2 machine at deployment time. How can I speed up my deployment with the minimal impact?
+	a. Remove some dependencies in your code
+	b. Place the dependencies in Amazon S3
+	c. Resolve the dependencies bdeforehand and package them in the zip file uploaded to Elastic Beanstalk.
+	Answer - c.
+	
+	Question 11:
+	What service does Elastic Beanstalk use under the hood?
+	Answer - AWS CloudFormation
+	
+	Question 12:
+	You would like your Elastic Beanstalk environment to expose an HTTPS endpoint instead of an HTTP endpoint in order to get in-flight encryption between your clients and your web servers. What must be done to setup HTTPS on Beanstalk?
+	a. Use a separate CloudFormation template to load the SSL certificate onto the Load Balancer
+	b. Create an .ebextensions/elb.config file to configure the Load Balancer
+	c. Open up the port 80 for the security group
+	d. Configure Health Checks
+	Answer - b. 
+	
+	Question 13:
+	How can you remove older versions that are not used by Elastic Beanstalk so that new versions can be created for your applications?
+	Answer - Use a Lifecycle Policy
+	
+	Question 14:
+	You are looking to perform a set of repetitive and scheduled tasks asynchronously. Which Elastic Beanstalk environment should you setup?
+	a. Setup a Web Server environment and a .ebextensions file
+	b. Setup a Web Server environment and a cron.yaml file
+	c. Setup a Worker environment and a .ebextensions file
+	d. Setup a Worker environment and a cron.yaml file
+	Answer - d. 
+	https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features-managing-env-tiers.html
+	
+	Question 15:
+	You have created a test environment in Elastic Beanstalk and as part of that environment, you have created an RDS database. How can you make sure the database can be explored after the environment is destroyed?
+	a. Make a snapshop of the database before it gets deleted
+	b. Make a selective delete in Elastic Beanstalk
+	c. Change the Elastic Beanstalk environment varaibles
+	Answer - a.
+	
+	
+Section 15: AWS CICD: CodeCommit, CodePipeline, CodeBuildd, CodeDeploy
+	
+	
+	Continous integration means whenever developer pushes his code on GitHub/CodeCommit, it will be picked by by the test server/CodeBuildd,  and then code will be build and then test cases will be executed and result will be send back to the developer.
+
+	Continous Delivery is all about deploying as often as possible, predictably and reliably.
+
+	To deploy to user managed EC2 intances Fleet(which can be created using CloudFormation) we use CodeDeploy (Not for Elastic Beanstalk.).
+	
+	CodeCommit is same like GitHub, provides version control, central repository, is based on Git, we can push, pull from repositories, etc.
+	
+	Commit can be integrated with Jenkins/CodeBuildd/ other third party CI tools.
+	
+	How to give access to our repositories to some other account? Cross account access?
+	Don't share SSH key or AWS credentials.
+	Use IAM role in your account and then the another account will have to use AWS STS(with AssumeRole API)
+	
+	
+	Now if we want to push pull from CodeCommit we need to configure SSH or HTTPS. For this go in IAM user, you will see Options like - SSH keys for AWS CodeCommit and HTTPS Git credentials for AWS CodeCommit.
+	We can just upload our existing SSH public key and then go in CodeCommit do CloneURL -> Clone SSH -> get the url in our git prompt and we will be able to clone now.
+	
+	For HTTPS git credential we can just click on generate and credentials are generated for us.
+	
+	
+161. CodePipeline Hands On
+
+	Okay, so CodePipeline is going to allow us to link sources, builds and deploy stages and we're going to create a very first simple Pipeline.
+
+	And right away we are greeted with creating a service role.
+	So this pipeline will do a lot of things, it will talk to S3, it will talk to CodeCommit, it will talk to Beanstalk and so as such we should be creating a service role as an IAM role that will have the permissions to do what it needs to do.
+	So something to remember CodePipeline requires an IAM role attached to it.	
+	
+	
+	Stages(DeployToProd, Build, etc) can have multiple Action Groups(Manual Approval, CodeBuild, Deploy to Beanstalk, etc.).
+	
+	We can have sequential and parallel actions.
+	
+	If the source in the pipeline is CodeCommit, then if we make any changes in repository in CodeCommit, the Pipeline will start executing immediately.
+	
+	
+162. CodeBuild Overview
+
+	CodeBuild can do both build and test.
+	
+	After CodeCommit, and it's going to be used for building and testing our application.
+	The idea is that it can do both, because they're kind of the same thing.
+	When you build something, or you test something, you just provide commands to a server, and the server does something as part of the command. It could be building or it could be testing.
+
+	So let's do a deep dive into CodeBuild.
+	So it is a fully managed build service.
+	What does that mean?
+	That means that as an alternative to other tools, such as Jenkins, it's going to be able to continuously scale.
+	As a user, you don't have any servers to manage or provision.
+	There is no build queue.
+	If you have a tool such as Jenkins, for example, which is an open source build tool, this time for Jenkins you have to provision it onto your EC2 machines and make it run, and provision Jenkin agents, and then when you have built, if your agents are busy, they're going to build queue.
+	Not with CodeBuild, it's fully managed.
+	It scales a lot, so basically you don't manage any servers.
+	You don't install anything or provision anything.
+	As you have build requests coming in, CodeBuild just goes ahead and builds it for you.
+	You pay for the usage of CodeBuild as well, which is really really nice.
+	If you had a Jenkins box, for example, just sitting around in your infrastructure and just doing one build a day, then you would be overpaying for sure, right?
+	It would not be busy at all, all the time.
+	Whereas for CodeBuild, if you do one build a day that is fine, because you are only going to pay for the usage of your development server or your build server.
+	So if takes you one minute a day to complete builds, then this is what you're going to pay for.
+
+
+
+	Code build leverages(uses) Docker under the hood for reproducible builds. 
+	Possibility to extend capabilities leveraging our own base Docker image.
+	Check the diagram, it will run the Build Docket Image(AWS managed ot Custom) and it will become CodeBuild Container, in which it will run instructions from buildspec.yml
+	
+	
+	So CodeBuild runs a Docker image that will run your test and so you have two kind of Docker images you can specify for CodeBuild, it could be a Managed image, and that is managed by AWS CodeBuild itself, and this is what we will be using, or you could specify a custom Docker image in which case you would need to say where that Docker image is coming from, where you're pulling it, and this is where you wanna have a more specific test environment for your company.
+
+
+	So because CodeBuild needs to run sometimes on actions, for example, pulling the code from CodeCommit, it is important to create an IAM service role and we'll just click on New service role and automatically it will create this service role for us.	
+
+	Check buildspec.yml file in code folder.
+	
+	
+	
+	Practical hands on we can do - 
+		- Create a build project independently in CodeBuild and execute it. This project can later be included in CodePipeline stage.
+		
+		- Build a CodePipeline
+			- put a project in CodeCommit
+			- Create pipeline to Pick it from CodeCommit, Build it, Deploy it on Beanstalk. Can have manual approvals...
+		
+	
+	
+	CloudWatch - 
+		1. Alarms
+		2. Events
+		3. Logs
+		
+
+166. CodeDeploy Overview
+
+	
+	They can be an EC2 machine or it can be an on premise machine by the way and it must be running something called the CodeDeploy agent.
+	So it's like a little software running on the EC2 machines and so the agent is basically going to do some things going to continuously poll for the AWS CodeDeploy service and ask, do I have to deploy new stuff? Do I have work to do?
+
+	I have my source code and I have my appspec.yml file.
+	So that file is super important you'll get asked about it and I have a whole lecture on it anyway whole slide but basically that file has to be at the root of your source code and it will define how the application gets deployed and so as a developer, I'm going to go ahead and push my source code to GitHub or Amazon S3 and then I'm going to trigger a deployment on AWS CodeDeploy.
+	
+	Now my EC2 instances because they continuously pull for CodeDeploy, they will realize that I've triggered a deployment and say okay time to deploy.
+	
+	So they will download the code and the appspec.yml file onto the EC2 instances and the agent will take care of running whatever is in that appsec.yml file to basically deploy your application correctly.
+	So other things you should know about CodeDeploy is that the EC2 instance are grouped by something called deployment group.
+	You can have dev, test, prod or just different segments.
+	You have a lot of flexibility as to regarding as to what you want to call the deployment groups or deployments.
+
+	For hook there is an already old application and we are upgrading the application.
+	
+	
+	Step 1 =>  Create two roles - ServiceRole for CodeDeploy and Role for EC2 instances
+	
+	Step 2 =>  Create EC2 instances, tag them
+	
+	Step 3 =>  SSH in EC2, install CodeDeploy Agent. Scrits are in Code folder.
+	
+	Step 4 =>  Create S3 bucket, add our application there (should contain appspec.yml file). We have project in Code folder.
+	
+	Step 5 =>  Create a Application in CodeDeploy
+	
+	Step 6 =>  Create Deployment Group, add tag which will add EC2 instances associated with that tag. (We can also provide ELB, ASG, etc.)
+	
+	Step 7 =>  Create Deployment and associate above created Deployment Group.
+	(Tell where is our application is, in S3)
+
+	Step 8 => After creating Deployment, deployment will start and we can check by getting the EC2 instance IP and hitting it in browser.
+	
+	
+169. AWS CodeStar
+
+	So CodeStar is going to be an integrated solution that regroups all the bunch of CICD services we've seen. GitHub, CodeCommit for storing code, CodeBuild for building the code, CodeDeploy and CloudFormation for deploying the code, CodePipeline for handling the pipeline orchestration, and CloudWatch.
+	So, it brings it all together.
+	It's just a wrapper around everything and gives you a nice one-stop dashboard for this.
+
+
+Quiz 14: CICD Quiz
+
+	Question 1:
+	CICD stands for...
+	Answer - Continous Integration Continous Delivery
+	
+	Question 2:
+	Which AWS Service helps you run automated test in your CICD?
+	Answer - CodeBuild
+	
+	Question 3:
+	You are looking to automatically trigger a code analysis at each commit in CodeCommit to ensure your developers haven't committed secret credentials. How can you achieve this?
+	Answer - Setup AWS SNS / Lambda integration in CodeCommit
+	
+	Question 4:
+	You want to send email alerts anytime pull requests are open or comments are added to commits in CodeCommit. You should use
+	a. AWS SES
+	b. AWS SNS
+	c. AWS CloudWatch Events
+	Answer - c. 
+	Pull requests always with CloudWatch Events
+	
+	Question 5:
+	CodeCommit doesn't support the following authentication
+	a. IAM credential helper with AWS CLI and git
+	b. SSH Keys in user profiles
+	c. HTTPS credentials in user profiles
+	d. HTTP public access
+	Answer - d.
+	
+	Question 6:
+	You want to give a colleague that has an IAM User in another AWS Account access to your CodeCommit repository. How should you achieve that?
+	a. Share your SSH Key with them
+	b. Generate HTTPS credentials and share that
+	c. Setup an IAM Role in your account and tell him to use STS cross-account access to assume that role
+	Answer - c. 
+	
+	Question 7:
+	Your CodePipeline hasn't deployed code to Elastic Beanstalk even though you've pushed code to your CodeCommit repository. It used to work 10 minutes ago. What reason is the most likely to explain that situation?
+	a. IAM permissions are wrong (10 mins before it was working, so no.)
+	b. CodePipeline is waiting for manual approval (10 mins before it was working, so no.)
+	c. Your CodeBuild stage probably failed some tests
+	d. Someone has deleted the Elastic Beanstalk environment (10 mins before it was working, so no.)
+	Answer - c.
+	
+	Question 8:
+	Your manager wants to receive emails when your CodePipeline fails in order to take action. How do you do it?
+	a. Setup an AWS CloudWatch Event Rule
+	b. Setup an SNS notification
+	c. Setup a SES email
+	Answer - a. 
+	
+	Question 9:
+	Which AWS Services allow you to track and audit API calls made to and from CodePipeline?
+	Answer - AWS CloudTrail
+	
+	Question 10:
+	Where should the buildspec.yml file be placed in your code for CodeBuild to work properly?
+	Answer - at the root of your code
+	
+	Question 11:
+	Your CodeBuild has failed. What isn't a solution to troubleshoot what happened?
+	a. Look through Logs in AWS CloudWatch logs
+	b.Look through Logs in AWS S3
+	c. SSH into the CodeBuild container to debug from there
+	d. Run CodeBuild locally to reproduce the build
+	Answer - c.
+	
+	CodeBuild containers are deleted at the end of their execution (success or failed). You can't SSH into them, even while they're running
+
+	Question 12:
+	You would like to improve the performance of your CodeBuild build. You realize that 15 minutes at each build is spent on pulling dependencies from remote repositories and that takes a while. What should you do to drastically speed up the build time?
+	Answer - Change buildspec.yml to enable dependencies caching in Amazon S3
+	
+	Question 13:
+	(hard question - think outside the box)
+
+	You would like to deploy static web files to Amazon S3 automatically. Which services should you use for this?
+	a. CodeCommit + CodePipeline
+	b. CodePipeline + CodeBuild
+	c. CodePipeline + CodeDeploy
+	d. CodeDeploy
+	Answer - b.
+	
+	CodeBuild can run any commands, so you can use it to run commands and copy your static web files to Amazon S3.
+	
+	CodeDeploy only allows to deploy to EC2 instances!!
+
+	Question 14:
+	What's the proper order of events in CodeDeploy?
+	Answer - Stop Application, Before Install, After Install, Start Application
+	
+	Question 15:
+	Which hook step should be used in appspec.yml file to ensure the application is properly running after being deployed?
+	Answer - ValidateService
+	
+	Question 16:
+	You've created a fleet of EC2 & on-premise instances and you're trying to run your first CodeDeploy. It doesn't work, why?
+	Answer - You've probabaly forgotten to install and start the CodeDeploy agent
+	
+	Question 17:
+	You would like to have a one-stop dashboard for all the CICD needs of one of your projects. You don't need heavy control of the individual configuration of each components in your CICD, but need to be able to get a holistic view of your projects. Which service do you recommend?
+	Answer - CodeStar.
+	
+	
+
+Quiz 15: CloudFormation Quiz
+
+	Question 1:
+	To make your infrastructure created with CloudFormation evolve over time, you should do which of the following?
+	a. Change the resources manually in the AWS Console and your CloudFormation template will get automatically updated.
+	b. Upload a new version of a CloudFormation template with the modified code and apply it in the CloudFormation Console.
+	c. Create a new CloudFormation stack with the updated template
+	Answer - b.
+	
+	Question 2:
+	Before being used by CloudFormation, your templates must be uploaded
+	a. Directly in CloudFormation
+	b. In AWS S3
+	c. In AWS CodeCommit
+	Answer - b.
+	
+	Question 3:
+	You need to specify the order in which your CloudFormation template should create resources
+	Answer - False, CloudFormation is smart enough to understand the order.
+	
+	Question 4:
+	Which of the following is mandatory for a CloudFormation template?
+	a. Parameters
+	b. Resources
+	c. Mappings
+	d. Outputs
+	Answer - b. 
+	
+	Question 5:
+	Which intrinsic function should you use to retrieve the DNS name of a Load Balancer created with CloudFormation?
+	a. Fn::Ref
+	b. Fn::Sub
+	c. Fn::Join
+	d. Fn::GetAtt
+	Answer - d.
+	
+	Question 6:
+	Considering these mappings:
+
+	Mappings:
+	  AWSRegionArch2AMI:
+		us-east-1:
+		  HVM64: ami-6869aa05
+		us-west-2:
+		  HVM64: ami-7172b611
+		us-west-1:
+		  HVM64: ami-31490d51
+		eu-west-1:
+		  HVM64: ami-f9dd458a
+	 
+	  EnvironmentToInstanceType:
+		development:
+		  instanceType: t2.micro
+		production:
+		  instanceType: m4.large
+	And this Resources block:
+
+	Resources:
+	  EC2Instance:
+		Type: AWS::EC2::Instance
+		Properties:
+		  InstanceType: !FindInMap [EnvironmentToInstanceType, !Ref 'EnvironmentName', instanceType]
+		  ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', HVM64]
+	What is wrong in this template?
+	
+	a. The parameter AWS::Region is missing so !Ref 'AWS::Region' won't work
+	b. The !FindInMap function is using the wrong syntax. It should have 2 arguments only
+	c. You cannot define two mappings in a template 
+	d. The parameter EnvironmentName is missing 
+	Answer - d. 
+
+	Question 7:
+	The !Ref function can be used to reference the following except...
+	a. Parameters
+	b. Resources
+	c. Conditions
+	Answer - c.
+	
+	Question 8:
+	The following block:
+
+	Fn::Join:
+			- ''
+			- [IPAddress=, !Ref 'IPAddress']
+	With the parameter IPAddress being 10.0.0.1.
+
+	Will generate...
+	
+	a. IPAddress,10.0.0.1
+	b. IPAddress=10.0.0.1
+	c. IPAddress10.0.0.1
+	d. 10.0.0.1
+	Answer - b. 
+	
+	!Join [ delimiter, [comma-delimited list of values]]
+
+	Question 9:
+	I'm trying to delete a stack but it seems I can't because other stacks reference its exported outputs. What should you do?
+	Answer - Delete the other stacks referencing the exported outputs first.
+	
+	Question 10:
+	I tried to create an exported output:
+
+	Outputs:
+	  StackSSHSecurityGroup:
+		Description: The SSH Security Group for our Company
+		Value: !Ref MyCompanyWideSSHSecurityGroup
+		Export:
+		  Name: SSHSecurityGroup 
+	But it seems I get an error. It says "SSHSecurityGroup" output already exists. What should you do?
+
+	Answer - Exported output names must be unique within your region.
+	
+	
+Section 17: AWS Monitoring & Audit: CloudWatch, X-Ray and CloudTrail	
+
+
+202. AWS Quick Clean-Up
+
+	Question 1:
+	We'd like to have CloudWatch Metrics for EC2 at a 1 minute rate. What should we do?
+	Answer - Enable Detailed Monitoring
+	
+	Question 2:
+	High Resolution Custom Metrics can have a minimum resolution of
+	a. 1 second
+	b. 10 seconds
+	c. 30 seconds
+	d. 1 minute
+	Answer - a.
+	
+	Question 3:
+	To send a custom metric to CloudWatch, which API should we use?
+	a. SendMetricData
+	b. PutCustomMetric 
+	c. SendCustomMetric
+	d. PutMetricData 
+	Answer - d.
+	
+	Question 4:
+	Your CloudWatch alarm is triggered and controls an ASG. The alarm should trigger 1 instance being deleted from your ASG, but your ASG has already 2 instances running and the minimum capacity is 2. What will happen?
+	a. One instance will be deleted and the ASG capacity and minimum will go to 1
+	b. The alarm will reamin in "ALARM" state but never decrease the number of instances in my ASG
+	c. The alarm will be detached from my ASG
+	d. The alarm will go in OK state.
+	Answer - b. 
+	
+	Question 5:
+	An Alarm on a High Resolution Metric can be triggered as often as
+	a. 1 second
+	b. 10 seconds
+	c. 30 seconds
+	d. 1 minute
+	Answer - b. 	
+	
+	Question 6:
+	CloudWatch logs automatically expire after 7 days by default
+	Answer - false - they never expire by default
+	
+	Question 7:
+	CloudWatch Logs expiration policy should be defined at which level?
+	a. Log Groups
+	b. Log Streams
+	Answer - a.
+	
+	Question 8:
+	My application traces appear in X-Ray when I run the application on my local laptop. When I deploy my application to my Elastic Beanstalk, the traces do not appear in X-Ray. Why?
+	a. A config file is missing in .ebextensions/ folder of your code
+	b. You need to authorize your application from the X-Ray console
+	c. Your code is wrong
+	Answer - a. 
+	(I think - You application on local was able to send traces because of X-Ray SDK, and when we deploy we add a configuration in .ebextensions file to install and enable X-Ray agent on Beanstalk.)
+
+	Question 9:
+	My application traces appear in X-Ray when I run the application on my local laptop. When I deploy my application to my EC2 instances with CodeDeploy, the traces do not appear in X-Ray. Why?
+	a. The CodeDeploy script breaks the X-Ray integration. It is a known bug.
+	b. The X-Ray daemon is not running on the EC2 instance.
+	c. X-Ray integration needs to be enabled with CodeDeploy
+	Answer - b.
+	
+	Question 10:
+	The X-Ray daemon is running on my EC2, and my application manages to send X-Ray traces from my computer, but it still doesn't work from my EC2 instance. What's wrong?
+	a. You need to enable input ports on your EC2 instance to allow UDP traffic in.
+	b. Your IAM role for your EC2 instance doesn't have the required permissions to send data to X-Ray
+	c. Your EC2 instance needs to be running in an auto scaling group
+	Answer - b. 
+	
+	Question 11:
+	All of a sudden, your CodePipeline breaks because it says it cannot find the target Elastic Beanstalk environment to deploy your application to. What should you do to find the root cause of this problem?
+	a. Look in CloudFormation for deletions
+	b. Look in CodePipeline for changes
+	c. Look in CloudTrail for a "delete" event in Elastic Beanstalk
+	Answer - c. 
+	
+	Question 12:
+	How should you configure the XRay daemon to send traces across accounts?
+	a. Create a user on another account, and export the access and secret keys to load them onto the agent.
+	b. Create a role on another account, and allow a role in your account to assume that role.
+	Answer - b. This is the best practice.
+	
+	Question 13:
+	You would like to index your XRay traces in order to search and filter through them efficiently. What should you use?
+	a. Segments	(part of a trace; of one component or service)
+	b. Sampling (defines how many request to send oer second and after that)
+	c. Annotations
+	d. Metadata
+	Answer - c.
+	
+	Question 14:
+	You would like to use a service that would enable you to get cross-account tracing and visualization. Which service do you recommend?
+	a. VPC Flow Logs
+	b. AWS X-Ray
+	c. CloudWatch Logs
+	d. CloudTrail
+	Answer - b. 
+	
+	Question 15:
+	Which API is NOT used for writing to X-Ray?
+	a. BatchGetTraces
+	b. GetSamplingRules
+	c. PutTraceSegments
+	d. PutTelemetryRecords.
+	Answer - a.
+
+
+Section 18: AWS Integration & Messaging: SQS, SNS & Kinesis	
+	
+	Long Polling / Receive Message Wait Time, consumer will tell SQS, hey is there any message for me, SQS says no, consumer says okay, I am willing to wait for 20 seconds in case any message comes to you let me know, and in meantime producer produces message in SQS in just 10 seconds and SQS send that message to consumer who is waiting.
+	
+	
+208. AWS SQS CLI Practice
+
+	=> aws sqs help
+	
+	=> aws sqs list-queues		
+	
+	We might need to specify region, if CLI is configure to one region and SQS is in another region.
+	
+	=> aws sqs list-queues --region us-east-1
+	
+	=> aws sqs send-message --queue-url https://... --region us-east-1 --message-body hello-world
+	
+	=> aws sqs receive-message --queue-url https://... --region us-east-1 --max-number-of-messages 10 --visibility-timeout 30 --wait-time-seconds 20
+	
+	
+	
+	
+	Mailinator.com => we can use an email address temporarily
+	
+
+Quiz 17: Messaging and Integration Quiz
+
+	Question 1:
+	You are preparing for the biggest day of sale of the year, where your traffic will increase by 100x. You have already setup SQS standard queue. What should you do?
+	a. Open a support ticket to pre-warm the SQS queue
+	b. Enable auto scaling in the SQS queue
+	c. Increase the capacity of the SQS queue
+	d. Do nothing, SQS scales automatically
+	Answer - d.
+	
+	Question 2:
+	You would like messages to be processed by SQS consumers only after 5 minutes. What should you do?
+	a. Increase the DelaySeconds parameters
+	b. Change the Visibility Timeout
+	c. Enable Long polling
+	d. Use the extended SQS client
+	Answer - a.
+	
+	Question 3:
+	Your consumers poll 10 messages at a time and finish processing them in 1 minute. You notice that your messages are processed twice, as other consumers also receive the messages. What should you do?
+	a. Enable Long Polling
+	b. Add delay to the messages when being produced
+	c. Increase the VisibilityTimeout
+	d. Decrease the VisibilityTimeout 
+	Answer - c.	
+	
+	Question 4:
+	One message keeps on being processed and makes your consumers crash one by one. That message has a bad format and you'd like to get rid of it automatically if that happens. How can you implement this?
+	a. Add a SQS filter to verify the message format
+	b. Implement a DLQ with a redrive policy
+	c. Increase the VisibilityTimeout
+	Answer - b. 
+	
+	Question 5:
+	Your SQS costs are extremely high. Upon closer look, you notice that your consumers are polling SQS too often and getting empty data as a result. What should you do?
+	Answer - Enable Long Polling
+	
+	Question 6:
+	You'd like your messages to be processed exactly once and in order. Which do you need?
+	Answer - SQS FIFO Queue
+	
+	Question 7:
+	You want to send messages of 1 MB to SQS. You need to
+	Answer - Use the SQS Extended Client Library
+	
+	Question 8:
+	You'd like to send a message to 3 different applications all using SQS. You should
+	a. Use SQS Replication Feature
+	b. Use SNS + SQS Fan Out pattern
+	c. Send messages individually to 3 SQS queues
+	Answer - b. 
+	
+	Question 9:
+	You have a Kinesis stream usually receiving 5MB/s of data and sending out 8 MB/s of data. You have provisioned 6 shards. Some days, your traffic spikes up to 2 times and you get a throughput exception. You should
+	a. Enable Kinesis replication
+	b. Add more shards
+	c. Use SQS as a buffer to Kinesis
+	Answer - b. 
+	
+	Question 10:
+	You are sending a clickstream for your users navigating your website, all the way to Kinesis. It seems that the users data is not ordered in Kinesis, and the data for one individual user is spread across many shards. How to fix that problem?
+	Answer - You should use a partition key that represents the identity of the user
+	
+	Question 11:
+	You intermittently get a ProvisionedThroughputExceeded Exception in your producing applications. You should
+	a. Use linear backoff on retries
+	b. Use exponential backoff on retries
+	c. Retry as fast as possible
+	Answer - b. 
+	
+	Question 12:
+	We'd like to perform real time analytics on streams of data. The most appropriate product will be
+	a. SQS
+	b. SNS
+	c. Kinesis
+	Answer - c.
+	
+	Question 13:
+	We'd like for our big data to be loaded near real time to S3 or Redshift. We'd like to convert the data along the way. What should we use?
+	Answer - Kinesis Streams + Kinesis Firehose
+	
+	Question 14:
+	You want to send email notifications to your users. You should use
+	Answer - SNS
+	
+	Question 15:
+	Which SQS FIFO message attribute allows two messages to be processed in order?
+	a. MessageDeduplicationID
+	b. MessageGroupId
+	c. MessageHash
+	d. MessageOrderId	
+	Answer - b. 
+
+	Question 16:
+	Which SQS FIFO message attribute allows two messages to be de-duplicated ?
+	Answer - MessageDeduplicationID
+
+	Question 17:
+	One of your Kinesis Stream is experiencing increased traffic due to a sale day. Therefore your Kinesis Administrator has split shards and thus you went from having 6 shards to having 10 shards in your Kinesis Stream. Your consuming application is running a KCL-based application on EC2 instances. What is the maximum number of EC2 instances that can be deployed to process the shards?
+	Answer - 10
+	In KCL, you can have a maximum of EC2 instances running in parallel equal to the number of shards in your Kinesis Stream.
+
+	Question 18:
+	If you currently have 10 active group messages (defined by GroupID) in your SQS FIFO queues, how many consumers can consume simultaneously?
+	Answer - 10
+	You can have as many consumers as GroupID for your FIFO queues
+
+
+Section 19: AWS Serverless: Lambda
+
+	
+	We run CRON jobs only on EC2 instances or virtual servers.
+
+	Each function invocation will create a new log stream in CloudWatch.
+	
+	Lambda function has it own service role, it allows it to create log groups and create log stream in log groups and then add logs in log streams.
+	
+	
+	aws lambda list-functions --region eu-west-1
+	
+	Check the command in code folder - to send call to lambda from CLI with some data.
+	
+	aws lambda invoke --function-name hello-world --cli-binary-format raw-in-base64-out --payload '{"key1": "value1", "key2": "value2", "key3": "value3" }' --region eu-west-2 response.json
+	
+	Above command makes a synchronous call to lambda, its also passing data in json but its tell CLI convert the json to base-64 and then make call.
+	
+	
+	aws lambda invoke --function-name hello-world --cli-binary-format raw-in-base64-out --payload '{"key1": "value1", "key2": "value2", "key3": "value3" }' --invocation-type Event --region eu-west-2 response.json
+	
+	In above command --invocation-type Event, is telling it that this is a Asynchronous call to Lambda function.
+	
+	
+234. Lambda Destinations
+	
+	So here is a very cool new feature from November 2019, called Lambda Destinations.
+
+	So, the problem is that, when we've been doing asynchronous invocations or event mappers, it was really hard for us to see if it had failed or succeeded.
+	And if it did, to retrieve the data.
+	So the idea with destinations is to send the result of an asynchronous invocation or the failure of an event mapper into somewhere.
+	
+
+	Lambda Execution Role - This is for event source mapping or when Lambda function need to invoke other services.
+	
+	Lambda Resource Based Policies - Lambda function is invoked by other services. This is to give other accounts or other aws services permission to use your Lambda resources.
+	
+	
+	
+	
+	If we put our lambda function in public subnet we won't have internet access. (Even no internet access in private subnet)
+	But if we put in private subnet we can have NAT gateway or NAT instance, where lambda outbound traffic can be routed, which will go to Internet-Gateway and we can haev internet access.
+	But lambda is in public we can't have NAT gateway/instance, so there is no way to get internet access.
+	
+	We we put lambda in our private subnet and we want to it to talk with the RDS in same private subnet. Then internally lambda will have a ENI (Elastic Network Interface), which will be surrounded by lambda security group, and RDS will have it's own security group, now we will have to allow traffic from lambda security into RDS by add it into RDS security group.
+	
+	In case of EC2 in public subnet, it will have internet access by default.
+	
+	
+	The more RAM you will have, the more vCPUs you will get.
+	You cann't directly allocate the vCPUs, it depends on your RAM size and it will be automatically allocated by Lambda Service.
+	
+	
+	
+	Concurrency means how much lambda can scale.
+	1000 concurrency is for an account. Means what ever lambda function we will have will share these 1000 concurrency.
+	We can have reserved concurrency for each lambda function and remaining will be used by other functions. 
+	If a function is allocated a reserved concurrency, it cannot scale above that reserved concurrency and it may get throttled if it reaches the limit.
+	
+	We can request for more concurrency by raising a ticket.
+	
+	Provisioned concurrency means those many concurrency will always be there, provisioned.
+	If a limit is reached in provisioned concurrency and there is still a reserved concurrency availabile then it will scale. 
+	
+	Check the diagram at the end of seesion 23. Lambda Concurrency
+	
+	
+	Alias mutable means, we can make it point to some another version later.
+	
+	
+	
+	
 
 
 
